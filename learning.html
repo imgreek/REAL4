@@ -337,8 +337,13 @@
                 `;
 
                 courseCard.addEventListener('click', () => {
-                    if (courseFileName && courseFileName.endsWith('.md')) {
-                        window.location.href = `course-detail.html?file=${encodeURIComponent(courseFileName)}&title=${encodeURIComponent(courseName)}`;
+                    const actualCourseId = course.courseId; // 來自 courses.csv 的 ID (e.g., C001)
+                    const courseTitleForUrl = currentLang === 'zh' ? course.courseName : course.courseNameEN;
+
+                    if (course.contentPath && course.contentPath.endsWith('.md')) {
+                        const fileName = course.contentPath.split('/').pop();
+                        // 傳遞 file, title, 和真實的 courseId
+                        window.location.href = `course-detail.html?file=${encodeURIComponent(fileName)}&title=${encodeURIComponent(courseTitleForUrl)}&courseId=${encodeURIComponent(actualCourseId)}`;
                     } else {
                         console.warn('Course file name not found or invalid for card:', course);
                         alert(t('course_content_not_available', currentLang)); 

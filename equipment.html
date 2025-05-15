@@ -406,56 +406,72 @@
             async function loadEquipment() {
                 const searchQuery = searchInput.value.trim().toLowerCase();
                 const selectedDate = document.getElementById('rentalDate').value;
-                
+                console.log(`Loading equipment for category: ${currentCategory}, date: ${selectedDate}, search: ${searchQuery}`);
+
                 try {
-                    // 使用數據庫模塊獲取設備
                     const equipmentList = await window.Database.loadEquipmentData();
                     const bookings = await window.Database.loadBookingsData();
-                    
-                    // 過濾設備
-                    const filteredEquipment = equipmentList.filter(item => {
-                        // 檢查基本可用性 (Status for rent)
-                        const isGenerallyAvailable = item['Status for rent'] === 'Available';
-                        if (!isGenerallyAvailable) return false;
+                    const currentUserData = JSON.parse(localStorage.getItem('currentUserData')); // Reload for current level
+                    const currentUserLevel = currentUserData ? parseInt(currentUserData.level) : 0;
 
-                        // 檢查選定日期的可用性
+                    if (!equipmentList) {
+                        console.error('Equipment list is null or undefined after loadEquipmentData');
+                        displayEquipment([], selectedDate);
+                        return;
+                    }
+
+                    const filteredEquipment = equipmentList.filter(item => {
+                        // 條件1: 設備本身的主要狀態 (Status for rent)
+                        // 我們希望 'Available', 'In use', 'Checking' 的都可能被展示，但後續UI會不同
+                        const generalStatus = item['Status for rent'];
+                        const isPotentiallyViewable = ['Available', 'In use', 'Checking'].includes(generalStatus);
+                        if (!isPotentiallyViewable) return false;
+
+                        // 條件2: 分類篩選
+                        const categoryMatch = currentCategory === 'all' || item['Item Category'] === currentCategory;
+                        if (!categoryMatch) return false;
+                        
+                        // 條件3: 搜索查詢 (如果提供了搜索詞)
+                        if (searchQuery) {
+                            const itemName = item['Item Name'] || '';
+                            const brand = item.Brand || '';
+                            const searchMatch = (typeof itemName === 'string' && itemName.toLowerCase().includes(searchQuery)) ||
+                                              (typeof brand === 'string' && brand.toLowerCase().includes(searchQuery));
+                            if (!searchMatch) return false;
+                        }
+                        
+                        // 注意：日期可用性和用戶等級的 *最終決定權* 會在卡片創建和詳情顯示時處理，
+                        //這裡主要是初步篩選，確保我們不會完全排除等級不足或當天已預訂的，而是讓UI去處理這些狀態的顯示。
+                        // 但是，如果一個設備因為 *其他用戶的預訂* 而在 selectedDate 當天不可用，我們應該在這裡過濾掉。
                         const itemCode = item['Item Code'];
-                        const isBookedOnSelectedDate = bookings.some(booking => 
+                        const isBookedByOtherOnSelectedDate = bookings.some(booking => 
                             booking.ItemCode === itemCode &&
-                            booking.BookingStatus !== 'Cancelled' &&
+                            booking.BookingStatus === 'Confirmed' && // Only confirmed bookings block availability
                             selectedDate >= booking.StartDate && 
                             selectedDate <= booking.EndDate
                         );
-                        if (isBookedOnSelectedDate) return false;
+                        if (generalStatus === 'Available' && isBookedByOtherOnSelectedDate) return false; // If available but booked on this date by someone
                         
-                        // 類別篩選
-                        const categoryMatch = !currentCategory || currentCategory === 'all' || item['Item Category'] === currentCategory;
-                        
-                        // 難度等級篩選 (確保 currentUserLevel 是數字)
-                        const difficultyMatch = parseInt(item.DifficultyLevel) <= currentUserLevel;
-                        
-                        // 搜索查詢 (增加空值和類型檢查)
-                        const itemName = item['Item Name'] || '';
-                        const brand = item.Brand || '';
-                        const searchMatch = !searchQuery || 
-                            (typeof itemName === 'string' && itemName.toLowerCase().includes(searchQuery)) ||
-                            (typeof brand === 'string' && brand.toLowerCase().includes(searchQuery));
-                        
-                        return categoryMatch && difficultyMatch && searchMatch;
+                        // 等級要求篩選：我們仍然需要這個來決定是否 *可借用*，但不一定從列表移除
+                        // const difficultyLevel = parseInt(item.DifficultyLevel);
+                        // const canUserBorrowByLevel = !isNaN(difficultyLevel) && difficultyLevel <= currentUserLevel;
+                        // item.canUserBorrowByLevel = canUserBorrowByLevel; // Attach this info for card rendering
+
+                        return true; // Pass to display, further logic in createEquipmentCard
                     });
                     
-                    displayEquipment(filteredEquipment, selectedDate);
+                    console.log(`Found ${filteredEquipment.length} items after filtering.`);
+                    displayEquipment(filteredEquipment, selectedDate, currentUserLevel, bookings);
                 } catch (error) {
                     console.error('加載設備列表失敗：', error);
-                    displayEquipment([], selectedDate);
+                    displayEquipment([], selectedDate, 0, []);
                 }
             }
             
             // 顯示設備列表
-            function displayEquipment(equipmentList, forDate) {
+            function displayEquipment(equipmentList, forDate, currentUserLevel, allBookings) {
                 const equipmentGrid = document.getElementById('equipmentGrid');
-                
-                equipmentGrid.innerHTML = '';
+                equipmentGrid.innerHTML = ''; 
                 
                 if (equipmentList.length === 0) {
                     const lang = localStorage.getItem('language') || 'zh';
@@ -470,167 +486,232 @@
                 }
                 
                 equipmentList.forEach(equipment => {
-                    const card = createEquipmentCard(equipment, forDate);
+                    const card = createEquipmentCard(equipment, forDate, currentUserLevel, allBookings);
                     equipmentGrid.appendChild(card);
                 });
             }
             
             // 創建設備卡片
-            function createEquipmentCard(equipment, forDate) {
+            function createEquipmentCard(equipment, forDate, currentUserLevel, allBookings) { 
                 const card = document.createElement('div');
-                card.className = 'equipment-card relative';
+                card.className = 'equipment-card relative flex flex-col'; 
                 const currentLang = localStorage.getItem('language') || 'zh';
                 
-                let imageUrl;
-                const baseImageUrlPath = 'assets/images/Item_image/';
-                const equipmentImageURL = equipment.ImageURL ? equipment.ImageURL.trim() : '';
+                // --- 圖標路徑邏輯 ---
+                let iconFileName = 'default_icon.png'; // Provide a real default icon in the SIM LOGO folder
+                const category = equipment['Item Category'];
+                if (category) {
+                    const categoryLower = category.toLowerCase();
+                    if (categoryLower.includes('camera') && !categoryLower.includes('len')) iconFileName = 'Camera.png';
+                    else if (categoryLower.includes('len')) iconFileName = 'Lens.png';
+                    else if (categoryLower.includes('audio') || categoryLower.includes('microphone')) iconFileName = 'microphone.png';
+                    else if (categoryLower.includes('lighting')) iconFileName = 'Lighting.png';
+                    else if (categoryLower.includes('stabilizer')) iconFileName = 'Stabilizer.png';
+                    else if (categoryLower.includes('battery')) iconFileName = 'Battery.png';
+                    else if (categoryLower.includes('sd card') || categoryLower.includes('stroage')) iconFileName = 'SD Card.png'; // Grouped SD Card and Stroage
+                    // Add more specific mappings if needed, e.g., for Video, Computer, Utility, Tripod
+                    else if (categoryLower.includes('video')) iconFileName = 'Camera.png'; // Or a generic video icon
+                    else if (categoryLower.includes('computer')) iconFileName = 'default_icon.png'; // Placeholder, add Computer.png
+                    else if (categoryLower.includes('utility')) iconFileName = 'default_icon.png';// Placeholder, add Utility.png
+                    else if (categoryLower.includes('tripod')) iconFileName = 'Stabilizer.png';// Placeholder, add Tripod.png or use Stabilizer
+                     else if (categoryLower.includes('communication')) iconFileName = 'microphone.png';// Placeholder, add Communication.png or use microphone
+                     else if (categoryLower.includes('monitor')) iconFileName = 'default_icon.png'; // Placeholder, add Monitor.png
 
-                if (equipmentImageURL !== '') {
-                    // Assuming ImageURL in CSV is just the filename like "canon_r5.jpg"
-                    imageUrl = baseImageUrlPath + equipmentImageURL;
-                } else {
-                    // Fallback to generating from Item Name if ImageURL is empty
-                    const generatedImageName = (equipment['Item Name'] || '').toLowerCase()
-                                            .replace(/\s+/g, '_')      // Replace spaces with underscores
-                                            .replace(/\//g, '-')       // Replace / with -
-                                            .replace(/[^a-z0-9_.-]/g, ''); // Remove other special chars, keep ., _
-                    imageUrl = `${baseImageUrlPath}${generatedImageName}.jpg`;
                 }
-                const fallbackImageUrl = `https://dummyimage.com//400x200?text=${encodeURIComponent(equipment['Item Name'] || 'N/A')}`;
-                
-                let availabilityText = t('available', currentLang);
-                let availabilityClass = 'bg-green-500'; // Default for Available
+                const iconUrl = `assets/images/Item_image/SIM LOGO/${iconFileName}`;
+                const fallbackIconUrl = `assets/images/App_Logo/REAL_LOGO_Square.png`;
 
-                // Adjust badge based on actual status (even if filtered to be generally viewable)
-                // This part becomes more relevant if you relax the 'isGenerallyAvailable' filter in loadEquipment
-                if (item['Status for rent'] === 'In use') {
-                    availabilityText = t('in_use', currentLang); // Add translation for 'in_use'
+                let availabilityText = '';
+                let availabilityClass = '';
+                let cardBorderClass = 'border-gray-200';
+                let isBorrowable = false;
+
+                const equipmentStatus = equipment['Status for rent'];
+                const itemCode = equipment['Item Code'];
+                const difficultyLevel = parseInt(equipment.DifficultyLevel);
+                const userCanMeetLevel = !isNaN(difficultyLevel) && difficultyLevel <= currentUserLevel;
+
+                const bookingForThisItemOnThisDate = allBookings.find(b => 
+                    b.ItemCode === itemCode && 
+                    b.BookingStatus === 'Confirmed' && 
+                    forDate >= b.StartDate && 
+                    forDate <= b.EndDate
+                );
+
+                if (equipmentStatus === 'In use' || (equipmentStatus === 'Available' && bookingForThisItemOnThisDate)) {
+                    availabilityText = t('in_use_on_date', currentLang, {date: forDate});
                     availabilityClass = 'bg-red-500';
-                } else if (item['Status for rent'] === 'Checking') {
-                    availabilityText = t('checking', currentLang); // Add translation for 'checking'
+                    cardBorderClass = 'border-red-300';
+                } else if (equipmentStatus === 'Checking') {
+                    availabilityText = t('checking', currentLang);
                     availabilityClass = 'bg-yellow-500';
-                } else if (item['Status for rent'] !== 'Available') { // Other non-available states
-                    availabilityText = t('not_available', currentLang); // Add translation for 'not_available'
-                    availabilityClass = 'bg-gray-500';
+                    cardBorderClass = 'border-yellow-300';
+                } else if (equipmentStatus === 'Available') {
+                    availabilityText = t('available_on_date', currentLang, {date: forDate});
+                    availabilityClass = 'bg-green-500';
+                    cardBorderClass = 'border-green-300';
+                    isBorrowable = true; 
+                } else { 
+                    availabilityText = t('status_' + (equipmentStatus || 'unknown').toLowerCase().replace(/\s+/g, '_'), currentLang, {status: equipmentStatus});
+                    availabilityClass = 'bg-gray-400';
+                    cardBorderClass = 'border-gray-300';
                 }
+
+                let levelWarningIcon = '';
+                if (equipmentStatus === 'Available' && !bookingForThisItemOnThisDate && !userCanMeetLevel && !isNaN(difficultyLevel)) {
+                    levelWarningIcon = `<i class="fas fa-exclamation-triangle text-yellow-500 ml-2" title="${t('level_too_low_short', currentLang)}"></i>`;
+                    isBorrowable = false; 
+                }
+
+                card.classList.add(cardBorderClass, 'border-l-4');
 
                 card.innerHTML = `
-                    <div class="equipment-image" data-fallback="${fallbackImageUrl}"></div>
+                    <div class="h-32 w-full flex items-center justify-center ${cardBorderClass.replace('border-l-4','').replace('border-','bg-')}-100 rounded-t-md p-2">
+                         <img src="${iconUrl}" alt="${equipment['Item Name'] || t('equipment_icon', currentLang)}" class="h-full w-auto max-h-24 max-w-full object-contain" onerror="this.onerror=null; this.src='${fallbackIconUrl}';">
+                    </div>
                     <div class="availability-badge ${availabilityClass} text-white">${availabilityText}</div>
-                    <div class="p-3">
-                        <h3 class="font-medium text-gray-800 truncate">${equipment['Item Name'] || 'N/A'}</h3>
+                    <div class="p-3 flex-grow">
+                        <h3 class="font-medium text-gray-800 truncate">${equipment['Item Name'] || 'N/A'}${levelWarningIcon}</h3>
                         <div class="flex items-center mt-1">
-                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${currentLang === 'zh' ? getCategoryNameChinese(equipment['Item Category']) : (equipment['Item Category'] || 'N/A')}</span>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${currentLang === 'zh' ? getCategoryNameChinese(category) : (category || 'N/A')}</span>
                         </div>
                         <div class="flex justify-between items-center mt-2">
                             <div class="text-xs text-gray-600">
                                 <span class="font-medium text-blue-600">${equipment.PointsPerDay || '50'}</span>
-                                <span data-i18n="points_per_day">積分/天</span>
+                                <span data-i18n="points_per_day">${t('points_per_day', currentLang)}</span>
                             </div>
-                            <div class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                                ${getDifficultyLevel(equipment.DifficultyLevel, currentLang)}
+                            <div class="text-xs ${(userCanMeetLevel) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-2 py-0.5 rounded-full">
+                                ${t('level_short', currentLang)} ${!isNaN(difficultyLevel) ? difficultyLevel : 'N/A'}
                             </div>
                         </div>
                     </div>
+                    <div class="p-3 border-t ${cardBorderClass.replace('border-l-4','')}">
+                        <button class="w-full text-sm py-2 rounded-md ${isBorrowable && userCanMeetLevel ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}" 
+                                ${!(isBorrowable && userCanMeetLevel) ? 'disabled' : ''} 
+                                onclick="window.showEquipmentDetail(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(equipment))}')))">
+                            ${isBorrowable && userCanMeetLevel ? t('view_and_borrow', currentLang) : t('view_details', currentLang)}
+                        </button>
+                    </div>
                 `;
-                
-                const imageContainer = card.querySelector('.equipment-image');
-                const img = new Image();
-                img.onload = () => {
-                    imageContainer.style.backgroundImage = `url('${imageUrl}')`;
-                };
-                img.onerror = () => {
-                    imageContainer.style.backgroundImage = `url('${fallbackImageUrl}')`;
-                };
-                img.src = imageUrl; // Start loading the image to trigger onload or onerror
-                
-                card.addEventListener('click', function() {
-                    showEquipmentDetail(equipment);
-                });
                 
                 return card;
             }
             
-            // 顯示設備詳情
-            function showEquipmentDetail(equipment) {
+            // Make showEquipmentDetail globally accessible or pass equipment data differently
+            window.showEquipmentDetail = function(equipment) {
                 const detail = document.getElementById('equipmentDetail');
                 const backdrop = document.getElementById('detailBackdrop');
-                
-                // 填充詳情
+                const currentLang = localStorage.getItem('language') || 'zh';
+                const currentUserData = JSON.parse(localStorage.getItem('currentUserData'));
+                const currentUserLevel = currentUserData ? parseInt(currentUserData.level) : 0;
+                const userPoints = currentUserData ? parseInt(currentUserData.points) : 0;
+
                 document.getElementById('detailTitle').textContent = equipment['Item Name'];
                 
-                const imageName = equipment['Item Name'].toLowerCase().replace(/\s+/g, '_');
-                const imageUrl = `assets/images/Item_image/${imageName}.jpg`;
+                let imageUrl;
+                const baseImageUrlPath = 'assets/images/Item_image/';
+                const equipmentImageURL = equipment.ImageURL ? equipment.ImageURL.trim() : '';
+                if (equipmentImageURL !== '') {
+                    imageUrl = baseImageUrlPath + equipmentImageURL;
+                } else {
+                    const generatedImageName = (equipment['Item Name'] || '').toLowerCase().replace(/\s+/g, '_').replace(/\//g, '-').replace(/[^a-z0-9_.-]/g, '');
+                    imageUrl = `${baseImageUrlPath}${generatedImageName}.jpg`;
+                }
                 const detailImage = document.getElementById('detailImage');
                 detailImage.src = imageUrl;
                 detailImage.onerror = function() {
-                    this.src = `https://dummyimage.com//400x200?text=${encodeURIComponent(equipment['Item Name'])}`;
+                    this.src = `https://dummyimage.com//400x200?text=${encodeURIComponent(equipment['Item Name'] || 'N/A')}`;
                 };
                 
                 document.getElementById('detailCategory').textContent = currentLang === 'zh' ? 
-                    getCategoryNameChinese(equipment['Item Category']) : equipment['Item Category'];
+                    getCategoryNameChinese(equipment['Item Category']) : (equipment['Item Category'] || 'N/A');
+                
+                const difficultyLevel = parseInt(equipment.DifficultyLevel);
                 document.getElementById('detailLevel').textContent = getDifficultyLevel(equipment.DifficultyLevel, currentLang);
-                document.getElementById('detailBrand').textContent = equipment.Brand;
-                document.getElementById('detailModel').textContent = equipment.Model || equipment['Item Name'].replace(equipment.Brand, '').trim();
+                document.getElementById('detailBrand').textContent = equipment.Brand || 'N/A';
+                document.getElementById('detailModel').textContent = equipment.Model || equipment['Item Name'].replace(equipment.Brand || '', '').trim() || 'N/A';
                 document.getElementById('detailPoints').textContent = equipment.PointsPerDay || '50';
                 
-                // 更新難度等級指示器
-                const difficultyLevel = parseInt(equipment.DifficultyLevel) || 1;
                 const levelIndicator = document.getElementById('levelIndicator');
                 levelIndicator.innerHTML = '';
-                
                 for (let i = 1; i <= 5; i++) {
                     const levelDot = document.createElement('div');
-                    levelDot.className = `w-6 h-6 rounded-full flex items-center justify-center text-white ${i === 5 ? '' : 'mr-1'}`;
-                    
-                    if (i <= difficultyLevel) {
-                        levelDot.classList.add('bg-green-500');
-                    } else {
-                        levelDot.classList.add('bg-gray-300');
-                    }
-                    
+                    levelDot.className = `w-6 h-6 rounded-full flex items-center justify-center text-white ${i === 5 ? '' : 'mr-1'} ${i <= difficultyLevel ? 'bg-green-500' : 'bg-gray-300'}`;
                     levelDot.textContent = i;
                     levelIndicator.appendChild(levelDot);
                 }
                 
-                // 檢查用戶等級是否足夠
                 const levelWarning = document.getElementById('levelWarning');
+                const pointsWarning = document.getElementById('pointsWarning'); // Assume you add this element
                 const borrowBtn = document.getElementById('borrowBtn');
-                
-                if (currentUserLevel < difficultyLevel) {
+                const selectedDate = document.getElementById('rentalDate').value; // Get current date from main page for context
+
+                levelWarning.classList.add('hidden');
+                if(pointsWarning) pointsWarning.classList.add('hidden');
+                borrowBtn.disabled = false;
+                borrowBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
+                borrowBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                borrowBtn.innerHTML = `<i class="fas fa-calendar-plus mr-2"></i> ${t('reserve_equipment', currentLang)}`;
+
+                let canBorrow = true;
+                let reason = '';
+
+                if (equipment['Status for rent'] === 'In use') {
+                    reason = t('status_in_use', currentLang);
+                    canBorrow = false;
+                } else if (equipment['Status for rent'] === 'Checking') {
+                    reason = t('status_checking', currentLang);
+                    canBorrow = false;
+                } else if (equipment['Status for rent'] !== 'Available') {
+                    reason = t('status_not_available_general', currentLang);
+                    canBorrow = false;
+                }
+
+                // Check booking for this specific item on the selected date (from main calendar)
+                // This is a re-check for detail view, ideally rental-booking.html handles final date selection
+                if (canBorrow && window.Database) {
+                    window.Database.loadBookingsData().then(allBookings => {
+                        const isBooked = allBookings.some(b => 
+                            b.ItemCode === equipment['Item Code'] && 
+                            b.BookingStatus === 'Confirmed' && 
+                            selectedDate >= b.StartDate && 
+                            selectedDate <= b.EndDate
+                        );
+                        if (isBooked) {
+                            reason = t('booked_on_selected_date', currentLang, {date: selectedDate});
+                            canBorrow = false;
+                            updateBorrowButtonState();
+                        }
+                    });
+                }
+
+                if (!isNaN(difficultyLevel) && currentUserLevel < difficultyLevel) {
+                    reason = t('level_too_low_detailed', currentLang, {reqLevel: difficultyLevel, courseLink: 'learning.html'}); // Hypothetical courseLink
+                    levelWarning.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i> ${reason}`;
                     levelWarning.classList.remove('hidden');
-                    borrowBtn.disabled = true;
-                    borrowBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                } else {
-                    levelWarning.classList.add('hidden');
-                    borrowBtn.disabled = false;
-                    borrowBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    canBorrow = false;
                 }
                 
-                // 設置借用按鈕事件
+                // Points check can be done here too if needed, or rely on rental-booking.html
+                // For now, just basic state setting
+                function updateBorrowButtonState() {
+                    if (!canBorrow) {
+                        borrowBtn.disabled = true;
+                        borrowBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
+                        borrowBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                        borrowBtn.innerHTML = reason || t('cannot_borrow', currentLang); // Add 'cannot_borrow' to lang.js
+                    }
+                }
+                updateBorrowButtonState(); // Initial call
+                
                 borrowBtn.onclick = function() {
-                    if (!borrowBtn.disabled) {
+                    if (canBorrow) {
                         window.location.href = `rental-booking.html?id=${equipment['Item Code']}`;
                     }
                 };
                 
-                // 顯示詳情卡片
                 detail.classList.add('show');
                 backdrop.classList.add('show');
-                
-                // 綁定關閉事件
-                document.getElementById('closeDetailBtn').setAttribute('aria-label', t('close', currentLang));
-                document.getElementById('closeDetailBtn').addEventListener('click', closeDetail);
-                backdrop.addEventListener('click', closeDetail);
-            }
-            
-            // 關閉詳情卡片
-            function closeDetail() {
-                const detail = document.getElementById('equipmentDetail');
-                const backdrop = document.getElementById('detailBackdrop');
-                
-                detail.classList.remove('show');
-                backdrop.classList.remove('show');
             }
             
             // 初始加載設備

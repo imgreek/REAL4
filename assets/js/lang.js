@@ -195,7 +195,36 @@ const translations = {
     switch_language: "切換語言",
     select_user_prompt: "請先選擇一個用戶",
     login_failed: "登入失敗，請檢查您的選擇或稍後重試。",
-    login_error: "登入過程中發生意外錯誤，請聯繫管理員。"
+    login_error: "登入過程中發生意外錯誤，請聯繫管理員。",
+    
+    // Equipment page specific from recent changes
+    equipment_icon: "器材圖標",
+    status_in_use: "使用中",
+    status_checking: "檢查中",
+    status_damaged: "已損壞",
+    status_unknown: "未知狀態 ({{status}})", 
+    level_too_low_short: "等級不足",
+    level_short: "等級",
+    view_and_borrow: "查看並預約",
+    available_on_date: "於 {{date}} 可借用",
+    in_use_on_date: "於 {{date}} 已借出",
+    status_not_available_general: "目前無法提供此設備",
+    level_too_low_detailed: "您的等級 ({{currentUserLevel}}) 不足，此設備要求等級 {{reqLevel}}。請前往<a href='{{courseLink}}' class='underline text-blue-600 hover:text-blue-800'>學習中心</a>提升等級。",
+    cannot_borrow: "無法預約",
+    booked_on_selected_date: "此設備在 {{date}} 已被預訂。",
+    no_matching_equipment_for_date: "在 {{date}} 沒有找到符合條件的設備。",
+    stabilizer: "穩定器", 
+    computer: "電腦",   
+    tripod: "三腳架/燈架",
+    communication: "通訊設備",
+    monitor: "監視器",
+    stroage: "儲存設備", 
+    utility: "實用工具",
+    video_equipment: "視訊設備", 
+    status_available: "可借用",
+    status_not_available: "無法借用",
+    status_fully_functional: "功能正常", 
+    status_missing: "遺失",
   },
   en: {
     // Common
@@ -392,18 +421,79 @@ const translations = {
     switch_language: "Switch Language",
     select_user_prompt: "Please select a user first.",
     login_failed: "Login failed. Please check your selection or try again later.",
-    login_error: "An unexpected error occurred during login. Please contact an administrator."
+    login_error: "An unexpected error occurred during login. Please contact an administrator.",
+    
+    // Equipment page specific from recent changes
+    equipment_icon: "Equipment Icon",
+    status_in_use: "In Use",
+    status_checking: "Checking",
+    status_damaged: "Damaged",
+    status_unknown: "Unknown Status ({{status}})", 
+    level_too_low_short: "Level Too Low",
+    level_short: "Lvl.",
+    view_and_borrow: "View & Borrow",
+    available_on_date: "Available on {{date}}",
+    in_use_on_date: "In use on {{date}}",
+    status_not_available_general: "This equipment is currently unavailable.",
+    level_too_low_detailed: "Your level ({{currentUserLevel}}) is not sufficient. This equipment requires level {{reqLevel}}. Please visit the <a href='{{courseLink}}' class='underline text-blue-600 hover:text-blue-800'>Learning Center</a> to level up.",
+    cannot_borrow: "Cannot Borrow",
+    booked_on_selected_date: "Booked on {{date}}.",
+    no_matching_equipment_for_date: "No matching equipment found for {{date}}.", 
+    stabilizer: "Stabilizer", 
+    computer: "Computer",   
+    tripod: "Tripod/Lightstand",
+    communication: "Communication",
+    monitor: "Monitor",
+    stroage: "Storage", 
+    utility: "Utility",
+    video_equipment: "Video Equipment", 
+    status_available: "Available",
+    status_not_available: "Not Available",
+    status_fully_functional: "Fully Functional", 
+    status_missing: "Missing",
   }
 };
 
 // Function to get translation
-function t(key, lang) {
+function t(key, lang, options = {}) {
   let currentLang = lang || localStorage.getItem('language') || 'zh';
-  // 確保 currentLang 是支持的語言，否則回退到 'zh'
+  
+  // Fallback to 'zh' if currentLang is not a valid key in translations
   if (!translations[currentLang]) {
+    // console.warn(`Language "${currentLang}" not found in translations, falling back to 'zh'.`);
     currentLang = 'zh';
   }
-  return translations[currentLang][key] || key;
+
+  let translation = '';
+  // Try to get translation for the current language
+  if (translations[currentLang] && typeof translations[currentLang][key] !== 'undefined') {
+    translation = translations[currentLang][key];
+  } else {
+    // Fallback to English if current language or key is missing, and currentLang is not English
+    if (currentLang !== 'en' && translations['en'] && typeof translations['en'][key] !== 'undefined') {
+        // console.warn(`Key "${key}" not found for lang "${currentLang}", falling back to 'en'.`);
+        translation = translations['en'][key];
+    } 
+    // Fallback to Chinese if English also missing or currentLang is English but key missing, and currentLang is not Chinese
+    else if (currentLang !== 'zh' && translations['zh'] && typeof translations['zh'][key] !== 'undefined') {
+        // console.warn(`Key "${key}" not found for lang "${currentLang}" or 'en', falling back to 'zh'.`);
+        translation = translations['zh'][key];
+    } else {
+        // If key not found in current, en, or zh, return the key itself as a last resort
+        // console.warn(`Key "${key}" not found in any configured language, returning key.`);
+        translation = key;
+    }
+  }
+
+  // Perform placeholder replacement
+  if (typeof translation === 'string') {
+    for (const placeholder in options) {
+      if (Object.hasOwnProperty.call(options, placeholder)) {
+        translation = translation.replace(new RegExp(`{{${placeholder}}}`, 'g'), options[placeholder]);
+      }
+    }
+  }
+  return translation;
 }
 
 // Function to switch language

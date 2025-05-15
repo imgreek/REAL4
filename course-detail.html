@@ -186,7 +186,8 @@
     let courseStages = [];
     let pageCurrentLang = localStorage.getItem('language') || 'zh';
     let currentUser = ''; 
-    let courseFileIdentifier = ''; 
+    let courseFileIdentifier = ''; // Original MD filename (e.g., "DJI Pocket 3") for loading JSON
+    let actualCourseId = ''; // The true ID from courses.csv (e.g., "C001") for progress tracking
 
     document.addEventListener('DOMContentLoaded', async function() {
         currentUser = localStorage.getItem('currentUser');
@@ -195,8 +196,9 @@
         applyTranslations(); 
 
         const urlParams = new URLSearchParams(window.location.search);
-        const courseFile = urlParams.get('file');
-        courseFileIdentifier = courseFile ? courseFile.replace('.md', '') : '';
+        const courseFileFromUrl = urlParams.get('file'); // e.g., "DJI Pocket 3.md"
+        actualCourseId = urlParams.get('courseId'); // e.g., "C001"
+        courseFileIdentifier = courseFileFromUrl ? courseFileFromUrl.replace('.md', '') : '';
         const courseTitleFromURL = urlParams.get('title');
 
         const pageTitleEl = document.getElementById('coursePageTitle');
@@ -215,7 +217,7 @@
             await window.Database.init(); // Attempt to initialize if not ready
         }
 
-        if (courseFileIdentifier) {
+        if (courseFileIdentifier && actualCourseId) { // Need both to proceed with course content and progress
             const jsonPath = `assets/database/learn_json/${courseFileIdentifier}.json`;
             try {
                 const response = await fetch(jsonPath);
@@ -228,7 +230,7 @@
                     courseStages = courseSpecificData.stages;
                     if (currentUser) {
                         const { passedStages: userPassedStageIds, courseCompleted: isCourseMarkedCompleted } = 
-                            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+                            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId); // Use actualCourseId
                         
                         if (isCourseMarkedCompleted && courseStages.length > 0) {
                             currentStageIndex = courseStages.length; 
@@ -305,13 +307,13 @@
         const stage = courseStages[stageIndex];
         const courseContentEl = document.getElementById('courseContent');
         
-        const { passedStages: userPassedStageIds } = (currentUser && courseFileIdentifier && window.Database) ? 
-            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier) : { passedStages: [] };
+        const { passedStages: userPassedStageIds } = (currentUser && actualCourseId && window.Database) ? 
+            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId) : { passedStages: [] };
         const isStageQuizPassed = userPassedStageIds.includes(stage.id.toString());
         
         let isStageAccessible = true;
-        if (stageIndex > 0 && currentUser && courseFileIdentifier && window.Database) {
-            const prevStageProgress = window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+        if (stageIndex > 0 && currentUser && actualCourseId && window.Database) {
+            const prevStageProgress = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
             const prevStageId = courseStages[stageIndex - 1].id.toString();
             if (!prevStageProgress.passedStages.includes(prevStageId)) {
                 isStageAccessible = false;
@@ -371,7 +373,7 @@
     }
 
     function handleQuizSubmit(stageId, correctAnswerIndex) {
-        if (!currentUser || !courseFileIdentifier || !window.Database) {
+        if (!currentUser || !actualCourseId || !window.Database) {
             alert(t('login_to_save_progress_alert', pageCurrentLang || 'zh'));
             // Simulate visual feedback without saving (copied from previous version)
             const form = document.getElementById(`quizForm_${stageId}`);
@@ -418,12 +420,12 @@
             resultEl.textContent = t('correct_answer_next_stage', pageCurrentLang);
             resultEl.className = 'mt-3 text-sm font-medium text-green-600';
             
-            window.Database.saveUserStagePass(currentUser, courseFileIdentifier, stageId.toString());
+            window.Database.saveUserStagePass(currentUser, actualCourseId, stageId.toString());
             
-            const { passedStages: updatedPassedStages } = window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+            const { passedStages: updatedPassedStages } = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
             const isNowCourseCompleted = updatedPassedStages.length === courseStages.length;
             const progressPercentage = courseStages.length > 0 ? (updatedPassedStages.length / courseStages.length) * 100 : 0;
-            window.Database.updateUserCourseOverallProgress(currentUser, courseFileIdentifier, progressPercentage, isNowCourseCompleted);
+            window.Database.updateUserCourseOverallProgress(currentUser, actualCourseId, progressPercentage, isNowCourseCompleted);
 
             if(nextBtn) nextBtn.disabled = false;
             Array.from(form.elements).forEach(el => el.disabled = true);
@@ -452,8 +454,8 @@
 
         if (!prevBtn || !nextBtn || !completionMessageEl || !courseNavigationEl || !courseContentEl) return;
 
-        const { passedStages: userPassedStageIds, courseCompleted: isCourseOverallCompleted } = (currentUser && courseFileIdentifier && window.Database) ? 
-            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier) : { passedStages: [], courseCompleted: false };
+        const { passedStages: userPassedStageIds, courseCompleted: isCourseOverallCompleted } = (currentUser && actualCourseId && window.Database) ? 
+            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId) : { passedStages: [], courseCompleted: false };
 
         if (isCourseOverallCompleted && courseStages.length > 0) {
             courseContentEl.innerHTML = ''; 
@@ -501,9 +503,9 @@
     }
 
     function handleNextStage() {
-        if (!window.Database) return;
-        const { courseCompleted: isCourseMarkedCompleted } = (currentUser && courseFileIdentifier) ? 
-            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier) : { courseCompleted: false };
+        if (!window.Database || !currentUser || !actualCourseId) return;
+        const { courseCompleted: isCourseMarkedCompleted } = 
+            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
 
         if (isCourseMarkedCompleted) return; 
 
@@ -511,18 +513,16 @@
             currentStageIndex++;
             renderStage(currentStageIndex);
         } else if (currentStageIndex === courseStages.length - 1) {             
-            if (currentUser && courseFileIdentifier) {
-                const { passedStages: userPassedStageIds } = window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
-                const allPassed = courseStages.every(s => userPassedStageIds.includes(s.id.toString()));
-                if (allPassed) {
-                    const progressPercentage = 100;
-                    window.Database.updateUserCourseOverallProgress(currentUser, courseFileIdentifier, progressPercentage, true);
-                    console.log("Course marked as completed via Database module!");
-                } else {
-                    console.warn("Attempted to complete course, but not all stages are marked as passed (DB check).");
-                    renderStage(currentStageIndex);
-                    return;
-                }
+            const { passedStages: userPassedStageIds } = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
+            const allPassed = courseStages.every(s => userPassedStageIds.includes(s.id.toString()));
+            if (allPassed) {
+                const progressPercentage = 100;
+                window.Database.updateUserCourseOverallProgress(currentUser, actualCourseId, progressPercentage, true);
+                console.log("Course marked as completed via Database module using actualCourseId:", actualCourseId);
+            } else {
+                console.warn("Attempted to complete course, but not all stages are marked as passed (DB check).");
+                renderStage(currentStageIndex);
+                return;
             }
             currentStageIndex++; 
             renderStage(currentStageIndex); 

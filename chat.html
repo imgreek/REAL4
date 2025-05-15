@@ -461,27 +461,52 @@
         // 填充訊息
         function renderMessages(chatId) {
             const messageContainerEl = document.getElementById('messageContainer');
+            if (!messageContainerEl) return;
             messageContainerEl.innerHTML = '';
             
             const chatMessages = messages[chatId] || [];
-            
+            const currentChat = chats.find(c => c.id === chatId);
+            const isGroupChat = currentChat && currentChat.type === 'group';
+
             chatMessages.forEach(message => {
-                const isSent = message.sender === currentUser;
+                const isSentByCurrentUser = message.sender === currentUser;
+                const senderInfo = users[message.sender] || { name: 'Unknown User', avatar: 'https://dummyimage.com/32?text=?' };
+                const senderName = isSentByCurrentUser ? t('you', currentLang) : senderInfo.name; // lang.js 需要 'you'
+
                 const messageEl = document.createElement('div');
-                messageEl.className = `message ${isSent ? 'message-sent' : 'message-received'}`;
+                messageEl.className = `message-bubble flex mb-3 ${isSentByCurrentUser ? 'justify-end' : 'justify-start'}`;
                 
+                let nameDisplayHTML = '';
+                // 只在群聊中非當前用戶發送的消息上方顯示名字
+                if (isGroupChat && !isSentByCurrentUser) {
+                    nameDisplayHTML = `<div class="text-xs text-gray-500 mb-1 ml-10">${senderName}</div>`;
+                } else if (!isGroupChat && !isSentByCurrentUser) {
+                    // 一對一聊天，如果是對方發的，也可以考慮顯示名字，或者根據UI設計決定
+                    // nameDisplayHTML = `<div class="text-xs text-gray-500 mb-1 ml-10">${senderName}</div>`; 
+                }
+
                 // 處理換行符
                 const formattedContent = message.content.replace(/\n/g, '<br>');
-                
+
                 messageEl.innerHTML = `
-                    <div>${formattedContent}</div>
-                    <div class="message-time text-right">${message.timestamp}</div>
+                    <div class="flex items-end ${isSentByCurrentUser ? 'flex-row-reverse' : ''}">
+                        ${!isSentByCurrentUser ? 
+                            `<div class="user-avatar w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ${isSentByCurrentUser ? 'ml-2' : 'mr-2'}">
+                                <img src="${senderInfo.avatar}" alt="${senderInfo.name}" class="w-full h-full object-cover">
+                            </div>` : ''}
+                        <div class="max-w-[70%]">
+                            ${nameDisplayHTML}
+                            <div class="message ${isSentByCurrentUser ? 'message-sent' : 'message-received'}">
+                                <div>${formattedContent}</div>
+                                <div class="message-time text-right mt-1">${message.timestamp}</div>
+                            </div>
+                        </div>
+                    </div>
                 `;
                 
                 messageContainerEl.appendChild(messageEl);
             });
             
-            // 滾動到底部
             messageContainerEl.scrollTop = messageContainerEl.scrollHeight;
         }
 

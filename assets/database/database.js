@@ -259,7 +259,6 @@ window.Database = (function() {
     async function initialize() {
         console.log("Database: Full Initialization Starting...");
         
-        // Load static data first
         equipment = await fetchAndParseCsv(EQUIPMENT_CSV_PATH);
         localStorage.setItem('db_equipment', JSON.stringify(equipment));
         console.log("Database: Equipment loaded.", equipment.length);
@@ -268,11 +267,10 @@ window.Database = (function() {
         localStorage.setItem('db_users', JSON.stringify(users));
         console.log("Database: Users loaded.", users.length);
 
-        courses = await fetchAndParseCsv(COURSES_CSV_PATH); // Basic course info
+        courses = await fetchAndParseCsv(COURSES_CSV_PATH);
         localStorage.setItem('db_courses', JSON.stringify(courses));
         console.log("Database: Basic Courses info loaded.", courses.length);
 
-        // Load data that might be initially empty or user-specific later
         bookings = await fetchAndParseCsv(BOOKINGS_CSV_PATH);
         localStorage.setItem('db_bookings', JSON.stringify(bookings));
         console.log("Database: Bookings loaded.", bookings.length);
@@ -281,20 +279,20 @@ window.Database = (function() {
         localStorage.setItem('db_rentalHistory', JSON.stringify(rentalHistory));
         console.log("Database: Rental History loaded.", rentalHistory.length);
 
-        // Load Learning Progress from localStorage (as it's more dynamic and UI-driven)
-        const storedStageProgress = localStorage.getItem('db_stageProgressData');
+        // Load Learning Progress from localStorage (keys will now be userId_actualCourseId)
+        const storedStageProgress = localStorage.getItem('db_stageProgressData'); // Key: userId_actualCourseId
         if (storedStageProgress) {
             stageProgressData = JSON.parse(storedStageProgress);
         } else {
-            stageProgressData = {}; // Initialize if not found
+            stageProgressData = {}; 
         }
         console.log("Database: Stage progress loaded from localStorage.", Object.keys(stageProgressData).length);
 
-        const storedOverallProgress = localStorage.getItem('db_overallProgressData');
+        const storedOverallProgress = localStorage.getItem('db_overallProgressData'); // Key: userId -> { actualCourseId: {progress, completed} }
         if (storedOverallProgress) {
             overallProgressData = JSON.parse(storedOverallProgress);
         } else {
-            overallProgressData = {}; // Initialize
+            overallProgressData = {}; 
         }
         console.log("Database: Overall course progress loaded from localStorage.", Object.keys(overallProgressData).length);
         
@@ -306,10 +304,10 @@ window.Database = (function() {
     function _simulateSaveStageProgressToCsv() {
         let csvRows = [];
         const now = new Date().toISOString();
-        for (const userCourseKey in stageProgressData) {
-            const [userId, courseId] = userCourseKey.split('_');
+        for (const userCourseKey in stageProgressData) { // userCourseKey is now userId_actualCourseId
+            const [userId, actualCourseId] = userCourseKey.split('_');
             stageProgressData[userCourseKey].passedStages.forEach(stageId => {
-                csvRows.push({ userId, courseId, stageId, timestamp: now });
+                csvRows.push({ userId, courseId: actualCourseId, stageId, timestamp: now }); // Use actualCourseId for courseId column
             });
         }
         const csvString = arrayToCsv(csvRows, ['userId', 'courseId', 'stageId', 'timestamp']);
@@ -321,11 +319,11 @@ window.Database = (function() {
         let csvRows = [];
         const now = new Date().toISOString();
         for (const userId in overallProgressData) {
-            for (const courseId in overallProgressData[userId]) {
-                const data = overallProgressData[userId][courseId];
+            for (const actualCourseId in overallProgressData[userId]) { // Key is now actualCourseId
+                const data = overallProgressData[userId][actualCourseId];
                 csvRows.push({
                     userId,
-                    courseId,
+                    courseId: actualCourseId, // Use actualCourseId for courseId column
                     progress_percentage: data.progress,
                     completed_status: data.completed,
                     last_updated_timestamp: now
@@ -421,47 +419,44 @@ window.Database = (function() {
         },
 
         // --- Learning System (Original and New) ---
-        getAllCourses: async function() { // For basic course info from courses.csv
-            if (courses.length === 0) courses = await fetchAndParseCsv(COURSES_CSV_PATH);
+        getAllCourses: async function() { 
+            if (courses.length === 0) {
+                 try { courses = await fetchAndParseCsv(COURSES_CSV_PATH); localStorage.setItem('db_courses', JSON.stringify(courses)); } catch(e){ const c =localStorage.getItem('db_courses'); if(c)courses=JSON.parse(c);}
+            }
             return courses;
         },
-        // Legacy function name from original, maps to new overall progress getter
+        
         getUserLearningProgress: async function(userId) { 
-             // This used to load earning_progress.csv. Now it should reflect the overall progress structure.
-             // For compatibility, we can try to structure its output similarly if needed,
-             // or other pages should adapt to use getAllUserOverallProgress.
-             // For now, let's return the structure from getAllUserOverallProgress.
              if (!userId) return [];
-             const userOverall = publicApi.getAllUserOverallProgress(userId); // This is synchronous
-             // Convert it to an array format if the old system expected an array [{courseId, progress, completed}, ...]
-             return Object.entries(userOverall).map(([courseId, data]) => ({
+             const userOverall = publicApi.getAllUserOverallProgress(userId); 
+             return Object.entries(userOverall).map(([actualCourseId, data]) => ({
                  userId: userId,
-                 courseId: courseId, // this is courseFileIdentifier
+                 courseId: actualCourseId, // This is the actualCourseId (e.g., "C001")
                  progress: data.progress.toString(),
                  completed: data.completed.toString() 
              }));
         },
 
         // --- New Learning Progress Specific Functions ---
-        getUserStageSpecificProgress: function(userId, courseFileIdentifier) {
-            if (!userId || !courseFileIdentifier) return { passedStages: [], courseCompleted: false };
-            const key = `${userId}_${courseFileIdentifier}`;
+        getUserStageSpecificProgress: function(userId, actualCourseId) { // Param is now actualCourseId
+            if (!userId || !actualCourseId) return { passedStages: [], courseCompleted: false };
+            const key = `${userId}_${actualCourseId}`;
             return stageProgressData[key] || { passedStages: [], courseCompleted: false };
         },
         
-        getUserOverallCourseProgress: function(userId, courseFileIdentifier) { // Specific course
-            if (!userId || !courseFileIdentifier) return { progress: 0, completed: false };
-            return (overallProgressData[userId] && overallProgressData[userId][courseFileIdentifier]) || { progress: 0, completed: false };
+        getUserOverallCourseProgress: function(userId, actualCourseId) { // Param is now actualCourseId
+            if (!userId || !actualCourseId) return { progress: 0, completed: false };
+            return (overallProgressData[userId] && overallProgressData[userId][actualCourseId]) || { progress: 0, completed: false };
         },
 
-        getAllUserOverallProgress: function(userId) { // All courses for a user
+        getAllUserOverallProgress: function(userId) { // Internal keys are now actualCourseId
             if (!userId) return {};
             return overallProgressData[userId] || {};
         },
 
-        saveUserStagePass: function(userId, courseFileIdentifier, stageId) {
-            if (!userId || !courseFileIdentifier || !stageId) return false;
-            const key = `${userId}_${courseFileIdentifier}`;
+        saveUserStagePass: function(userId, actualCourseId, stageId) { // Param is now actualCourseId
+            if (!userId || !actualCourseId || !stageId) return false;
+            const key = `${userId}_${actualCourseId}`;
             if (!stageProgressData[key]) {
                 stageProgressData[key] = { passedStages: [], courseCompleted: false };
             }
@@ -469,25 +464,25 @@ window.Database = (function() {
                 stageProgressData[key].passedStages.push(stageId.toString());
                 localStorage.setItem('db_stageProgressData', JSON.stringify(stageProgressData));
                 _simulateSaveStageProgressToCsv();
-                console.log(`Database: Stage ${stageId} for ${courseFileIdentifier} saved for ${userId}.`);
+                console.log(`Database: Stage ${stageId} for course ${actualCourseId} saved for ${userId}.`);
                 return true;
             }
             return false; 
         },
 
-        updateUserCourseOverallProgress: function(userId, courseFileIdentifier, progressPercentage, isCourseCompleted) {
-            if (!userId || !courseFileIdentifier) return false;
+        updateUserCourseOverallProgress: function(userId, actualCourseId, progressPercentage, isCourseCompleted) { // Param is now actualCourseId
+            if (!userId || !actualCourseId) return false;
             if (!overallProgressData[userId]) {
                 overallProgressData[userId] = {};
             }
-            overallProgressData[userId][courseFileIdentifier] = {
+            overallProgressData[userId][actualCourseId] = {
                 progress: Math.round(progressPercentage),
                 completed: isCourseCompleted
             };
             localStorage.setItem('db_overallProgressData', JSON.stringify(overallProgressData));
             _simulateSaveOverallProgressToCsv();
             
-            const stageProgressKey = `${userId}_${courseFileIdentifier}`;
+            const stageProgressKey = `${userId}_${actualCourseId}`;
             if(stageProgressData[stageProgressKey]) {
                 if(stageProgressData[stageProgressKey].courseCompleted !== isCourseCompleted && isCourseCompleted){
                     stageProgressData[stageProgressKey].courseCompleted = isCourseCompleted;
@@ -495,38 +490,28 @@ window.Database = (function() {
                 }
             } else if (isCourseCompleted) { 
                  stageProgressData[stageProgressKey] = { passedStages: [], courseCompleted: true }; 
-                 // If marking course complete overall, but no prior stage data, assume all stages are passed for this context.
-                 // Or, this state might indicate an issue if a course can only be completed by passing stages.
-                 // For now, just ensure the courseCompleted flag is set in stageProgressData.
-                 const courseInfo = courses.find(c => (c.contentPath ? c.contentPath.split('/').pop().replace('.md','') : c.courseId) === courseFileIdentifier);
-                 if (courseInfo) { // Try to get stages from course JSON if possible (not directly available here)
-                    // This part is complex as stage info (number of stages) isn't directly in database.js from courses.csv
-                    // We rely on course-detail.html to provide the full list of stages for a course.
-                    // For simplicity, if overall is marked completed, we just ensure the flag is true here.
-                 }
+                 // Logic for populating passedStages if course is directly marked complete might be needed if courses can have 0 stages.
+                 // For now, this ensures the courseCompleted flag is set.
                  localStorage.setItem('db_stageProgressData', JSON.stringify(stageProgressData));
             }
-            console.log(`Database: Overall progress for ${courseFileIdentifier} (User: ${userId}) to ${progressPercentage}%, Completed: ${isCourseCompleted}.`);
+            console.log(`Database: Overall progress for ${actualCourseId} (User: ${userId}) to ${progressPercentage}%, Completed: ${isCourseCompleted}.`);
             return true;
         },
 
         // --- Session Management ---
-        initUserSession: async function(userId) { // From original
+        initUserSession: async function(userId) { 
             try {
                 const userData = await publicApi.getCurrentUserData(userId);
                 if (!userData) throw new Error('用戶不存在');
                 
-                const userRentalHistory = await publicApi.getUserRentalHistory(userId); // Use renamed var
-                const userBookings = await publicApi.getUserBookings(userId); // Use renamed var
-                
-                // For learning progress, we can use the new more granular data or the overall.
-                // Let's stick to the overall for this session summary for now, similar to original.
-                const userLearningProgress = await publicApi.getUserLearningProgress(userId); // Uses the new overall data
+                const userRentalHistory = await publicApi.getUserRentalHistory(userId); 
+                const userBookings = await publicApi.getUserBookings(userId); 
+                const userLearningProgress = await publicApi.getUserLearningProgress(userId); // This now returns items with actualCourseId
                 
                 localStorage.setItem('currentUserData', JSON.stringify(userData));
-                localStorage.setItem('rentalHistory', JSON.stringify(userRentalHistory)); // Use renamed var
-                localStorage.setItem('bookings', JSON.stringify(userBookings)); // Use renamed var
-                localStorage.setItem('learningProgress', JSON.stringify(userLearningProgress)); // This is now overall progress
+                localStorage.setItem('rentalHistory', JSON.stringify(userRentalHistory)); 
+                localStorage.setItem('bookings', JSON.stringify(userBookings)); 
+                localStorage.setItem('learningProgress', JSON.stringify(userLearningProgress)); 
                 
                 console.log(`Database: User session initialized for ${userId}.`);
                 return {
