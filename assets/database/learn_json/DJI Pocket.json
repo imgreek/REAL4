@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=nNapondAUWc",
+      "intro_zh": "長按電源鍵開/關機。首次使用需透過DJI Mimo App與手機連線啟動裝置。按下拍照/錄影鍵即可快速拍攝。拖動觸控螢幕或使用遙桿調整鏡頭方向。",
+      "intro_en": "Long press the power button to power on/off. For initial use, connect to your smartphone with the DJI Mimo App to activate. Press the photo/video button to quickly take photos or record videos. Use the touchscreen or joystick to adjust the camera angle.",
+      "quiz": {
+        "question_zh": "DJI Pocket 是哪一類型的裝置？",
+        "question_en": "What type of device is the DJI Pocket?",
+        "options_zh": ["平板電腦", "三軸穩定相機", "無人機"],
+        "options_en": ["Tablet", "3-axis gimbal camera", "Drone"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://support.dji.com/help/content?customId=zh-cn03400009024&spaceId=34&re=CN&lang=zh-CN&documentType=artical&paperDocType=paper",
+      "intro_zh": "切換至跟隨/鎖定/FPV等三種雲台模式。在專用菜單啟用定格或運動延時攝影。啟用全景功能自動拍攝多張組合大片。在觸控螢幕框選主體，啟動ActiveTrack智能跟隨。",
+      "intro_en": "Switch gimbal between Follow, Lock, and FPV modes for different moves. Use the menu to enable Timelapse or Motionlapse shooting. Activate panorama to auto-capture multiple images and stitch them. Use touch screen to select a subject and enable ActiveTrack for tracking.",
+      "quiz": {
+        "question_zh": "DJI Pocket 支援下列哪種運鏡模式？",
+        "question_en": "Which movement mode does DJI Pocket support?",
+        "options_zh": ["跟隨模式", "游戲模式", "VR模式"],
+        "options_en": ["Follow", "Game mode", "VR mode"],
+        "correct_answer_index": 0
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://dl.djicdn.com/downloads/DJI_Pocket_2/20210325UM/DJI_Pocket_2_User_Manual_v1.2_CHT_20210325.pdf",
+      "intro_zh": "插上手機連接器、開啟DJI Mimo實時預覽與影像剪輯。安裝無線模組可遠端遙控與WiFi檔案傳輸。將機身連接電腦或透過手機APP備份到雲端。使用專用轉接頭輸出HDMI畫面到大螢幕教學或展示。",
+      "intro_en": "Attach smartphone connector and use DJI Mimo for real-time preview and editing. Add the wireless module for remote control and WiFi file transfer. Connect the device to a computer or use the app to back up files to the cloud. Use a special adapter to output HDMI video to a large screen for teaching or showcasing.",
+      "quiz": {
+        "question_zh": "要用手機APP即時預覽需用什麼？",
+        "question_en": "What do you need for real-time preview on phone app?",
+        "options_zh": ["HDMI線", "手機連接器", "SD卡"],
+        "options_en": ["HDMI cable", "Smartphone connector", "SD card"],
+        "correct_answer_index": 1
+      }
+    }
+  ]
+}

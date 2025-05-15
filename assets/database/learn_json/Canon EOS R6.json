@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=4FvBNzLTVek",
+      "intro_zh": "打開底部電池艙，插入電池和SD卡。向右撥動開關開啟相機，按螢幕指示設定語言、日期與時間。將鏡頭紅點對準機身紅點，輕轉固定。半按快門鍵自動對焦，全按拍照。",
+      "intro_en": "Open the battery compartment at the bottom, insert the battery and SD card. Flip the switch to the right to turn on the camera, then set language, date, and time as prompted. Align the red dot on the lens with the camera body, gently twist until it clicks. Half-press the shutter to focus, press fully to take a photo.",
+      "quiz": {
+        "question_zh": "Canon EOS R6感光元件屬於哪一種類型？",
+        "question_en": "What type of sensor does the Canon EOS R6 use?",
+        "options_zh": ["APS-C", "1英吋", "全片幅"],
+        "options_en": ["APS-C", "1 inch", "Full-frame"],
+        "correct_answer_index": 2
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=y-mBrssGkd8",
+      "intro_zh": "轉盤或選單設定選擇連拍或單張拍攝。轉到錄影模式，選擇4K畫質開始錄影。選擇單點AF、區域AF或人臉/眼睛優先追蹤。菜單中可開啟或關閉防震（IBIS）功能。透過設定選單連線到手機或平板。",
+      "intro_en": "Use the dial or menu to choose single or burst shooting mode. Turn to video mode, select 4K quality and start recording. Choose single point, zone, or face/eye detection autofocus. In the menu, enable or disable the In-Body Image Stabilization (IBIS). Connect to your phone or tablet via menu settings.",
+      "quiz": {
+        "question_zh": "EOS R6最高可錄製什麼畫質影片？",
+        "question_en": "What is the maximum video resolution of EOS R6?",
+        "options_zh": ["1080P", "4K", "8K"],
+        "options_en": ["1080P", "4K", "8K"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=UvsZvlTGphg",
+      "intro_zh": "在手機安裝並開啟Camera Connect，依畫面步驟配對。選擇遙控功能，可用手機螢幕操控相機拍照與錄影。選取檔案後快速傳到手機相簿編輯分享。透過麥克風端口或熱靴安裝外接設備。用USB-C傳輸線將檔案直接匯入電腦。",
+      "intro_en": "Install and open Camera Connect on your phone, follow on-screen pairing instructions. Select the remote function to control photo/video shooting from your phone. Choose files to quickly transfer to your phone gallery for editing and sharing. Connect external devices via mic jack or hot shoe. Use a USB-C cable to import files to your computer.",
+      "quiz": {
+        "question_zh": "哪個App可手機連線EOS R6？",
+        "question_en": "Which App connects EOS R6 to a smartphone?",
+        "options_zh": ["Camera Connect", "Canon Print", "Zoom"],
+        "options_en": ["Camera Connect", "Canon Print", "Zoom"],
+        "correct_answer_index": 0
+      }
+    }
+  ]
+}

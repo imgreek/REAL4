@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - 首頁</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .module-card {
+            background-color: var(--secondary-color);
+            transition: all 0.3s ease;
+            height: 160px;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        .profile-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .ai-assistant-btn {
+            background-color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        .ai-assistant-btn:hover {
+            background-color: #00a896;
+            transform: scale(1.05);
+        }
+        .qr-scan-btn {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        .qr-scan-btn:hover {
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <img src="assets/images/App_Logo/REAL_LOGO.PNG" alt="REAL Logo" class="h-8">
+        <h1 class="text-xl font-bold" data-i18n="home">首頁</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <a href="chat.html" id="chat-link" class="text-white hover:text-gray-200 mr-3" aria-label="Chat Room" title="Chat Room" data-i18n-aria-label="chat_room_label" data-i18n-title="chat_room_label"><i class="fas fa-comments"></i></a>
+            <a href="qr-scanner.html" class="text-white" aria-label="QR碼掃描" data-i18n-aria="qr_scanner">
+                <i class="fas fa-qrcode text-lg"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-4">
+        <!-- 用戶資訊卡 -->
+        <div class="profile-card p-4 mb-6">
+            <div class="flex items-center">
+                <div class="w-14 h-14 rounded-full bg-gray-200 overflow-hidden mr-4">
+                    <img src="assets/images/user_icon/user_profile.png" alt="用戶頭像" class="w-full h-full object-cover" onerror="this.src='https://dummyimage.com//56?text=用戶'">
+                </div>
+                <div>
+                    <h2 class="text-lg font-semibold user-name">載入中...</h2>
+                    <div class="flex items-center text-sm text-gray-600">
+                        <span class="mr-4"><i class="fas fa-star mr-1 text-yellow-500"></i><span id="userPoints">0</span> <span data-i18n="points">積分</span></span>
+                        <span><i class="fas fa-trophy mr-1 text-blue-500"></i><span id="userLevelText">Level</span> <span id="userLevel">0</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <h3 class="text-sm font-medium text-gray-700 mb-2" data-i18n="recent_status">借用狀態</h3>
+                <div id="rentalStatus">
+                    <div id="noRentalMessage" class="text-center py-4 text-gray-500" data-i18n="no_equipment">目前沒有借用中的設備</div>
+                </div>
+            </div>
+        </div>
+        <!-- 進行中課程 -->
+        <h3 class="text-lg font-medium text-gray-700 mb-3" data-i18n="ongoing_courses">進行中課程</h3>
+        <div id="ongoingCourses" class="space-y-4 mb-8">
+            <!-- 這裡將由JavaScript動態填充 -->
+            <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-medium text-gray-800">Canon R7 基礎視頻拍攝</h4>
+                        <p class="text-sm text-gray-600 mt-1">中級 · 5 個單元</p>
+                    </div>
+                    <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full" data-i18n="in_progress">進行中</div>
+                </div>
+                <div class="mt-3">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 30%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1"><span data-i18n="progress">進度</span>: 30%</p>
+                </div>
+                <button class="mt-3 w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-lg" data-i18n="continue_learning">
+                    繼續學習
+                </button>
+            </div>
+        </div>
+
+        <!-- AI助手按鈕 -->
+        <div class="fixed right-4 bottom-20">
+            <button id="aiAssistantBtn" class="ai-assistant-btn text-white p-4 rounded-full shadow-lg" aria-label="AI助手" title="AI助手">
+                <i class="fas fa-robot text-xl"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center active">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <!-- AI助手側邊欄 (默認隱藏) -->
+    <div id="aiSidebar" class="fixed top-0 right-0 h-full w-4/5 max-w-md bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="p-4 bg-teal-500 text-white flex justify-between items-center">
+            <h2 class="text-xl font-bold" id="aiAssistantTitle">RIO AI 助手</h2>
+            <button id="closeAiBtn" class="text-white" aria-label="Close">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-4 h-[calc(100%-6rem)] overflow-y-auto">
+            <div class="bg-gray-100 rounded-lg p-3 mb-3">
+                <p class="text-gray-700" id="aiGreeting">你好！我是 RIO AI，您的媒體設備專家。有什麼我可以幫助您的嗎？</p>
+            </div>
+            <div id="aiChat" class="space-y-3">
+                <!-- AI聊天內容將在這裡動態填充 -->
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 bg-white">
+            <div class="flex items-center">
+                <input type="text" id="aiInput" class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="輸入您的問題..." data-i18n-placeholder="message_placeholder">
+                <button id="aiSendBtn" class="ml-2 bg-teal-500 text-white p-2 rounded-lg" aria-label="Send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 在頭部添加數據庫腳本引用 -->
+    <script src="assets/database/database.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply language translations
+            applyTranslations();
+            
+            // Language switcher
+            const currentLang = localStorage.getItem('language') || 'zh';
+            document.getElementById('languageSwitcher').addEventListener('click', function() {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+            
+            // Update UI elements based on language
+            if (currentLang === 'en') {
+                document.getElementById('learningDesc').textContent = 'Learn equipment operation, earn points';
+                document.getElementById('equipmentDesc').textContent = 'Browse and rent equipment';
+                document.getElementById('chatDesc').textContent = 'Discussion and communication';
+                document.getElementById('userLevelText').textContent = 'Level';
+                document.getElementById('aiAssistantTitle').textContent = 'RIO AI Assistant';
+                document.getElementById('aiGreeting').textContent = 'Hello! I am RIO AI, your media equipment expert. How can I help you?';
+            } else {
+                document.getElementById('userLevelText').textContent = 'Level';
+                document.getElementById('aiAssistantTitle').textContent = 'RIO AI 助手';
+                document.getElementById('aiGreeting').textContent = '你好！我是 RIO AI，您的媒體設備專家。有什麼我可以幫助您的嗎？';
+            }
+            
+            // 獲取當前用戶資訊
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // 從本地存儲獲取用戶數據（由數據庫模塊初始化）
+            const userData = JSON.parse(localStorage.getItem('currentUserData'));
+            const rentalHistory = JSON.parse(localStorage.getItem('rentalHistory')) || [];
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            const learningProgress = JSON.parse(localStorage.getItem('learningProgress')) || [];
+            
+            if (!userData) {
+                // 如果未找到用戶數據，嘗試重新初始化
+                window.Database.initUserSession(currentUser)
+                    .then(result => {
+                        if (result.success) {
+                            // 刷新頁面以顯示新加載的數據
+                            window.location.reload();
+                        } else {
+                            console.error('無法載入用戶數據，重定向到登入頁面');
+                            localStorage.removeItem('currentUser');
+                            window.location.href = 'index.html';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('初始化用戶會話失敗:', error);
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'index.html';
+                    });
+                return;
+            }
+
+            // 填充用戶資訊
+            document.querySelector('.user-name').textContent = currentLang === 'zh' ? userData.name : userData.nameEN;
+            document.getElementById('userPoints').textContent = userData.points;
+            document.getElementById('userLevel').textContent = userData.level;
+            
+            const userAvatar = `assets/images/user_icon/${userData.profileImage}`;
+            const profileImgEl = document.querySelector('.profile-card img');
+            if (profileImgEl) {
+                profileImgEl.src = userAvatar;
+                profileImgEl.onerror = function() {
+                    this.src = 'https://dummyimage.com//56?text=' + (userData.name ? userData.name[0] : 'U');
+                };
+            }
+
+            // 填充進行中課程
+            loadOngoingCourses(learningProgress);
+            
+            // 填充租借狀態
+            loadRentalStatus(rentalHistory, bookings);
+            
+            // 加載進行中課程
+            async function loadOngoingCourses(learningProgressData) {
+                const ongoingCoursesEl = document.getElementById('ongoingCourses');
+                if (!ongoingCoursesEl) return;
+
+                const courses = await window.Database.getAllCourses();
+                if (!courses || courses.length === 0) {
+                     ongoingCoursesEl.innerHTML = `<p class="text-gray-500 text-center py-4">${t('error_loading_courses')}</p>`;
+                     return;
+                }
+                
+                const inProgressCourses = learningProgressData.filter(progress => 
+                    progress.completed === 'false' && parseInt(progress.progress) > 0
+                );
+                
+                if (inProgressCourses.length > 0) {
+                    ongoingCoursesEl.innerHTML = '';
+                    inProgressCourses.forEach(progress => {
+                        const course = courses.find(c => c.courseId === progress.courseId);
+                        if (!course) return;
+                        
+                        const courseName = currentLang === 'zh' ? course.courseName : course.courseNameEN;
+                        const inProgressText = t('in_progress');
+                        const progressText = t('progress');
+                        const continueText = t('continue_learning');
+                        const courseLevelText = t('level') + ' ' + course.level;
+                        const modulesText = course.modules ? `${course.modules} ${t('modules', currentLang)}` : '';
+
+                        ongoingCoursesEl.innerHTML += `
+                            <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">${courseName}</h4>
+                                        <p class="text-sm text-gray-600 mt-1">${courseLevelText}${modulesText ? ' · ' + modulesText : ''}</p>
+                                    </div>
+                                    <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">${inProgressText}</div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${progress.progress}%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">${progressText}: ${progress.progress}%</p>
+                                </div>
+                                <button class="mt-3 w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-lg" onclick="location.href='learning.html?courseId=${course.courseId}'">
+                                    ${continueText}
+                                </button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    ongoingCoursesEl.innerHTML = `<p class="text-gray-500 text-center py-4">${t('no_ongoing_courses')}</p>`;
+                }
+            }
+            
+            // 加載租借狀態
+            async function loadRentalStatus(rentalHistory, bookings) {
+                const rentalStatusEl = document.getElementById('rentalStatus');
+                const noRentalMessageEl = document.getElementById('noRentalMessage');
+                if (!rentalStatusEl || !noRentalMessageEl) return;
+
+                const allRentals = [];
+                if (rentalHistory) {
+                     rentalHistory.filter(rental => rental.status === 'Confirmed' || rental.status === 'Active').forEach(r => allRentals.push(r));
+                }
+                if (bookings) {
+                     bookings.filter(booking => booking.BookingStatus === 'Confirmed' || booking.BookingStatus === 'Pending').forEach(b => {
+                        if (!allRentals.some(r => r.id === b.BookingID && r.status === 'Confirmed')) {
+                            allRentals.push({
+                                id: b.BookingID,
+                                userId: b.UserID,
+                                equipmentId: b.ItemCode,
+                                equipmentName: b.ItemName, 
+                                startDate: b.StartDate,
+                                endDate: b.EndDate,
+                                totalPoints: b.TotalPoints,
+                                status: b.BookingStatus 
+                            });
+                        }
+                     });
+                }
+                
+                if (allRentals.length === 0) {
+                    noRentalMessageEl.style.display = 'block';
+                    rentalStatusEl.innerHTML = '';
+                    rentalStatusEl.appendChild(noRentalMessageEl);
+                    return;
+                }
+                
+                noRentalMessageEl.style.display = 'none';
+                rentalStatusEl.innerHTML = '';
+                const equipmentData = await window.Database.loadEquipmentData();
+
+                allRentals.forEach(rental => {
+                    const equipment = equipmentData.find(eq => eq['Item Code'] === (rental.equipmentId || rental.ItemCode));
+                    const rentalCard = createRentalCard(rental, equipment);
+                    rentalStatusEl.appendChild(rentalCard);
+                });
+            }
+            
+            // 創建租借卡片
+            function createRentalCard(rental, equipmentDetails) {
+                const card = document.createElement('div');
+                const equipmentName = rental.equipmentName || rental.ItemName;
+                const startDate = rental.startDate || rental.StartDate;
+                const endDate = rental.endDate || rental.EndDate;
+                const status = rental.status; 
+
+                let statusText = '';
+                let statusColorClass = '';
+                let iconClass = 'fas fa-question-circle'; 
+                let categoryIcon = 'fas fa-tools'; // Default category icon
+                
+                const today = new Date();
+                today.setHours(0,0,0,0); 
+                const rentStartDate = new Date(startDate);
+                const rentEndDate = new Date(endDate);
+
+                if (status === 'Returned') {
+                    statusText = t('returned', currentLang);
+                    statusColorClass = 'bg-green-100 text-green-700';
+                    iconClass = 'fas fa-check-circle';
+                } else if (status === 'Active' || (status === 'Confirmed' && today >= rentStartDate && today <= rentEndDate) ){
+                    statusText = t('rented', currentLang); 
+                    statusColorClass = 'bg-yellow-100 text-yellow-700';
+                    iconClass = 'fas fa-hourglass-half';
+                } else if (status === 'Pending' || (status === 'Confirmed' && today < rentStartDate) ){
+                    statusText = t('pending_pickup', currentLang) || '待取/預約中'; 
+                    statusColorClass = 'bg-blue-100 text-blue-700';
+                    iconClass = 'fas fa-clock';
+                } else if (today > rentEndDate && status !== 'Returned') {
+                    statusText = t('overdue', currentLang) || '已逾期'; 
+                    statusColorClass = 'bg-red-100 text-red-700';
+                    iconClass = 'fas fa-exclamation-triangle';
+                } else {
+                     statusText = status; 
+                     statusColorClass = 'bg-gray-100 text-gray-700';
+                }
+
+                if (equipmentDetails && equipmentDetails['Item Category']) {
+                    const category = equipmentDetails['Item Category'].toLowerCase();
+                    if (category.includes('camera')) categoryIcon = 'fas fa-camera';
+                    else if (category.includes('audio') || category.includes('microphone')) categoryIcon = 'fas fa-microphone';
+                    else if (category.includes('lens')) categoryIcon = 'fas fa-dot-circle';
+                    else if (category.includes('lighting')) categoryIcon = 'fas fa-lightbulb';
+                    else if (category.includes('stabilizer') || category.includes('gimbal')) categoryIcon = 'fas fa-hand-rock';
+                    else if (category.includes('battery')) categoryIcon = 'fas fa-battery-full';
+                    else if (category.includes('sd card') || category.includes('storage')) categoryIcon = 'fas fa-sd-card';
+                    else if (category.includes('tripod')) categoryIcon = 'fas fa-mountain'; 
+                    else if (category.includes('drone')) categoryIcon = 'fas fa-helicopter'; 
+                }
+
+                const daysRemaining = (status !== 'Returned' && today <= rentEndDate) ? Math.ceil((rentEndDate - today) / (1000 * 60 * 60 * 24)) : '-';
+                const daysRemainingText = (daysRemaining !== '-') ? `${t('days_remaining', currentLang)}: ${daysRemaining} ${t('days', currentLang)}` : '';
+                
+                // 狀態顏色應用到整個卡片背景和邊框
+                let cardBgColor = 'bg-white'; // 默認背景
+                let cardBorderColor = 'border-gray-200'; // 默認邊框
+
+                if (status === 'Returned') {
+                    cardBgColor = 'bg-green-50';
+                    cardBorderColor = 'border-green-300';
+                } else if (status === 'Active' || (status === 'Confirmed' && today >= rentStartDate && today <= rentEndDate) ){
+                    cardBgColor = 'bg-yellow-50';
+                    cardBorderColor = 'border-yellow-300';
+                } else if (status === 'Pending' || (status === 'Confirmed' && today < rentStartDate) ){
+                    cardBgColor = 'bg-blue-50';
+                    cardBorderColor = 'border-blue-300';
+                } else if (today > rentEndDate && status !== 'Returned') {
+                    cardBgColor = 'bg-red-50';
+                    cardBorderColor = 'border-red-300';
+                } else {
+                     cardBgColor = 'bg-gray-50';
+                     cardBorderColor = 'border-gray-300';
+                }
+
+                card.className = `flex items-center ${cardBorderColor} border-l-4 p-3 rounded-md mb-2 shadow-sm ${cardBgColor}`;
+                
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-md flex items-center justify-center flex-shrink-0 mr-4 text-2xl ${statusColorClass.split(' ')[1]}">
+                        <i class="${categoryIcon}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium text-gray-800">${equipmentName}</h3>
+                        <p class="text-sm">${t('rental_period', currentLang)}: ${startDate} - ${endDate}</p>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-xs px-2 py-0.5 rounded-full ${statusColorClass}">
+                               <i class="${iconClass} mr-1"></i> ${statusText}
+                            </span>
+                            ${daysRemainingText ? `<span class="text-xs text-gray-600">${daysRemainingText}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                return card;
+            }
+
+            // AI 助手側邊欄控制
+            const aiAssistantBtn = document.getElementById('aiAssistantBtn');
+            const aiSidebar = document.getElementById('aiSidebar');
+            const closeAiBtn = document.getElementById('closeAiBtn');
+            const aiInput = document.getElementById('aiInput');
+            const aiSendBtn = document.getElementById('aiSendBtn');
+            const aiChat = document.getElementById('aiChat');
+
+            aiAssistantBtn.addEventListener('click', function() {
+                aiSidebar.classList.remove('translate-x-full');
+            });
+
+            closeAiBtn.addEventListener('click', function() {
+                aiSidebar.classList.add('translate-x-full');
+            });
+
+            // 簡單的 AI 聊天功能（Demo 用）
+            aiSendBtn.addEventListener('click', sendMessage);
+            aiInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const message = aiInput.value.trim();
+                if (message) {
+                    // 顯示用戶訊息
+                    aiChat.innerHTML += `
+                        <div class="flex justify-end mb-3">
+                            <div class="bg-blue-500 text-white rounded-lg p-3 max-w-xs">
+                                <p>${message}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    aiInput.value = '';
+                    aiChat.scrollTop = aiChat.scrollHeight;
+
+                    // 模擬 AI 回應（實際應從 API 獲取）
+                    setTimeout(() => {
+                        let response = "我正在處理您的請求，很快將為您提供答案。";
+                        
+                        // 簡單的關鍵詞回應（Demo用）
+                        const currentLang = localStorage.getItem('language') || 'zh';
+                        
+                        if (message.includes('相機') || message.includes('攝影') || message.includes('Canon') || 
+                            message.toLowerCase().includes('camera') || message.toLowerCase().includes('photography') || message.includes('Canon')) {
+                            response = currentLang === 'zh' ? 
+                                "對於媒體項目，Canon R7 是一個很好的選擇，具有高解析度視訊拍攝功能。您可以在 Equipment 模組中查詢更多設備詳情。" :
+                                "For media projects, Canon R7 is a great choice with high-resolution video capabilities. You can check more equipment details in the Equipment module.";
+                        } else if (message.includes('音頻') || message.includes('麥克風') || message.includes('錄音') ||
+                                  message.toLowerCase().includes('audio') || message.toLowerCase().includes('microphone') || message.toLowerCase().includes('recording')) {
+                            response = currentLang === 'zh' ?
+                                "DJI Mic 2 是一款優秀的無線麥克風系統，適合各種場景的錄音需求。您可以透過「學習」模組了解更多關於音頻設備的使用技巧。" :
+                                "DJI Mic 2 is an excellent wireless microphone system suitable for various recording needs. You can learn more about audio equipment techniques through the 'Learning' module.";
+                        } else if (message.includes('學習') || message.includes('課程') ||
+                                  message.toLowerCase().includes('learn') || message.toLowerCase().includes('course')) {
+                            response = currentLang === 'zh' ?
+                                "我們提供多種設備的使用教程，從基礎到進階。完成課程測驗還可以獲得積分，用於借用更高級的設備。" :
+                                "We offer tutorials for various equipment, from basic to advanced. Completing course quizzes also earns points for borrowing higher-level equipment.";
+                        } else if (message.includes('借') || message.includes('預約') || message.includes('租') ||
+                                  message.toLowerCase().includes('borrow') || message.toLowerCase().includes('reserve') || message.toLowerCase().includes('rent')) {
+                            response = currentLang === 'zh' ?
+                                "您可以在「Equipment」模組瀏覽和預約設備。系統會根據您的積分和設備的可用情況進行安排。" :
+                                "You can browse and reserve equipment in the 'Equipment' module. The system will arrange based on your points and equipment availability.";
+                        } else {
+                            response = currentLang === 'zh' ?
+                                "我正在處理您的請求，很快將為您提供答案。" :
+                                "I'm processing your request and will provide an answer soon.";
+                        }
+
+                        aiChat.innerHTML += `
+                            <div class="flex justify-start mb-3">
+                                <div class="bg-gray-100 rounded-lg p-3 max-w-xs">
+                                    <p class="text-gray-700">${response}</p>
+                                </div>
+                            </div>
+                        `;
+                        aiChat.scrollTop = aiChat.scrollHeight;
+                    }, 1000);
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

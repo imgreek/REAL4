@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - 登入</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/database/database.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-image: url('assets/images/App_Logo/bg.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background-color: rgba(26, 115, 232, 0.8); /* 半透明教育藍 */
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+        .login-card {
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明白色背景 */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #1565C0;
+        }
+        .user-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .user-card.selected {
+            border: 2px solid var(--primary-color);
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+        main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center w-full">
+        <img src="assets/images/App_Logo/REAL_LOGO.PNG" alt="REAL Logo" class="h-8">
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-md w-full">
+            <div class="login-card p-6">
+                <h2 class="text-2xl font-bold text-center mb-6" data-i18n="login">登入</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-2" data-i18n="select_user">請選擇用戶</label>
+                    <div class="space-y-3" id="userCards">
+                        <div class="user-card p-3 flex items-center" data-user-id="ST020123">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
+                                <img src="assets/images/user_icon/user_zoe.png" alt="Zoe" class="w-full h-full object-cover" onerror="this.src='https://dummyimage.com//48?text=Z'">
+                            </div>
+                            <div>
+                                <div class="font-medium user-name">陳佐伊 (Zoe Chan)</div>
+                                <div class="text-sm text-gray-600">ST020123</div>
+                            </div>
+                        </div>
+                        <div class="user-card p-3 flex items-center" data-user-id="ST020124">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
+                                <img src="assets/images/user_icon/user_rio.png" alt="Rio" class="w-full h-full object-cover" onerror="this.src='https://dummyimage.com//48?text=R'">
+                            </div>
+                            <div>
+                                <div class="font-medium user-name">王瑞歐 (Rio Wong)</div>
+                                <div class="text-sm text-gray-600">ST020124</div>
+                            </div>
+                        </div>
+                        <div class="user-card p-3 flex items-center" data-user-id="ST020125">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
+                                <img src="assets/images/user_icon/user_Tintin.png" alt="Tintin" class="w-full h-full object-cover" onerror="this.src='https://dummyimage.com//48?text=T'">
+                            </div>
+                            <div>
+                                <div class="font-medium user-name">陳天天 (Tintin Chen)</div>
+                                <div class="text-sm text-gray-600">ST020125</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 font-medium mb-2" data-i18n="password">密碼</label>
+                    <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="password_placeholder" placeholder="輸入密碼（Demo 版可直接進入）">
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <input type="checkbox" id="rememberMe" class="mr-2">
+                            <label for="rememberMe" class="text-gray-700">記住我</label>
+                        </div>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">忘記密碼？</a>
+                    </div>
+                </div>
+                
+                <button id="loginBtn" class="btn-primary w-full flex justify-center items-center" disabled>
+                    <span data-i18n="login">登入</span>
+                </button>
+                
+                <div class="text-center mt-4 text-sm text-gray-600" data-i18n="demo_note">
+                    Demo 版：任何用戶均可直接登入
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 加載中覆蓋層 -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg flex flex-col items-center">
+            <div class="spinner mb-4">
+                <i class="fas fa-circle-notch fa-spin text-3xl text-blue-600"></i>
+            </div>
+            <p class="text-gray-800" data-i18n="loading">資料載入中...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 應用語言翻譯，確保在其他操作前完成
+            applyTranslations();
+            
+            // 語言切換器
+            const languageSwitcherBtn = document.getElementById('languageSwitcher');
+            if (languageSwitcherBtn) {
+                languageSwitcherBtn.addEventListener('click', function() {
+                    const currentLang = localStorage.getItem('language') || 'zh';
+                    const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                    switchLanguage(newLang); // switchLanguage 內部會調用 applyTranslations
+                });
+            }
+            
+            // 用戶卡片選擇
+            let selectedUserId = null;
+            const userCards = document.querySelectorAll('.user-card');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            userCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    userCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedUserId = this.getAttribute('data-user-id');
+                    loginBtn.disabled = !selectedUserId;
+                });
+            });
+            
+            // 登入按鈕事件
+            if (loginBtn) {
+                loginBtn.addEventListener('click', async function() {
+                    if (!selectedUserId) {
+                        alert(t('select_user_prompt', localStorage.getItem('language') || 'zh'));
+                        return;
+                    }
+                    
+                    document.getElementById('loadingOverlay').classList.remove('hidden');
+                    
+                    try {
+                        const result = await window.Database.initUserSession(selectedUserId);
+                        if (result.success) {
+                            localStorage.setItem('currentUser', selectedUserId);
+                            window.location.href = 'home.html';
+                        } else {
+                            alert(result.error || t('login_failed', localStorage.getItem('language') || 'zh'));
+                            document.getElementById('loadingOverlay').classList.add('hidden');
+                        }
+                    } catch (error) {
+                        console.error('登入過程中發生錯誤:', error);
+                        alert(t('login_error', localStorage.getItem('language') || 'zh'));
+                        document.getElementById('loadingOverlay').classList.add('hidden');
+                    }
+                });
+            }
+            
+            // 檢查是否已有登入用戶 (此邏輯可選，根據需求決定是否保留)
+            // const currentUser = localStorage.getItem('currentUser');
+            // if (currentUser && window.Database && typeof window.Database.initUserSession === 'function') {
+            //     // 可選擇在此驗證用戶會話或直接跳轉，但需注意用戶可能手動返回登入頁
+            //     // window.location.href = 'home.html'; 
+            // }
+            
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && selectedUserId && loginBtn && !loginBtn.disabled) {
+                    loginBtn.click();
+                }
+            });
+            
+            // 更新用戶卡片顯示的名稱 (確保在 applyTranslations 後執行，以獲取正確語言的名稱)
+            // 或者將此邏輯移到 applyTranslations 內部或其後被調用
+            updateUserNames(); 
+            
+            function updateUserNames() {
+                const userCards = document.querySelectorAll('.user-card');
+                const currentLang = localStorage.getItem('language') || 'zh';
+                
+                userCards.forEach(card => {
+                    const userId = card.getAttribute('data-user-id');
+                    const nameElement = card.querySelector('.user-name');
+                    // 假設用戶數據已在HTML中或可以從某處獲取（此處為硬編碼示例）
+                    // 在實際應用中，您可能需要從 `database.js` 或預加載的用戶列表中獲取中英文名
+                    if (nameElement) { // 確保元素存在
+                        if (currentLang === 'zh') {
+                            if (userId === 'ST020123') nameElement.textContent = '陳佐伊 (Zoe Chan)';
+                            else if (userId === 'ST020124') nameElement.textContent = '王瑞歐 (Rio Wong)';
+                            else if (userId === 'ST020125') nameElement.textContent = '陳天天 (Tintin Chen)';
+                        } else {
+                            if (userId === 'ST020123') nameElement.textContent = 'Zoe Chan (陳佐伊)';
+                            else if (userId === 'ST020124') nameElement.textContent = 'Rio Wong (王瑞歐)';
+                            else if (userId === 'ST020125') nameElement.textContent = 'Tintin Chen (陳天天)';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

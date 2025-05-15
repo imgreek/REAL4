@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=ME1-hlnQmrc",
+      "intro_zh": "將電池手柄插入雲台底部，固定後再安裝相機於快拆板並鎖緊。長按電源鍵開機，待雲台自動解鎖展開。調整前後、左右、高低，讓相機在無電狀態下可維持水平不傾倒。可單手操控雲台或加裝手柄雙手穩定運鏡。",
+      "intro_en": "Insert the battery grip into the bottom of the gimbal, then mount the camera onto the quick-release plate and secure it. Long press the power button to turn on, wait for the gimbal to auto-unlock and unfold. Adjust back-forth, left-right, and up-down until the camera stays level when powered off. You can operate with one hand or add grips for two-handed stability.",
+      "quiz": {
+        "question_zh": "RS3 Pro 屬於哪種類型的設備？",
+        "question_en": "What type of device is the RS3 Pro?",
+        "options_zh": ["攝影機", "穩定器", "反光板"],
+        "options_en": ["Camera", "Gimbal", "Reflector"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=2SwH3Lab4l4",
+      "intro_zh": "透過觸控螢幕或快捷鍵切換跟隨、POV、運動等模式。安裝LiDAR模組，開啟自動對焦輔助，提升對焦精準度。與相機藍牙配對可直接用RS3 Pro拍照與錄影。在雲台螢幕可調整馬達強度、追蹤速度、校正等。",
+      "intro_en": "Use touchscreen or shortcut buttons to switch Follow, POV, and Sport modes. Attach the LiDAR module and enable autofocus assistance for enhanced precision. Pair with camera via Bluetooth to control shooting and recording remotely. Fine-tune motor strength, tracking speed, and calibration via the gimbal screen.",
+      "quiz": {
+        "question_zh": "影像模式切換可用什麼操作？",
+        "question_en": "How can you switch shooting modes?",
+        "options_zh": ["專用App", "觸控螢幕或快捷鍵", "拔電池"],
+        "options_en": ["Special App", "Touchscreen or shortcut button", "Remove battery"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=Y6rSNpJ1P4A",
+      "intro_zh": "搭配DJI Transmission 或 RavenEye模組進行遠距監控與導演溝通。裝上DJI Focus Motor，實現遠端跟焦拍攝。雲台外接冷靴可裝燈光、麥克風等配件。DJI Ronin App 可同時監控/控制多台RS系列雲台。",
+      "intro_en": "Use DJI Transmission or RavenEye module for remote monitoring and director’s communication. Attach the DJI Focus Motor for remote follow focus control. Use the cold shoe to mount accessories like lights or microphones. The DJI Ronin App can simultaneously control/monitor multiple RS series gimbals.",
+      "quiz": {
+        "question_zh": "哪個模組可實現RS3 Pro無線影像傳輸？",
+        "question_en": "Which module enables wireless video transmission for RS3 Pro?",
+        "options_zh": ["RavenEye 或 DJI Transmission", "LiDAR 對焦模組", "手把"],
+        "options_en": ["RavenEye or DJI Transmission", "LiDAR focus module", "Handle Grip"],
+        "correct_answer_index": 0
+      }
+    }
+  ]
+}

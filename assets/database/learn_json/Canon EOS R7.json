@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=MZ-GL4Zm5mA",
+      "intro_zh": "打開相機底部的電池艙, 插入電池與SD卡。按下電源開關，依照螢幕指示設定日期與時間。將相機卡口處的紅點或白點對準鏡頭, 輕轉至卡住。半按快門對焦，完全按下拍照。",
+      "intro_en": "Open the battery compartment at the bottom, insert the battery and SD card. Turn on the power switch, set the date and time as prompted on the screen. Align the red or white dot on the camera mount with the lens, twist until it clicks. Half-press the shutter button to focus, fully press down to take a photo.",
+      "quiz": {
+        "question_zh": "Canon R7的感光元件類型是？",
+        "question_en": "What type of sensor does the Canon R7 have?",
+        "options_zh": ["全片幅", "APS-C", "1吋"],
+        "options_en": ["Full-frame", "APS-C", "1-inch"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=SJ3wqFf2vyo",
+      "intro_zh": "進入拍攝選單，選擇連拍模式。旋鈕切換到錄影模式，進入選單選擇4K錄影品質。在螢幕或按鈕上切換單次AF與連續AF。在設定選單找到WiFi設置，選擇裝置配對。",
+      "intro_en": "Go to the shooting menu and select the burst shooting mode. Turn the dial to video mode, select 4K video quality in the menu. Switch between One Shot and Servo AF on the screen or via buttons. In the settings menu, find WiFi setup and select device pairing.",
+      "quiz": {
+        "question_zh": "Canon R7是否支援4K錄影？",
+        "question_en": "Does Canon R7 support 4K video recording?",
+        "options_zh": ["是", "否"],
+        "options_en": ["Yes", "No"],
+        "correct_answer_index": 0
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=qaM7AEQ0Txg",
+      "intro_zh": "下載Canon Camera Connect App並開啟藍牙與WiFi。用App遠端預覽及選擇照片上傳到手機。在App內啟用遙控快門功能，輕鬆遠距拍攝。透過USB或WiFi將照片/影片匯入電腦。",
+      "intro_en": "Download the Canon Camera Connect App and turn on Bluetooth and WiFi. Preview and select photos via the app to transfer to your phone. Activate remote shutter in the app for easy distant shooting. Use USB cable or WiFi to import files to your computer.",
+      "quiz": {
+        "question_zh": "Canon Camera Connect App可以在手機做什麼？",
+        "question_en": "What can the Canon Camera Connect App do on your smartphone?",
+        "options_zh": ["遠端拍照", "相片傳輸", "預覽相片", "以上皆是"],
+        "options_en": ["Remote Shooting", "Transfer Photos", "Preview Images", "All of the above"],
+        "correct_answer_index": 3
+      }
+    }
+  ]
+}

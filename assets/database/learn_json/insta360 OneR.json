@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=8GABmexhOpg",
+      "intro_zh": "將鏡頭模組、主機核心與電池底座扣合。長按開機鍵開機，首次使用可調語言、時間、WiFi設定。打開側蓋裝入microSD卡。触控螢幕滑動或按模式鍵切換功能。",
+      "intro_en": "Attach the lens module, core, and battery base together. Long press the power button to turn on; on the first use, set language, time, WiFi. Open the side cover and insert a microSD card. Swipe the touchscreen or press the mode button to switch between functions.",
+      "quiz": {
+        "question_zh": "ONE R 屬於哪種類型的相機？",
+        "question_en": "What type of camera is the ONE R?",
+        "options_zh": ["數碼單眼", "運動相機", "監視器"],
+        "options_en": ["Digital SLR", "Action Camera", "Surveillance Cam"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=A6EkRAaQRxE",
+      "intro_zh": "拆下安裝不同鏡頭模組，覆蓋不同拍攝需求。開啟FlowState功能，防止畫面晃動。選擇HDR模式增強動態，或選擇Slow Motion錄製高速動作。直接触控螢幕預覽並調整各種參數。支援指定語音指令啟動錄影或拍照。",
+      "intro_en": "Detach and attach different lens modules for varied shooting options. Turn on FlowState for steady, shake-free footage. Select HDR for vivid scenes or Slow Motion for capturing fast action. Use the touchscreen for live preview and parameter adjustment. Use voice commands to start recording or take photos.",
+      "quiz": {
+        "question_zh": "\"FlowState\" 的主要功能是？",
+        "question_en": "What is the main function of FlowState?",
+        "options_zh": ["虛擬實境", "防手震", "藍牙連線"],
+        "options_en": ["Virtual reality", "Stabilization", "Bluetooth pairing"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=KiO0aliM7wE",
+      "intro_zh": "開啟相機WiFi，使用Insta360 APP實時預覽與遠端控制。相片/影片自動匯入APP，啟用AI剪輯一鍵出片。利用Insta360 Studio軟體進階編輯與導出。一鍵分享到Instagram, YouTube, Facebook等。支援自動備份至雲端或外接硬碟保護資料安全。",
+      "intro_en": "Turn on the camera's WiFi and use the Insta360 App for live preview and remote control. Photos/videos import automatically; use AI editor for quick video creation. Use Insta360 Studio software on PC for advanced editing and exporting. Share with one click to Instagram, YouTube, Facebook, and more. Supports automatic backup to cloud or external drives for data safety.",
+      "quiz": {
+        "question_zh": "Insta360 ONE R 支援哪種連線方式與APP同步？",
+        "question_en": "Which connection is supported for app synchronization?",
+        "options_zh": ["紅外線", "WiFi或藍牙", "GPS"],
+        "options_en": ["Infrared", "WiFi or Bluetooth", "GPS"],
+        "correct_answer_index": 1
+      }
+    }
+  ]
+}

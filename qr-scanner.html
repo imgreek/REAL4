@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - QR碼掃描</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.4/html5-qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        #reader {
+            width: 100%;
+            height: auto;
+        }
+        .equipment-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .equipment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold" data-i18n="qr_scanner">QR碼掃描</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <button id="closeBtn" class="text-white" aria-label="關閉" data-i18n-aria="close">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-4">
+        <div class="mb-4">
+            <p class="text-gray-700 mb-2" data-i18n="scan_instruction">請將鏡頭對準設備上的QR碼，系統將自動識別</p>
+        </div>
+        
+        <!-- QR碼掃描區域 -->
+        <div class="mb-6">
+            <div id="reader" class="rounded-lg overflow-hidden"></div>
+        </div>
+        
+        <!-- 掃描結果區域 -->
+        <div id="scanResult" class="equipment-card p-4 hidden">
+            <div class="flex">
+                <div class="w-24 h-24 bg-gray-200 rounded-md overflow-hidden flex-shrink-0 mr-4">
+                    <img id="equipmentImage" src="" alt="設備圖片" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h3 id="equipmentName" class="font-medium text-gray-800">設備名稱</h3>
+                    <div class="flex items-center mt-1 mb-2">
+                        <span id="equipmentCategory" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full mr-2">類別</span>
+                        <span id="equipmentLevel" class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">等級</span>
+                    </div>
+                    <div id="equipmentStatus" class="text-sm text-gray-600 mb-2">狀態: 可借用</div>
+                    <div class="flex mt-3">
+                        <a id="detailsBtn" href="#" class="bg-blue-600 text-white text-sm px-3 py-1 rounded-md mr-2" data-i18n="view_details">查看詳情</a>
+                        <a id="borrowBtn" href="#" class="bg-green-600 text-white text-sm px-3 py-1 rounded-md" data-i18n="borrow_now">立即借用</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply language translations
+            applyTranslations();
+            
+            // Language switcher
+            const currentLang = localStorage.getItem('language') || 'zh';
+            document.getElementById('languageSwitcher').addEventListener('click', function() {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+            
+            // 獲取當前用戶資訊
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 設備資料 (Demo用)
+            const equipment = [
+                { id: 'E001', name: 'Canon EOS R7', category: 'camera', categoryName: '相機', brand: 'Canon', model: 'EOS R7', level: 3, levelName: '專業', pointsPerDay: 150, image: 'https://dummyimage.com//400x200?text=Canon+R7', status: 'available' },
+                { id: 'E002', name: 'Canon RF 24-105mm f/4L', category: 'lens', categoryName: '鏡頭', brand: 'Canon', model: 'RF 24-105mm', level: 2, levelName: '進階', pointsPerDay: 100, image: 'https://dummyimage.com//400x200?text=Canon+RF+24-105', status: 'available' },
+                { id: 'E003', name: 'DJI Pocket 3', category: 'camera', categoryName: '相機', brand: 'DJI', model: 'Pocket 3', level: 1, levelName: '基礎', pointsPerDay: 50, image: 'https://dummyimage.com//400x200?text=DJI+Pocket+3', status: 'borrowed' },
+                { id: 'E004', name: 'DJI Mic 2', category: 'audio', categoryName: '音頻', brand: 'DJI', model: 'Mic 2', level: 1, levelName: '基礎', pointsPerDay: 30, image: 'https://dummyimage.com//400x200?text=DJI+Mic+2', status: 'available' }
+            ];
+            
+            // QR碼掃描功能
+            const html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess).catch(function (err) {
+                console.error("掃描啟動失敗:", err);
+                if (currentLang === 'zh') {
+                    alert("無法啟動相機，���確認已授予攝像頭權限。");
+                } else {
+                    alert("Could not start camera. Please make sure camera permissions are granted.");
+                }
+            });
+
+            // 掃描成功回調函數
+            function onScanSuccess(decodedText, decodedResult) {
+                // 停止掃描
+                html5QrCode.stop().then(() => {
+                    console.log('掃描已停止');
+                }).catch((err) => {
+                    console.error('停止掃描出錯:', err);
+                });
+                
+                // 解析掃描結果（實際應用中應更複雜，這裡假設QR碼內容為設備ID）
+                const equipmentId = decodedText;
+                const foundEquipment = equipment.find(item => item.id === equipmentId);
+                
+                if (foundEquipment) {
+                    // 更新顯示結果
+                    document.getElementById('equipmentImage').src = foundEquipment.image;
+                    document.getElementById('equipmentName').textContent = foundEquipment.name;
+                    
+                    const categoryText = currentLang === 'zh' ? foundEquipment.categoryName : foundEquipment.category;
+                    document.getElementById('equipmentCategory').textContent = categoryText;
+                    
+                    const levelText = currentLang === 'zh' ? foundEquipment.levelName : 
+                                     (foundEquipment.level === 1 ? 'Basic' : 
+                                     (foundEquipment.level === 2 ? 'Intermediate' : 'Advanced'));
+                    document.getElementById('equipmentLevel').textContent = levelText;
+                    
+                    const statusText = currentLang === 'zh' ? 
+                                     (foundEquipment.status === 'available' ? '可借用' : '已借出') :
+                                     (foundEquipment.status === 'available' ? 'Available' : 'Borrowed');
+                    document.getElementById('equipmentStatus').textContent = `${currentLang === 'zh' ? '狀態' : 'Status'}: ${statusText}`;
+                    
+                    // 設置按鈕連結
+                    document.getElementById('detailsBtn').href = `equipment.html?id=${foundEquipment.id}`;
+                    document.getElementById('borrowBtn').href = `equipment.html?id=${foundEquipment.id}&action=borrow`;
+                    
+                    // 如果設備已借出，禁用借用按鈕
+                    if (foundEquipment.status === 'borrowed') {
+                        const borrowBtn = document.getElementById('borrowBtn');
+                        borrowBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        borrowBtn.classList.remove('bg-green-600');
+                        borrowBtn.classList.add('bg-gray-400');
+                    }
+                    
+                    // 顯示結果區域
+                    document.getElementById('scanResult').classList.remove('hidden');
+                } else {
+                    // 找不到設備
+                    const message = currentLang === 'zh' ? '找不到對應的設備資訊，請檢查QR碼是否正確。' : 
+                                                          'Equipment information not found. Please check if the QR code is correct.';
+                    alert(message);
+                }
+            }
+            
+            // 關閉按鈕
+            document.getElementById('closeBtn').addEventListener('click', function() {
+                window.history.back();
+            });
+            
+            // Demo功能：點擊掃描區域模擬掃描結果
+            document.getElementById('reader').addEventListener('click', function() {
+                // 隨機選擇一個設備作為模擬掃描結果
+                const randomIndex = Math.floor(Math.random() * equipment.length);
+                onScanSuccess(equipment[randomIndex].id, null);
+            });
+        });
+    </script>
+</body>
+</html>

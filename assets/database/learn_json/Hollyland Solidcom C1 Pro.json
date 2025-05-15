@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=Yn4lIKFBnF0",
+      "intro_zh": "確認主耳機、遠端耳機、電池、充電座、麥克風風罩等配件皆齊全。打開耳機電池艙，裝入專用電池，長按電源鍵開機。開機後所有耳機會自動配對連線，主耳機（隊長/Host）擁有系統控制權。佩戴耳機時將麥克風桿調整到嘴巴旁側約2公分處。",
+      "intro_en": "Verify that the master headset, remote headsets, batteries, charging base, and microphone windshields are included. Open the battery compartment, insert the dedicated battery, and long-press the power button to turn on. All headsets auto-pair when powered on; the host headset has system control privilege. Wear the headset and adjust the mic boom about 2 cm from your mouth.",
+      "quiz": {
+        "question_zh": "Solidcom C1 Pro 須要基站才能運作嗎？",
+        "question_en": "Does the Solidcom C1 Pro require a base station?",
+        "options_zh": ["是", "否"],
+        "options_en": ["Yes", "No"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=UfFRzAb_Z1w",
+      "intro_zh": "按下專用ANC按鍵開啟/關閉降噪功能，提升收音清晰度。舉起麥克風桿可快速靜音，放下則恢復收音。主耳機可在顯示螢幕查看各耳機電量、連線狀態。耳罩可左/右耳切換，適應不同場景需求。",
+      "intro_en": "Press the ANC button to toggle noise cancellation for clearer sound. Lift the mic boom to mute, lower it to resume. The host displays battery levels and connection status for all units. The ear pad can switch for left/right or single/double ear comfort.",
+      "quiz": {
+        "question_zh": "按下ANC鍵的效果是？",
+        "question_en": "What happens when you press the ANC button?",
+        "options_zh": ["增強音量", "開啟主動降噪", "斷開連線"],
+        "options_en": ["Volume boost", "Turns on active noise cancelling", "Disconnects headset"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=EBjjhgLiIRc",
+      "intro_zh": "將多副耳機分配給導播、攝影、燈光等成員，現場溝通零時差。多組系統可在大型場合混用，同場多工作組互不干擾。主耳機音訊可外接無線喇叭或導播對講台。可透過轉接配件串接其他品牌耳機系統。",
+      "intro_en": "Distribute headsets to director, camera, and lighting teams for instant comms. Multiple sets can work at the same venue for various groups without interference. Host headset’s output can be routed to wireless speakers or control consoles. Use adapters for connection with other intercom brands.",
+      "quiz": {
+        "question_zh": "Solidcom C1 Pro適合下列哪種用途？",
+        "question_en": "For which use is Solidcom C1 Pro most suitable?",
+        "options_zh": ["單人自拍", "多人團隊溝通", "只用來聽音樂"],
+        "options_en": ["Selfie", "Team communication", "Listening to music only"],
+        "correct_answer_index": 1
+      }
+    }
+  ]
+}

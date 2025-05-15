@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=cbg88cNkm5I",
+      "intro_zh": "打開底部電池艙，裝入電池及SD/CFexpress記憶卡。向右撥動開關開機，並按螢幕指示設語言、時間等。對準紅點，輕轉鏡頭卡緊即可。半按快門鍵自動對焦，全按拍攝照片。",
+      "intro_en": "Open the battery compartment, insert battery and SD/CFexpress card. Switch to ON, and set language/time as prompted on the screen. Align the red dot and gently twist the lens until it locks. Half-press shutter for autofocus; fully press to take a picture.",
+      "quiz": {
+        "question_zh": "EOS R5 的感光元件有多少萬像素？",
+        "question_en": "What is the resolution (in megapixels) of EOS R5's sensor?",
+        "options_zh": ["2010萬", "2420萬", "4500萬"],
+        "options_en": ["20MP", "24MP", "45MP"],
+        "correct_answer_index": 2
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=u99Zuh8kkxM",
+      "intro_zh": "轉盤或選單可切換單張拍攝與高速連拍。進入錄影選單設定8K或4K畫質錄影。啟用人臉/眼睛偵測追焦，追蹤主體。在設定中開啟防震提升拍攝穩定度。設定選單中配對手機和平板傳輸照片。",
+      "intro_en": "Use dial/menu to select single shot or high-speed burst. In video menu, select 8K or 4K for video recording. Enable face/eye AF for subject tracking. Enable IBIS in settings for better stability. Use settings to pair with smart devices for photo transfer.",
+      "quiz": {
+        "question_zh": "EOS R5 可錄製最高幾K影片？",
+        "question_en": "What is the maximum video resolution EOS R5 supports?",
+        "options_zh": ["4K", "6K", "8K"],
+        "options_en": ["4K", "6K", "8K"],
+        "correct_answer_index": 2
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=3e6Mo3hLbPY",
+      "intro_zh": "下載Canon Camera Connect，配對WiFi或藍牙開始照片傳送。手機App可無線控制拍照錄影及即時預覽。直接將影像上傳至雲端或社群平台。插入麥克風、閃光燈或其他擴充配件。使用USB-C傳輸線將檔案快速備份到電腦。",
+      "intro_en": "Download Canon Camera Connect, pair via WiFi/Bluetooth for transfer. The app enables remote shutter, video recording and live view. Directly upload to cloud or social platforms. Attach microphones, flashes or other accessories. Use USB-C cable for fast backup to computer.",
+      "quiz": {
+        "question_zh": "哪個App適合與R5手機連線？",
+        "question_en": "Which app is used to connect the R5 with your phone?",
+        "options_zh": ["Camera Connect", "Canon Print", "Zoom"],
+        "options_en": ["Camera Connect", "Canon Print", "Zoom"],
+        "correct_answer_index": 0
+      }
+    }
+  ]
+}

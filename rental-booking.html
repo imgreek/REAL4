@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - 設備預訂</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/js/equipment-db.js"></script>
+    <script src="assets/database/database.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        .form-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .date-picker {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            outline: none;
+        }
+        .date-picker:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        .calendar-days .available {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .calendar-days .unavailable {
+            background-color: #e53e3e;
+            color: white;
+            text-decoration: line-through;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0d47a1;
+        }
+        .btn-primary:disabled {
+            background-color: #90caf9;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #334155;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold" data-i18n="equipment_rental">設備預訂</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <button id="closeBtn" class="text-white" aria-label="關閉" data-i18n-aria="close">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-6">
+        <div class="form-card p-6 mb-6">
+            <div id="equipmentInfo" class="mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-24 h-24 bg-gray-200 rounded-md overflow-hidden flex-shrink-0 mr-4">
+                        <img id="equipmentImage" src="https://via.placeholder.com/400x200?text=Equipment" alt="設備圖片" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h2 id="equipmentName" class="text-xl font-semibold">設備名稱</h2>
+                        <div class="flex items-center mt-1">
+                            <span id="equipmentCategory" class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full mr-2">類別</span>
+                            <span id="equipmentLevel" class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">難度</span>
+                        </div>
+                        <p id="equipmentPoints" class="text-gray-700 mt-2"><span data-i18n="points_per_day">積分/天</span>: <span class="font-medium">100</span></p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="font-medium text-gray-800 mb-2" data-i18n="basic_info">基本資訊</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600" data-i18n="brand">品牌</p>
+                            <p id="equipmentBrand" class="font-medium">品牌名稱</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600" data-i18n="model">型號</p>
+                            <p id="equipmentModel" class="font-medium">型號名稱</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mb-6">
+                <h3 class="font-medium text-gray-800 mb-4" data-i18n="rental_date">借用日期</h3>
+                <p class="text-sm text-gray-600 mb-3" data-i18n="select_rental_dates">請選擇借用起始與結束日期</p>
+                
+                <div class="mb-4">
+                    <label for="dateRange" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="date_range">日期範圍</label>
+                    <input type="text" id="dateRange" class="date-picker" placeholder="選擇日期範圍" readonly>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="rentalDays" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="rental_days">借用天數</label>
+                    <div class="flex items-center">
+                        <span id="rentalDays" class="text-2xl font-bold mr-2">0</span>
+                        <span data-i18n="days">天</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mb-6">
+                <h3 class="font-medium text-gray-800 mb-2" data-i18n="points_calculation">積分計算</h3>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-gray-600" data-i18n="your_points">您的積分</p>
+                        <p id="userPoints" class="font-medium">1500</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600" data-i18n="required_points">所需積分</p>
+                        <p id="requiredPoints" class="font-medium">0</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600" data-i18n="points_after_rental">借用後剩餘</p>
+                        <p id="remainingPoints" class="font-medium">1500</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-4">
+                <button id="cancelBtn" class="btn-secondary" data-i18n="cancel">取消</button>
+                <button id="confirmBtn" class="btn-primary" data-i18n="confirm_rental" disabled>確認借用</button>
+            </div>
+        </div>
+        
+        <!-- 預約結果提示框 -->
+        <div id="resultAlert" class="hidden p-4 mb-4 rounded-md">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i id="resultIcon" class="fas fa-check-circle text-green-500 text-xl"></i>
+                </div>
+                <div class="ml-3">
+                    <h3 id="resultTitle" class="text-sm font-medium"></h3>
+                    <div id="resultMessage" class="mt-2 text-sm"></div>
+                    <div class="mt-4">
+                        <button id="returnToEquipmentBtn" class="btn-secondary" data-i18n="back_to_equipment">返回設備頁面</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item flex flex-col items-center text-gray-500 active">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 應用語言翻譯
+            applyTranslations();
+            
+            // 設置語言切換器
+            const currentLang = localStorage.getItem('language') || 'zh';
+            document.getElementById('languageSwitcher').addEventListener('click', function() {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+            
+            // 獲取當前用戶信息
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 從URL獲取設備代碼
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemCode = urlParams.get('id');
+            
+            if (!itemCode) {
+                window.location.href = 'equipment.html';
+                return;
+            }
+            
+            // 獲取用戶數據
+            let currentUserData = JSON.parse(localStorage.getItem('currentUserData'));
+            if (!currentUserData) {
+                try {
+                    // 嘗試重新初始化用戶會話
+                    const result = await window.Database.initUserSession(currentUser);
+                    if (result.success) {
+                        currentUserData = result.userData;
+                    } else {
+                        alert(t('error_loading_user_data', currentLang));
+                        window.location.href = 'equipment.html';
+                        return;
+                    }
+                } catch (error) {
+                    console.error('初始化用戶會話失敗：', error);
+                    alert(t('error_loading_user_data', currentLang));
+                    window.location.href = 'equipment.html';
+                    return;
+                }
+            }
+            
+            // 獲取設備信息
+            let equipment = null;
+            try {
+                const equipmentList = await window.Database.loadEquipmentData();
+                equipment = equipmentList.find(item => item['Item Code'] === itemCode);
+            } catch (error) {
+                console.error('獲取設備詳情失敗:', error);
+            }
+            
+            if (!equipment) {
+                alert(t('equipment_not_found', currentLang));
+                window.location.href = 'equipment.html';
+                return;
+            }
+            
+            // 填充設備信息
+            document.getElementById('equipmentName').textContent = equipment['Item Name'];
+            document.getElementById('equipmentCategory').textContent = currentLang === 'zh' ? 
+                getCategoryNameChinese(equipment['Item Category']) : equipment['Item Category'];
+            document.getElementById('equipmentLevel').textContent = getDifficultyLevel(equipment.DifficultyLevel, currentLang);
+            document.getElementById('equipmentPoints').innerHTML = `<span data-i18n="points_per_day">${t('points_per_day', currentLang)}</span>: <span class="font-medium">${equipment.PointsPerDay || '50'}</span>`;
+            document.getElementById('equipmentBrand').textContent = equipment.Brand;
+            document.getElementById('equipmentModel').textContent = equipment.Model || equipment['Item Name'].replace(equipment.Brand, '').trim();
+            
+            // 設置設備圖片
+            const imageName = equipment['Item Name'].toLowerCase().replace(/\s+/g, '_');
+            document.getElementById('equipmentImage').src = `assets/images/Item_image/${imageName}.jpg`;
+            document.getElementById('equipmentImage').onerror = function() {
+                this.src = 'https://via.placeholder.com/400x200?text=' + encodeURIComponent(equipment['Item Name']);
+            };
+            
+            // 獲取用戶信息
+            const userPoints = parseInt(currentUserData.points);
+            document.getElementById('userPoints').textContent = userPoints;
+            document.getElementById('remainingPoints').textContent = userPoints;
+            
+            // 設置日期選擇器
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(today.getDate() + 30); // 最多可預約未來30天
+            
+            // 獲取預約記錄
+            let bookings = [];
+            try {
+                const allBookings = await window.Database.loadBookingsData();
+                bookings = allBookings.filter(booking => 
+                    booking.ItemCode === itemCode && booking.BookingStatus !== 'Cancelled'
+                );
+                
+                // 同時檢查本地存儲中的新預約記錄
+                const localBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+                const localActiveBookings = localBookings.filter(booking => 
+                    booking.ItemCode === itemCode && booking.BookingStatus !== 'Cancelled'
+                );
+                
+                // 合併預約記錄
+                bookings = [...bookings, ...localActiveBookings];
+            } catch (error) {
+                console.error('獲取預訂記錄失敗:', error);
+            }
+            
+            // 建立設備可用日期映射
+            const availableDates = {};
+            let currentDate = new Date(today);
+            while (currentDate <= maxDate) {
+                const dateStr = currentDate.toISOString().split('T')[0];
+                availableDates[dateStr] = true; // 預設所有日期都可用
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // 標記已被預約的日期為不可用
+            bookings.forEach(booking => {
+                const startDate = new Date(booking.StartDate);
+                const endDate = new Date(booking.EndDate);
+                
+                let current = new Date(startDate);
+                while (current <= endDate) {
+                    const dateStr = current.toISOString().split('T')[0];
+                    if (availableDates.hasOwnProperty(dateStr)) {
+                        availableDates[dateStr] = false; // 此日期不可用
+                    }
+                    
+                    current.setDate(current.getDate() + 1);
+                }
+            });
+            
+            // 配置Flatpickr日期選擇器
+            const dateRangePicker = flatpickr('#dateRange', {
+                mode: 'range',
+                minDate: today,
+                maxDate: maxDate,
+                dateFormat: 'Y-m-d',
+                disable: [
+                    function(date) {
+                        const dateStr = date.toISOString().split('T')[0];
+                        return availableDates[dateStr] === false;
+                    }
+                ],
+                locale: currentLang === 'zh' ? {
+                    weekdays: {
+                        shorthand: ['日', '一', '二', '三', '四', '五', '六'],
+                        longhand: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+                    },
+                    months: {
+                        shorthand: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                        longhand: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                    },
+                    rangeSeparator: ' 至 ',
+                    weekAbbreviation: '週',
+                    scrollTitle: '滾動切換',
+                    toggleTitle: '點擊切換'
+                } : {
+                    rangeSeparator: ' to ',
+                },
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length === 2) {
+                        const startDate = selectedDates[0];
+                        const endDate = selectedDates[1];
+                        const daysDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+                        
+                        document.getElementById('rentalDays').textContent = daysDiff;
+                        
+                        // 計算所需積分
+                        const requiredPoints = daysDiff * parseInt(equipment.PointsPerDay || '50');
+                        document.getElementById('requiredPoints').textContent = requiredPoints;
+                        
+                        // 計算剩餘積分
+                        const remainingPoints = userPoints - requiredPoints;
+                        document.getElementById('remainingPoints').textContent = remainingPoints;
+                        
+                        // 啟用或禁用確認按鈕
+                        const confirmBtn = document.getElementById('confirmBtn');
+                        if (remainingPoints >= 0) {
+                            confirmBtn.disabled = false;
+                        } else {
+                            confirmBtn.disabled = true;
+                        }
+                    }
+                }
+            });
+            
+            // 取消按鈕事件
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                window.location.href = 'equipment.html';
+            });
+            
+            // 關閉按鈕事件
+            document.getElementById('closeBtn').addEventListener('click', function() {
+                window.location.href = 'equipment.html';
+            });
+            
+            // 確認借用按鈕事件
+            document.getElementById('confirmBtn').addEventListener('click', async function() {
+                const selectedDates = dateRangePicker.selectedDates;
+                if (selectedDates.length !== 2) {
+                    alert(t('please_select_dates', currentLang));
+                    return;
+                }
+                
+                const startDate = selectedDates[0].toISOString().split('T')[0];
+                const endDate = selectedDates[1].toISOString().split('T')[0];
+                
+                // 檢查日期是否仍然可用（避免在打開頁面後被其他用戶預約）
+                for (let current = new Date(startDate); current <= new Date(endDate); current.setDate(current.getDate() + 1)) {
+                    const dateStr = current.toISOString().split('T')[0];
+                    if (availableDates[dateStr] === false) {
+                        alert(t('dates_no_longer_available', currentLang));
+                        window.location.reload(); // 重新加載頁面以獲取最新可用性
+                        return;
+                    }
+                }
+                
+                // 計算所需積分
+                const daysDiff = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) + 1;
+                const requiredPoints = daysDiff * parseInt(equipment.PointsPerDay || '50');
+                
+                // 檢查用戶等級是否足夠
+                if (parseInt(currentUserData.level) < parseInt(equipment.DifficultyLevel || '1')) {
+                    alert(t('level_warning', currentLang));
+                    return;
+                }
+                
+                // 檢查用戶積分是否足夠
+                if (userPoints < requiredPoints) {
+                    alert(t('not_enough_points', currentLang));
+                    return;
+                }
+                
+                // 創建預訂對象
+                const bookingId = 'BK' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 1000);
+                const bookingData = {
+                    BookingID: bookingId,
+                    UserID: currentUser,
+                    ItemCode: equipment['Item Code'],
+                    ItemName: equipment['Item Name'],
+                    StartDate: startDate,
+                    EndDate: endDate,
+                    BookingStatus: 'Confirmed',
+                    BookingDate: new Date().toISOString().split('T')[0],
+                    TotalPoints: requiredPoints
+                };
+                
+                try {
+                    // 使用數據庫模塊創建預訂
+                    const result = await window.Database.createBooking(bookingData);
+                    
+                    if (result.success) {
+                        // 更新用戶積分
+                        window.Database.updateUserPoints(currentUser, -requiredPoints);
+                        
+                        // 更新頁面顯示
+                        const resultAlert = document.getElementById('resultAlert');
+                        const resultIcon = document.getElementById('resultIcon');
+                        const resultTitle = document.getElementById('resultTitle');
+                        const resultMessage = document.getElementById('resultMessage');
+                        
+                        resultAlert.classList.remove('hidden', 'bg-red-50');
+                        resultAlert.classList.add('bg-green-50');
+                        resultIcon.classList.remove('fa-times-circle', 'text-red-500');
+                        resultIcon.classList.add('fa-check-circle', 'text-green-500');
+                        resultTitle.textContent = t('booking_success', currentLang);
+                        resultMessage.innerHTML = `
+                            <p>${t('equipment', currentLang)}: ${equipment['Item Name']}</p>
+                            <p>${t('rental_period', currentLang)}: ${startDate} ${t('to', currentLang)} ${endDate}</p>
+                            <p>${t('points_deducted', currentLang)}: ${requiredPoints}</p>
+                        `;
+                        
+                        // 更新頁面上顯示的用戶積分
+                        const newPoints = userPoints - requiredPoints;
+                        document.getElementById('userPoints').textContent = newPoints;
+                        document.getElementById('remainingPoints').textContent = newPoints;
+                        
+                        // 更新currentUserData中的積分
+                        currentUserData.points = newPoints;
+                        localStorage.setItem('currentUserData', JSON.stringify(currentUserData));
+                        
+                        // 禁用確認按鈕
+                        document.getElementById('confirmBtn').disabled = true;
+                    } else {
+                        // 預訂失敗
+                        const resultAlert = document.getElementById('resultAlert');
+                        const resultIcon = document.getElementById('resultIcon');
+                        const resultTitle = document.getElementById('resultTitle');
+                        const resultMessage = document.getElementById('resultMessage');
+                        
+                        resultAlert.classList.remove('hidden', 'bg-green-50');
+                        resultAlert.classList.add('bg-red-50');
+                        resultIcon.classList.remove('fa-check-circle', 'text-green-500');
+                        resultIcon.classList.add('fa-times-circle', 'text-red-500');
+                        resultTitle.textContent = t('booking_failed', currentLang);
+                        resultMessage.textContent = result.message || t('error_during_booking', currentLang);
+                    }
+                } catch (error) {
+                    console.error('預訂過程中發生錯誤:', error);
+                    
+                    // 顯示錯誤信息
+                    const resultAlert = document.getElementById('resultAlert');
+                    const resultIcon = document.getElementById('resultIcon');
+                    const resultTitle = document.getElementById('resultTitle');
+                    const resultMessage = document.getElementById('resultMessage');
+                    
+                    resultAlert.classList.remove('hidden', 'bg-green-50');
+                    resultAlert.classList.add('bg-red-50');
+                    resultIcon.classList.remove('fa-check-circle', 'text-green-500');
+                    resultIcon.classList.add('fa-times-circle', 'text-red-500');
+                    resultTitle.textContent = t('booking_failed', currentLang);
+                    resultMessage.textContent = t('error_during_booking', currentLang);
+                }
+            });
+            
+            // 返回設備頁面按鈕事件
+            document.getElementById('returnToEquipmentBtn').addEventListener('click', function() {
+                window.location.href = 'equipment.html';
+            });
+        });
+        
+        // 獲取類別中文名稱
+        function getCategoryNameChinese(category) {
+            const categoryMap = {
+                'Camera': '相機',
+                'Camera Len': '鏡頭',
+                'Audio': '音頻',
+                'Microphone': '麥克風',
+                'Lighting': '燈光',
+                'Stabilizer': '穩定器',
+                'Battery': '電池',
+                'SD Card': '記憶卡',
+                'Tripod/Lightstand': '三腳架/燈架',
+                'Monitor': '監視器',
+                'Video': '視頻設備',
+                'Communication': '通訊設備',
+                'Utility': '實用工具',
+                'Stroage': '儲存設備',
+                'Computer': '電腦'
+            };
+            
+            return categoryMap[category] || category;
+        }
+        
+        // 獲取難度等級文字
+        function getDifficultyLevel(level, lang) {
+            const levelMap = {
+                zh: ['未知', '基礎', '進階', '進階', '專業', '專家'],
+                en: ['Unknown', 'Basic', 'Intermediate', 'Advanced', 'Professional', 'Expert']
+            };
+            
+            return levelMap[lang][parseInt(level)] || level;
+        }
+    </script>
+</body>
+</html> 

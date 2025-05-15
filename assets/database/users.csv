@@ -1,0 +1,4 @@
+id,name,nameEN,email,points,level,levelName,levelNameEN,preferredEquipment,profileImage,projectDeadline,groupMembers
+ST020123,陳佐伊,Zoe Chan,ST020123@school.edu.hk,1620,2,進階,Intermediate,"DJI Pocket 3,Canon EOS R7",user_zoe.png,2025-05-21,"ST020124,ST020125"
+ST020124,王瑞歐,Rio Wong,ST020124@school.edu.hk,1820,3,專業,Professional,"Canon EOS R6,Zhiyun Crane 3",user_rio.png,2025-06-04,"ST020123,ST020125"
+ST020125,陳天天,Tintin Chen,ST020125@school.edu.hk,1550,2,進階,Intermediate,"DJI Pocket 3,RODE Wireless GO II",user_Tintin.png,2025-06-04,"ST020123,ST020124"

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - AI助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .header {
+            background-color: var(--accent-color);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        .message-container {
+            height: calc(100vh - 16rem);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-message {
+            background-color: #f0f0f0;
+            border-radius: 1rem 1rem 1rem 0.25rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            max-width: 80%;
+            align-self: flex-start;
+        }
+        .user-message {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 1rem 1rem 0.25rem 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            max-width: 80%;
+            align-self: flex-end;
+        }
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+        .chat-input {
+            border: 1px solid #e0e0e0;
+            border-radius: 1.5rem;
+            padding: 0.875rem 1.25rem;
+            width: 100%;
+            outline: none;
+        }
+        .chat-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 191, 165, 0.1);
+        }
+        .send-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .send-btn:hover {
+            background-color: #00a896;
+        }
+        .suggestion-chip {
+            background-color: #f0f0f0;
+            border-radius: 1rem;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .suggestion-chip:hover {
+            background-color: #e0e0e0;
+        }
+        .voice-btn {
+            background-color: #f0f0f0;
+            color: var(--accent-color);
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .voice-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .voice-btn.recording {
+            background-color: #ffebee;
+            color: #f44336;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">RIO AI 助手</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <a href="home.html" class="text-white" aria-label="關閉" data-i18n-aria="close">
+                <i class="fas fa-times text-lg"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-4">
+        <!-- AI助手簡介 -->
+        <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                    <i class="fas fa-robot text-teal-600 text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="font-medium text-gray-800" data-i18n="ai_assistant">RIO AI 助手</h2>
+                    <p class="text-sm text-gray-600" data-i18n="ai_description">您的媒體設備專家，可以幫助解決設備相關問題，提供學習建議</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 對話區域 -->
+        <div id="messageContainer" class="message-container mb-4 px-2">
+            <!-- 訊息將由JavaScript動態填充 -->
+            <div class="ai-message">
+                <div class="message-content" data-i18n="ai_greeting">你好！我是RIO AI，您的媒體設備專家。有什麼我可以幫助您的嗎？</div>
+                <div class="message-time">9:00</div>
+            </div>
+        </div>
+        
+        <!-- 建議問題 -->
+        <div class="mb-4 overflow-x-auto whitespace-nowrap py-2" id="suggestionChips">
+            <div class="suggestion-chip" data-i18n="suggest_equipment">推薦適合的設備</div>
+            <div class="suggestion-chip" data-i18n="suggest_learn">學習課程建議</div>
+            <div class="suggestion-chip" data-i18n="suggest_record">如何錄製好的音頻</div>
+            <div class="suggestion-chip" data-i18n="suggest_lighting">燈光佈置技巧</div>
+        </div>
+        
+        <!-- 輸入框 -->
+        <div class="flex items-center pb-4">
+            <button class="voice-btn mr-2" id="voiceBtn" aria-label="語音輸入" data-i18n-aria="voice_input">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <input type="text" id="messageInput" class="chat-input flex-1 mx-2" placeholder="輸入問題..." data-i18n-placeholder="ai_input_placeholder">
+            <button class="send-btn" id="sendBtn" aria-label="發送" data-i18n-aria="send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply language translations
+            applyTranslations();
+            
+            // Language switcher
+            const currentLang = localStorage.getItem('language') || 'zh';
+            document.getElementById('languageSwitcher').addEventListener('click', function() {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+            
+            // 獲取當前用戶資訊
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 用戶資料 (Demo用)
+            const users = {
+                'ST020123': { name: 'Zoe Siu', level: 1, points: 1620 },
+                'ST020124': { name: 'Rio Wong', level: 3, points: 1820 },
+                'ST020125': { name: 'Tintin Chen', level: 2, points: 1550 }
+            };
+            
+            const currentUserData = users[currentUser];
+            
+            // 建議問題點擊事件
+            const suggestionChips = document.querySelectorAll('.suggestion-chip');
+            suggestionChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const question = this.textContent;
+                    document.getElementById('messageInput').value = question;
+                    sendMessage();
+                });
+            });
+            
+            // 發送訊息
+            const sendBtn = document.getElementById('sendBtn');
+            const messageInput = document.getElementById('messageInput');
+            const messageContainer = document.getElementById('messageContainer');
+            
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (!message) return;
+                
+                // 添加用戶訊息
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                const userMessageEl = document.createElement('div');
+                userMessageEl.className = 'user-message';
+                userMessageEl.innerHTML = `
+                    <div class="message-content">${message}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
+                messageContainer.appendChild(userMessageEl);
+                
+                // 清空輸入
+                messageInput.value = '';
+                
+                // 滾動到底部
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+                
+                // 模擬AI思考
+                setTimeout(() => {
+                    // 添加AI回覆
+                    const aiResponse = getAIResponse(message, currentUserData);
+                    const aiMessageEl = document.createElement('div');
+                    aiMessageEl.className = 'ai-message';
+                    aiMessageEl.innerHTML = `
+                        <div class="message-content">${aiResponse}</div>
+                        <div class="message-time">${timeString}</div>
+                    `;
+                    messageContainer.appendChild(aiMessageEl);
+                    
+                    // 滾動到底部
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }, 800);
+            }
+            
+            // 語音輸入
+            const voiceBtn = document.getElementById('voiceBtn');
+            
+            voiceBtn.addEventListener('click', function() {
+                // 檢查瀏覽器支持
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    const recognition = new SpeechRecognition();
+                    
+                    // 設置語言
+                    recognition.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
+                    recognition.interimResults = false;
+                    
+                    // 開始錄音
+                    voiceBtn.classList.add('recording');
+                    recognition.start();
+                    
+                    recognition.onresult = function(event) {
+                        const speechResult = event.results[0][0].transcript;
+                        messageInput.value = speechResult;
+                        
+                        // 停止錄音動畫
+                        voiceBtn.classList.remove('recording');
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        console.error('語音識別錯誤:', event.error);
+                        // 停止錄音動畫
+                        voiceBtn.classList.remove('recording');
+                    };
+                    
+                    recognition.onend = function() {
+                        // 停止錄音動畫
+                        voiceBtn.classList.remove('recording');
+                    };
+                } else {
+                    alert(currentLang === 'zh' ? '您的瀏覽器不支持語音識別功能' : 'Your browser does not support speech recognition');
+                }
+            });
+            
+            // AI 回應生成（Demo用，實際應用中應串接API）
+            function getAIResponse(message, userData) {
+                const lowerMessage = message.toLowerCase();
+                
+                // 根據用戶等級給予不同建議
+                const levelBasedRecommendation = userData.level === 1 ? 
+                    (currentLang === 'zh' ? '考慮到您當前的基礎級別，建議先學習相應的使用教程' : 'Considering your current basic level, I recommend learning the relevant tutorials first') :
+                    (userData.level === 2 ? 
+                    (currentLang === 'zh' ? '您的進階級別能借用更多專業設備，但建議多參與實踐' : 'Your intermediate level allows you to borrow more professional equipment, but I suggest more practice') :
+                    (currentLang === 'zh' ? '以您的專業等級，可以嘗試使用更高端的設備組合和技巧' : 'With your advanced level, you can try using higher-end equipment combinations and techniques'));
+                
+                // 推薦設備相關
+                if (lowerMessage.includes('推薦') || lowerMessage.includes('設備') || 
+                    lowerMessage.includes('recommend') || lowerMessage.includes('equipment')) {
+                    return currentLang === 'zh' ?
+                        `根據您的需求和等級，我推薦以下設備：<br><br>
+                        1. ${userData.level >= 2 ? 'Canon EOS R7 相機' : 'DJI Pocket 3'}<br>
+                        2. ${userData.level >= 2 ? 'Canon RF 24-105mm F4 鏡頭' : 'DJI Mic 2 無線麥克風'}<br>
+                        3. ${userData.level >= 3 ? 'Godox SL-60W LED燈' : '推薦先完成相關課程提升等級'}<br><br>
+                        ${levelBasedRecommendation}` :
+                        `Based on your needs and level, I recommend the following equipment:<br><br>
+                        1. ${userData.level >= 2 ? 'Canon EOS R7 Camera' : 'DJI Pocket 3'}<br>
+                        2. ${userData.level >= 2 ? 'Canon RF 24-105mm F4 Lens' : 'DJI Mic 2 Wireless Microphone'}<br>
+                        3. ${userData.level >= 3 ? 'Godox SL-60W LED Light' : 'I recommend completing related courses to improve your level first'}<br><br>
+                        ${levelBasedRecommendation}`;
+                }
+                
+                // 學習課程建議
+                else if (lowerMessage.includes('學習') || lowerMessage.includes('課程') || 
+                         lowerMessage.includes('learn') || lowerMessage.includes('course')) {
+                    return currentLang === 'zh' ?
+                        `以下是針對您當前等級（${userData.level}）的推薦學習課程：<br><br>
+                        1. ${userData.level === 1 ? 'Canon R7 基礎視頻拍攝（升級必修）' : 'DJI Drone Piloting & Aerial Video'}<br>
+                        2. ${userData.level === 1 ? 'DJI Pocket 3 基礎操作' : 'Professional Audio Recording'}<br>
+                        3. ${userData.level < 3 ? 'Godox 燈光系統應用（推薦）' : 'Blackmagic ATEM 專業直播'}<br><br>
+                        完成課程測驗後可以獲得積分並提升等級，解鎖更多設備借用權限。` :
+                        `Here are the recommended courses for your current level (${userData.level}):<br><br>
+                        1. ${userData.level === 1 ? 'Canon R7 Basic Video Shooting (Required for upgrade)' : 'DJI Drone Piloting & Aerial Video'}<br>
+                        2. ${userData.level === 1 ? 'DJI Pocket 3 Basic Operation' : 'Professional Audio Recording'}<br>
+                        3. ${userData.level < 3 ? 'Godox Lighting System Application (Recommended)' : 'Blackmagic ATEM Professional Live Streaming'}<br><br>
+                        Complete course quizzes to earn points and level up, unlocking more equipment borrowing privileges.`;
+                }
+                
+                // 錄音技巧
+                else if (lowerMessage.includes('錄音') || lowerMessage.includes('音頻') || lowerMessage.includes('麥克風') ||
+                         lowerMessage.includes('audio') || lowerMessage.includes('recording') || lowerMessage.includes('microphone')) {
+                    return currentLang === 'zh' ?
+                        `以下是提高音頻錄製質量的建議：<br><br>
+                        1. 選擇合適的錄音設備：DJI Mic 2 是入門者的好選擇<br>
+                        2. 避免背景噪音：選擇安靜的環境或使用隔音設備<br>
+                        3. 適當的麥克風位置：距離音源約20-30厘米<br>
+                        4. 使用防風罩：戶外錄音時必備<br>
+                        5. 進行音頻監控：使用耳機實時監聽<br><br>
+                        您可以在學習中心完成"Professional Audio Recording"課程獲取更多專業知識。` :
+                        `Here are suggestions to improve audio recording quality:<br><br>
+                        1. Choose appropriate recording equipment: DJI Mic 2 is a good choice for beginners<br>
+                        2. Avoid background noise: Select a quiet environment or use sound insulation equipment<br>
+                        3. Proper microphone positioning: About 20-30cm from the sound source<br>
+                        4. Use windshields: Essential for outdoor recording<br>
+                        5. Monitor audio: Use headphones for real-time monitoring<br><br>
+                        You can complete the "Professional Audio Recording" course in the Learning Center for more professional knowledge.`;
+                }
+                
+                // 燈光設置
+                else if (lowerMessage.includes('燈光') || lowerMessage.includes('照明') || 
+                         lowerMessage.includes('light') || lowerMessage.includes('lighting')) {
+                    return currentLang === 'zh' ?
+                        `基礎三點打光技巧：<br><br>
+                        1. 主光源：放置在相機與主體之間，約45度角，提供主要照明<br>
+                        2. 輔助光：位於主體對面的主光源，填充陰影<br>
+                        3. 背光/輪廓光：放在主體後方，創造輪廓感和層次<br><br>
+                        設備推薦：<br>
+                        - 入門級：Godox SL-60W LED燈 + 柔光箱<br>
+                        - 進階：三燈套裝，包含主光、輔助光和背光<br><br>
+                        完成"Essential Lighting Techniques"課程獲取更多知識與積分。` :
+                        `Basic Three-Point Lighting Technique:<br><br>
+                        1. Key Light: Placed between the camera and subject at about 45 degrees, provides primary illumination<br>
+                        2. Fill Light: Positioned opposite to the key light, fills in shadows<br>
+                        3. Back Light/Rim Light: Placed behind the subject, creates contour and depth<br><br>
+                        Equipment Recommendations:<br>
+                        - Entry level: Godox SL-60W LED Light + Softbox<br>
+                        - Advanced: Three-light kit, including key, fill, and back lights<br><br>
+                        Complete the "Essential Lighting Techniques" course for more knowledge and points.`;
+                }
+                
+                // 其他問題的通用回應
+                else {
+                    return currentLang === 'zh' ?
+                        `感謝您的提問。我是媒體設備和製作專家，可以針對以下方面提供協助：<br><br>
+                        1. 推薦適合您項目的設備<br>
+                        2. 提供設備使用和技術指導<br>
+                        3. 解答音頻、視頻製作相關問題<br>
+                        4. 建議適合您等級的學習路徑<br><br>
+                        您當前的等級是：${userData.level}（${userData.level === 1 ? '基礎' : userData.level === 2 ? '進階' : '專業'}），積分：${userData.points}。請告訴我您的具體需求，我會提供更精確的協助。` :
+                        `Thank you for your question. I'm an expert in media equipment and production, and can assist with the following:<br><br>
+                        1. Recommend equipment suitable for your project<br>
+                        2. Provide equipment usage and technical guidance<br>
+                        3. Answer questions related to audio and video production<br>
+                        4. Suggest learning paths appropriate for your level<br><br>
+                        Your current level is: ${userData.level} (${userData.level === 1 ? 'Basic' : userData.level === 2 ? 'Intermediate' : 'Advanced'}), Points: ${userData.points}. Please tell me your specific needs for more precise assistance.`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

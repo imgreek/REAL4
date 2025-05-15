@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - 學習</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/database/database.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        .course-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .level-badge {
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+        }
+        .level-beginner {
+            background-color: #E3F2FD;
+            color: #1565C0;
+        }
+        .level-intermediate {
+            background-color: #FFF3E0;
+            color: #E65100;
+        }
+        .level-advanced {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+        }
+        .tabs-container {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1rem;
+        }
+        .tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <img src="assets/images/App_Logo/REAL_LOGO.PNG" alt="REAL Logo" class="h-8">
+        <h1 class="text-xl font-bold" data-i18n="learning_module">學習模組</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <a href="chat.html" id="chat-link" class="text-white hover:text-gray-200 mr-3" aria-label="Chat Room" title="Chat Room" data-i18n-aria-label="chat_room_label" data-i18n-title="chat_room_label"><i class="fas fa-comments"></i></a>
+            <a href="qr-scanner.html" class="text-white" aria-label="QR碼掃描" data-i18n-aria="qr_scanner">
+                <i class="fas fa-qrcode text-lg"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-4">
+        <!-- 標籤切換 -->
+        <div class="tabs-container">
+            <div class="tab active" data-tab="all" data-i18n="all">全部</div>
+            <div class="tab" data-tab="in-progress" data-i18n="in_progress">進行中</div>
+            <div class="tab" data-tab="completed" data-i18n="completed">已完成</div>
+        </div>
+
+        <!-- 課程列表 -->
+        <div id="coursesList" class="space-y-4">
+            <!-- 這裡將由JavaScript動態填充課程卡片 -->
+        </div>
+    </main>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center active">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <!-- 課程詳情模態框 (默認隱藏) -->
+    <div id="courseModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white w-full max-w-md rounded-lg overflow-hidden">
+            <div class="relative">
+                <img id="courseImage" src="https://dummyimage.com/400x200" alt="課程封面" class="w-full h-48 object-cover">
+                <button id="closeModal" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full" aria-label="關閉" data-i18n-aria="close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <h2 id="courseTitle" class="text-xl font-bold mb-2">課程標題</h2>
+                <div id="courseLevel" class="level-badge level-intermediate inline-block mb-3">中級</div>
+                <p id="courseDescription" class="text-gray-600 mb-4">課程描述將在這裡顯示...</p>
+                
+                <div class="mb-4">
+                    <h3 class="text-lg font-medium mb-2" data-i18n="course_modules">課程單元</h3>
+                    <div id="courseModules" class="space-y-2">
+                        <!-- 模組列表將在這裡動態填充 -->
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-sm text-gray-500" data-i18n="learning_time">學習時間:</span>
+                        <span id="courseDuration" class="text-sm font-medium">30</span> <span data-i18n="minutes">分鐘</span>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500" data-i18n="earnable_points">可獲積分:</span>
+                        <span id="coursePoints" class="text-sm font-medium">50</span>
+                    </div>
+                </div>
+                
+                <button id="startCourseBtn" class="w-full bg-blue-600 text-white py-3 rounded-lg mt-4 font-medium hover:bg-blue-700 transition" data-i18n="start_learning">
+                    開始學習
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            applyTranslations();
+
+            const languageSwitcherBtn = document.getElementById('languageSwitcher');
+            if (languageSwitcherBtn) {
+                languageSwitcherBtn.addEventListener('click', function() {
+                    const currentLang = localStorage.getItem('language') || 'zh';
+                    const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                    switchLanguage(newLang);
+
+                    // Re-render courses with the new language
+                    const activeTab = document.querySelector('.tab.active');
+                    const filter = activeTab ? activeTab.dataset.tab : 'all';
+                    renderCourses(filter);
+                });
+            }
+
+            const currentUser = localStorage.getItem('currentUser');
+            const currentLang = localStorage.getItem('language') || 'zh';
+
+            // --- Removed localStorage simulation, will use window.Database ---
+            
+            if (typeof window.Database === 'undefined' || !window.Database.init) {
+                console.error('Database module not found or not initialized on learning.html.');
+                const coursesListEl = document.getElementById('coursesList');
+                if (coursesListEl) {
+                    coursesListEl.innerHTML = `<p class="text-red-500 text-center py-8">${t('error_loading_database_module', currentLang)} (DB Missing)</p>`;
+                }
+                return;
+            }
+             // Ensure Database is initialized
+            if (!window.Database.getAllCourses) { // Simple check
+                 await window.Database.init();
+            }
+
+            async function renderCourses(filter = 'all') {
+                const coursesListEl = document.getElementById('coursesList');
+                if (!coursesListEl) return;
+                coursesListEl.innerHTML = `<div class="flex justify-center items-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i><p class="ml-3 text-gray-600">${t('loading_content', currentLang)}</p></div>`;
+
+                try {
+                    const allCourses = await window.Database.getAllCourses(); 
+                    const userOverallProgressMap = currentUser ? window.Database.getAllUserOverallProgress(currentUser) : {};
+
+                    if (!allCourses || allCourses.length === 0) { // Added check for empty or null allCourses
+                         console.error("getAllCourses returned undefined, null, or empty array");
+                         coursesListEl.innerHTML = `<p class="text-red-500 text-center py-8">${t('error_loading_courses', currentLang)}</p>`;
+                         return;
+                    }
+
+                    let filteredCourses = allCourses;
+                    
+                    if (filter === 'in-progress') {
+                        filteredCourses = allCourses.filter(course => {
+                            const courseId = course.contentPath ? course.contentPath.split('/').pop().replace('.md', '') : course.courseId;
+                            const progress = userOverallProgressMap[courseId];
+                            return progress && !progress.completed && progress.progress > 0 && progress.progress < 100;
+                        });
+                    } else if (filter === 'completed') {
+                        filteredCourses = allCourses.filter(course => {
+                            const courseId = course.contentPath ? course.contentPath.split('/').pop().replace('.md', '') : course.courseId;
+                            const progress = userOverallProgressMap[courseId];
+                            return progress && progress.completed;
+                        });
+                    }
+
+                    if (filteredCourses.length === 0) {
+                        let messageKey = 'no_courses_filter'; 
+                        if (filter === 'all') messageKey = 'no_courses_available'; 
+                        else if (filter === 'in-progress') messageKey = 'no_courses_in_progress';
+                        else if (filter === 'completed') messageKey = 'no_courses_completed_yet';
+                        coursesListEl.innerHTML = `<p class="text-gray-500 text-center py-8">${t(messageKey, currentLang)}</p>`;
+                        return;
+                    }
+                    
+                    coursesListEl.innerHTML = ''; 
+                    filteredCourses.forEach(course => {
+                        const courseId = course.contentPath ? course.contentPath.split('/').pop().replace('.md', '') : course.courseId;
+                        const overallProgress = userOverallProgressMap[courseId] || { progress: 0, completed: false }; 
+                        const courseCard = createCourseCard(course, overallProgress); 
+                        coursesListEl.appendChild(courseCard);
+                    });
+
+                } catch (error) {
+                    console.error("Error loading courses:", error);
+                    coursesListEl.innerHTML = `<p class="text-red-500 text-center py-8">${t('error_loading_courses', currentLang)}</p>`;
+                }
+            }
+
+            function createCourseCard(course, overallProgress) { 
+                const courseCard = document.createElement('div');
+                courseCard.className = 'course-card flex p-4 cursor-pointer';
+                const courseFileName = course.contentPath ? course.contentPath.split('/').pop() : (course.courseId ? `${course.courseId}.md` : 'unknown.md');
+                courseCard.dataset.courseFileName = courseFileName;
+
+                let levelClass = 'level-beginner';
+                const courseLevel = parseInt(course.level);
+                if (courseLevel === 2) levelClass = 'level-intermediate';
+                if (courseLevel >= 3) levelClass = 'level-advanced';
+
+                let progressHTML = '';
+                let statusTextKey = 'start_learning';
+
+                const progressPercent = parseInt(overallProgress.progress || 0);
+                const isCompleted = overallProgress.completed === true;
+
+                if (isCompleted) {
+                    statusTextKey = 'completed';
+                    progressHTML = `
+                        <div class="mt-2">
+                            <div class="w-full bg-green-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                            <div class="text-xs text-green-600 mt-1">${t('completed', currentLang)}</div>
+                        </div>
+                    `;
+                } else if (progressPercent > 0) {
+                    statusTextKey = 'continue_learning';
+                    progressHTML = `
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">${t('progress', currentLang)}: ${progressPercent}%</div>
+                        </div>
+                    `;
+                } else {
+                    progressHTML = `
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gray-400 h-2 rounded-full" style="width: 0%"></div> 
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">${t(statusTextKey, currentLang)}</div>
+                        </div>
+                    `;
+                }
+
+                const courseName = currentLang === 'zh' ? course.courseName : course.courseNameEN;
+                const courseDescription = currentLang === 'zh' ? course.description : course.descriptionEN;
+                const levelText = t(course.level === '1' ? 'basic' : (course.level === '2' ? 'intermediate' : 'professional'), currentLang);
+                const minutesText = t('minutes', currentLang);
+                const pointsText = t('points', currentLang);
+                
+                const baseImageUrl = 'assets/images/Item_image/';
+                const localFallbackImage = 'assets/images/App_Logo/REAL_LOGO_Square.png';
+                let imageUrl = course.imageURL ? `${baseImageUrl}${course.imageURL}` : localFallbackImage;
+                let remotePlaceholder = `https://dummyimage.com//80x80?text=${encodeURIComponent(courseName[0] || 'C')}`;
+
+                courseCard.innerHTML = `
+                    <div class="w-24 h-24 bg-gray-200 rounded-md overflow-hidden flex-shrink-0 mr-4">
+                        <img src="${imageUrl}" 
+                             alt="${courseName}" 
+                             class="w-full h-full object-cover" 
+                             onerror="this.onerror=null; this.src='${remotePlaceholder}'; this.onerror=()=>{this.onerror=null; this.src='${localFallbackImage}';}">
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium text-gray-800">${courseName}</h3>
+                        <div class="flex items-center mt-1 mb-2 flex-wrap">
+                            <span class="level-badge ${levelClass} mr-2 mb-1 sm:mb-0">${levelText}</span>
+                            <span class="text-sm text-gray-500 mr-3 mb-1 sm:mb-0"><i class="far fa-clock mr-1"></i>${course.duration || 'N/A'} ${minutesText}</span>
+                            <span class="text-sm text-gray-500 mb-1 sm:mb-0"><i class="fas fa-star mr-1 text-yellow-500"></i>${course.pointsReward || 'N/A'} ${pointsText}</span>
+                        </div>
+                        <div class="text-sm text-gray-600 line-clamp-2">${courseDescription}</div>
+                        ${progressHTML}
+                    </div>
+                `;
+
+                courseCard.addEventListener('click', () => {
+                    if (courseFileName && courseFileName.endsWith('.md')) {
+                        window.location.href = `course-detail.html?file=${encodeURIComponent(courseFileName)}&title=${encodeURIComponent(courseName)}`;
+                    } else {
+                        console.warn('Course file name not found or invalid for card:', course);
+                        alert(t('course_content_not_available', currentLang)); 
+                    }
+                });
+                return courseCard;
+            }
+
+            if (currentUser || confirm(t('proceed_without_login_progress_warning', currentLang || 'zh'))) {
+                 renderCourses('all');
+            } else {
+                 const coursesListEl = document.getElementById('coursesList');
+                 if (coursesListEl) {
+                    coursesListEl.innerHTML = `<p class="text-orange-600 text-center py-8">${t('login_recommended_for_progress', currentLang || 'zh')}</p>`;
+                 }
+            }
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const filter = this.dataset.tab;
+                    renderCourses(filter);
+                });
+            });
+
+            /* // Old modal logic commented out
+            function showCourseDetails(course, progress) { ... }
+            document.getElementById('closeModal').addEventListener('click', function() { ... });
+            document.getElementById('startCourseBtn').addEventListener('click', function() { ... });
+            */
+        });
+    </script>
+</body>
+</html> 

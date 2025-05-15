@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=DQVEED-lx7c",
+      "intro_zh": "長按發射器與接收器的開機鍵三秒，會自動配對。用背夾、磁鐵將發射器固定於衣領或衣物外部。旋緊小型防風毛球至發射器麥克風端，降低風吹雜音。說話並觀察接收器的音量指示條是否顯示正常收音。",
+      "intro_en": "Long press the power buttons on both the transmitter and receiver for 3 seconds to auto pair. Use the clip or magnet to attach the transmitter securely to your collar or clothing. Screw the wind muff onto the transmitter to minimize wind noise. Speak and check the audio level displayed on the receiver for proper signal.",
+      "quiz": {
+        "question_zh": "DJI Mic 的主體有哪些？",
+        "question_en": "What are the main parts of DJI Mic?",
+        "options_zh": ["發射器與接收器", "只有喇叭", "插頭"],
+        "options_en": ["Transmitters & Receiver", "Speaker only", "Only adapter"],
+        "correct_answer_index": 0
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=2mvlfSHZ-0A",
+      "intro_zh": "根據設備接口選擇USB-C、Lightning 或 3.5mm音訊線連接。可在接收器觸控螢幕切換單聲道（Mono）或雙聲道（Stereo）。發射器長按錄音鍵可單機錄音做為備份，斷訊時也不漏收音。可透過接收器一鍵切換靜音或調整收音音量。",
+      "intro_en": "Use USB-C, Lightning, or 3.5mm cable to connect to smartphones or cameras. Switch between mono and stereo via the receiver touch screen. Press and hold the record button on the transmitter to activate local onboard recording as backup. Mute or adjust gain levels quickly from the receiver’s screen.",
+      "quiz": {
+        "question_zh": "若要發射器自行本地錄音，需如何操作？",
+        "question_en": "How to use the transmitter’s onboard recording?",
+        "options_zh": ["接收器控制", "長按發射器錄音鍵", "用手機APP"],
+        "options_en": ["Use receiver", "Hold transmitter’s record button", "Phone app"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=SmVGwFTVUjs",
+      "intro_zh": "一組DJI Mic可與相機/手機等多設備同步錄音與錄影，適合團隊報導。可搭配筆電或直播設備同時進行現場或線上收音。發射器本地錄音檔可傳至電腦進行備份與音訊後製剪輯。接收器可連接喇叭、監聽耳機，提升現場教學或活動互動效果。",
+      "intro_en": "Use DJI Mic with cameras/phones for multi-person speaking in team settings. Link to a laptop or streaming system for live or hybrid events. Transfer onboard recordings to PC for backup and further editing. Connect receiver to speakers or monitoring headphones for better teaching or event experience.",
+      "quiz": {
+        "question_zh": "DJI Mic 可否搭配相機、手機等多種設備？",
+        "question_en": "Can DJI Mic work with cameras and smartphones?",
+        "options_zh": ["可以", "不可以"],
+        "options_en": ["Yes", "No"],
+        "correct_answer_index": 0
+      }
+    }
+  ]
+}

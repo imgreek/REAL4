@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=bUtBrh7WYPo",
+      "intro_zh": "將發射器和接收器放入充電盒，用5V/2A充電器供電。長按電源鍵2秒開啟裝置、發射器與接收器自動配對。根據用途選配不同轉接頭，連接到手機、相機或電腦。開機、開始說話，觀察接收器音量指示燈/螢幕。",
+      "intro_en": "Place transmitters and receiver into the charging case. Use a 5V/2A charger. Press and hold the power button for 2 seconds. Devices pair automatically. Choose the right adapter to connect to smartphone, camera, or computer. Speak while monitoring the receiver's volume indicators or screen.",
+      "quiz": {
+        "question_zh": "充電時建議用多少伏特的充電器？",
+        "question_en": "What is the recommended charger voltage for charging?",
+        "options_zh": ["3V", "5V", "12V"],
+        "options_en": ["3V", "5V", "12V"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=bUtBrh7WYPo",
+      "intro_zh": "接收器可選擇單聲道或立體聲錄音。按一下電源鍵可開啟/關閉降噪功能。透過接收器插入耳機可即時監聽聲音及調節音量。DJI Mic 2 部分手機支援用接收器按鍵控制手機拍攝。",
+      "intro_en": "Receiver allows you to select mono or stereo recording. Press the power button once to enable/disable noise reduction. Plug headphones into the receiver for live monitoring and volume adjustment. Some phones support using the receiver's button to start/stop recording.",
+      "quiz": {
+        "question_zh": "DJI Mic 2 可以錄單聲道和立體聲嗎？",
+        "question_en": "Can DJI Mic 2 record in both mono and stereo?",
+        "options_zh": ["是", "否"],
+        "options_en": ["Yes", "No"],
+        "correct_answer_index": 0
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/watch?v=bUtBrh7WYPo",
+      "intro_zh": "選擇對應轉接頭分別連接至不同設備。插拔接收器或選用雙發射器模式。將錄音檔通過電腦或手機下載進行儲存與剪輯。可搭配混音器或專業錄音設備擴充使用。",
+      "intro_en": "Use the appropriate adapter to connect to each device. Detach and replug the receiver or use dual transmitter mode. Download recordings via computer/phone for storage and editing. Expand with mixers or professional recording equipment if needed.",
+      "quiz": {
+        "question_zh": "DJI Mic 2 發射器可同時連接幾台設備？",
+        "question_en": "How many devices can a DJI Mic 2 transmitter connect at once?",
+        "options_zh": ["1", "2", "同時1台"],
+        "options_en": ["1", "2", "Only one at a time"],
+        "correct_answer_index": 2
+      }
+    }
+  ]
+}

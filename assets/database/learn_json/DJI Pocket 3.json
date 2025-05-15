@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=nNapondAUWc",
+      "intro_zh": "長按電源鍵開機，再長按一次可關機。手持設備，輕鬆調整雲台方向至合適角度。透過觸控螢幕選擇錄影或拍照模式。插入microSD卡後，在設定中完成格式化。",
+      "intro_en": "Press and hold the power button to turn on; press and hold again to turn off. Hold the device and smoothly adjust the gimbal direction as needed. Select video or photo mode from the touchscreen. Insert microSD card and format it via settings.",
+      "quiz": {
+        "question_zh": "DJI Pocket 3的感光元件多大？",
+        "question_en": "What is the sensor size of the DJI Pocket 3?",
+        "options_zh": ["1/2.3吋", "2吋", "1吋"],
+        "options_en": ["1/2.3 inch", "2 inch", "1 inch"],
+        "correct_answer_index": 2
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=iA0gOWdzHBk",
+      "intro_zh": "進入設定選單調整解析度至4K。旋轉螢幕或選單啟用直拍/橫拍模式。啟動ActiveTrack，讓相機自動追蹤主體。選擇「延時攝影」並預設間隔、時長。",
+      "intro_en": "In setting menu, set resolution to 4K. Rotate the screen or use the menu to switch between portrait and landscape. Activate ActiveTrack for auto subject tracking. Select “Timelapse” and set the interval and duration.",
+      "quiz": {
+        "question_zh": "DJI Pocket 3最高可錄製幾K的影片？",
+        "question_en": "What is the maximum video resolution DJI Pocket 3 supports?",
+        "options_zh": ["1080P", "2.7K", "4K"],
+        "options_en": ["1080P", "2.7K", "4K"],
+        "correct_answer_index": 2
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.dji.com/hk/osmo-pocket-3/video",
+      "intro_zh": "透過Type-C/Lightning介面連接手機啟動DJI Mimo App。使用DJI Mic或其他支援的無線麥克風接收器。插入外部配件開啟HDMI或Type-C影像輸出。將Pocket 3以Type-C連線至電腦進行資料備份和充電。",
+      "intro_en": "Connect via Type-C/Lightning port and launch DJI Mimo App. Attach DJI Mic or other supported wireless mic receivers. Use external accessories for HDMI/Type-C video output. Connect Pocket 3 to computer via Type-C for data backup and charging.",
+      "quiz": {
+        "question_zh": "Pocket 3需要哪個App與手機協作？",
+        "question_en": "Which App is used for Pocket 3 and smartphone collaboration?",
+        "options_zh": ["DJI GO", "DJI Fly", "DJI Mimo"],
+        "options_en": ["DJI GO", "DJI Fly", "DJI Mimo"],
+        "correct_answer_index": 2
+      }
+    }
+  ]
+}

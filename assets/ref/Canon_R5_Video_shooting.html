@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon EOS R5 專業影片拍攝</title>
+    <!-- 樣式表 -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Font Awesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定義樣式 -->
+    <style>
+        body {
+            padding-bottom: 60px;
+            background-color: var(--background-color);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar-logo {
+            max-height: 32px;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--primary-color);
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .large-card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin: 1rem 0;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            width: 100%;
+        }
+        
+        .card-section:last-child {
+            border-bottom: none;
+        }
+
+        .header-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .course-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .course-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-tag {
+            background-color: rgba(26, 115, 232, 0.1);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .course-tag.intermediate {
+            background-color: rgba(255, 160, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .back-btn {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 65%;
+        }
+
+        .module-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .module-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .module-item:last-child {
+            border-bottom: none;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .module-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .module-duration {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        .module-content {
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px dashed var(--light-gray);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            margin-bottom: 1rem;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .lesson-item:last-child {
+            border-bottom: none;
+        }
+
+        .lesson-icon {
+            margin-right: 1rem;
+            color: var(--primary-color);
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        .lesson-title {
+            flex: 1;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .lesson-duration {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .lesson-status {
+            margin-left: 1rem;
+            color: var(--success-color);
+        }
+
+        .instructors-section {
+            margin-top: 1.5rem;
+        }
+
+        .instructor-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .instructor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .instructor-info {
+            flex: 1;
+        }
+
+        .instructor-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+
+        .instructor-bio {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .chevron-icon {
+            transition: transform 0.3s;
+        }
+
+        .module-header.active .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .module-content {
+            display: none;
+        }
+
+        .module-header.active + .module-content {
+            display: block;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+    <!-- 添加用戶數據庫腳本 -->
+    <script src="assets/js/users.js"></script>
+</head>
+<body>
+    <!-- 頂部選單 -->
+    <div class="top-bar">
+        <div class="top-bar-brand">
+            <img src="assets/images/logo/REAL_SIM_ICON.png" alt="REAL" class="top-bar-logo">
+        </div>
+        <div class="top-bar-actions">
+            <div class="language-switcher">
+                <label for="language-switcher" class="sr-only">Select Language</label>
+                <select id="language-switcher" aria-label="Change language" title="Select language">
+                    <option value="en">English</option>
+                    <option value="zh-TW">繁體中文</option>
+                </select>
+            </div>
+            <button class="icon-btn" aria-label="Notifications" title="Notifications">
+                <i class="fas fa-bell" aria-hidden="true"></i>
+            </button>
+            <button class="icon-btn" aria-label="Scan QR Code" title="Scan QR Code">
+                <i class="fas fa-qrcode" aria-hidden="true"></i>
+            </button>
+            <a href="connect.html" class="icon-btn" aria-label="Connect Chat" title="聊天室">
+                <i class="fas fa-comments" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主內容區 -->
+    <div class="container">
+        <a href="learn.html" class="back-btn">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> 返回課程列表
+        </a>
+
+        <div class="large-card">
+            <img src="https://via.placeholder.com/800x240" alt="Canon EOS R5 專業影片拍攝" class="header-image">
+            <div class="card-section">
+                <div class="course-header">
+                    <div>
+                        <h1 class="course-title">Canon EOS R5 專業影片拍攝</h1>
+                        <div class="course-meta">
+                            <span>總時長: 240 分鐘</span> · <span>最後更新: 2023年6月</span>
+                        </div>
+                        <div class="course-tags">
+                            <span class="course-tag intermediate">中級</span>
+                            <span class="course-tag">視頻</span>
+                            <span class="course-tag">Canon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>課程進度</span>
+                        <span>65% 完成</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <p>掌握Canon EOS R5的8K視頻拍攝技術，學習專業的拍攝設置和後期處理流程。這門課程將幫助你充分利用Canon EOS R5的強大視頻功能，創作出專業質量的影片作品。</p>
+            </div>
+
+            <div class="card-section">
+                <h2>課程內容</h2>
+                <div class="module-list">
+                    <!-- 模組 1 -->
+                    <div class="module-item">
+                        <div class="module-header active">
+                            <h3 class="module-title">模組 1: 相機基礎設置</h3>
+                            <span class="module-duration"><i class="fas fa-clock" aria-hidden="true"></i> 45 分鐘</span>
+                            <i class="fas fa-chevron-down chevron-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="module-content">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="lesson-list">
+                                <div class="lesson-item">
+                                    <div class="lesson-icon">
+                                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="lesson-title">1.1 Canon EOS R5 介紹</div>
+                                    <div class="lesson-duration">10 分鐘</div>
+                                    <div class="lesson-status">已完成</div>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-icon">
+                                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="lesson-title">1.2 菜單系統導覽</div>
+                                    <div class="lesson-duration">15 分鐘</div>
+                                    <div class="lesson-status">已完成</div>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-icon">
+                                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="lesson-title">1.3 視頻錄製模式設置</div>
+                                    <div class="lesson-duration">20 分鐘</div>
+                                    <div class="lesson-status">已完成</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 模組 2 -->
+                    <div class="module-item">
+                        <div class="module-header active">
+                            <h3 class="module-title">模組 2: 專業視頻錄製技巧</h3>
+                            <span class="module-duration"><i class="fas fa-clock" aria-hidden="true"></i> 60 分鐘</span>
+                            <i class="fas fa-chevron-down chevron-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="module-content">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="lesson-list">
+                                <div class="lesson-item">
+                                    <div class="lesson-icon">
+                                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="lesson-title">2.1 8K RAW 錄製基礎</div>
+                                    <div class="lesson-duration">15 分鐘</div>
+                                    <div class="lesson-status">已完成</div>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-icon">
+                                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="lesson-title">2.2 C-Log 色彩配置文件應用</div>
+                                    <div class="lesson-duration">20 分鐘</div>
+                                    <div class="lesson-status">已完成</div>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-icon">
+                                        <i class="fas fa-play-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="lesson-title">2.3 高幀率慢動作拍攝</div>
+                                    <div class="lesson-duration">25 分鐘</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 模組 3 -->
+                    <div class="module-item">
+                        <div class="module-header">
+                            <h3 class="module-title">模組 3: 進階對焦技巧</h3>
+                            <span class="module-duration"><i class="fas fa-clock" aria-hidden="true"></i> 55 分鐘</span>
+                            <i class="fas fa-chevron-down chevron-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="module-content">
+                            <p>這個模組尚未解鎖。完成前面的課程內容後即可訪問。</p>
+                        </div>
+                    </div>
+
+                    <!-- 模組 4 -->
+                    <div class="module-item">
+                        <div class="module-header">
+                            <h3 class="module-title">模組 4: 後期製作工作流程</h3>
+                            <span class="module-duration"><i class="fas fa-clock" aria-hidden="true"></i> 80 分鐘</span>
+                            <i class="fas fa-chevron-down chevron-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="module-content">
+                            <p>這個模組尚未解鎖。完成前面的課程內容後即可訪問。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h2>課程講師</h2>
+                <div class="instructors-section">
+                    <div class="instructor-card">
+                        <img src="https://via.placeholder.com/60x60" alt="陳大偉" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h3 class="instructor-name">陳大偉</h3>
+                            <p class="instructor-bio">專業電影攝影師，擁有10年Canon相機使用經驗。曾參與多部獨立電影和商業廣告的拍攝工作，專注於高質量視頻製作和後期調色。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h2>相關設備</h2>
+                <p>學習本課程可以使用以下設備，這些設備可在REAL平台租借：</p>
+                <ul>
+                    <li>Canon EOS R5 相機</li>
+                    <li>Canon RF 24-105mm f/4L IS USM 鏡頭</li>
+                    <li>Canon RF 85mm f/1.2L USM 鏡頭</li>
+                    <li>DJI RS 3 Pro 穩定器</li>
+                    <li>Atomos Ninja V 外接監視器/錄像機</li>
+                </ul>
+                <a href="equipment.html" class="btn btn-primary">查看設備租借</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <nav class="bottom-nav">
+        <a href="home.html" class="bottom-nav-item">
+            <i class="fas fa-home bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="home">Home</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item">
+            <i class="fas fa-camera bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="equipment">Equipment</span>
+        </a>
+        <a href="learn.html" class="bottom-nav-item active">
+            <i class="fas fa-graduation-cap bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="learn">Learn</span>
+        </a>
+        <a href="rio_ai.html" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="rio_ai">Rio AI</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="profile">Profile</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript -->
+    <script src="assets/js/language.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 檢查用戶是否已登入
+            const currentUser = authUtils.getCurrentUser();
+            if (!currentUser) {
+                // 未登入則跳轉到登入頁
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // 模組展開/收起功能
+            document.querySelectorAll('.module-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

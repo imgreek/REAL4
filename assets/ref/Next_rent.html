@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Process</title>
+    <!-- 樣式表 -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Font Awesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 添加用戶數據庫腳本 -->
+    <script src="assets/js/users.js"></script>
+    <!-- 自定義樣式 -->
+    <style>
+        body {
+            padding-bottom: 60px;
+            background-color: var(--background-color);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar-logo {
+            max-height: 32px;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--primary-color);
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+
+        .process-container {
+            padding: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            background-color: var(--primary-color);
+            border-radius: 12px;
+            padding: 2rem;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-section {
+            margin-bottom: 2rem;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 45px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 15px;
+            width: 2px;
+            background-color: var(--light-gray);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .timeline-point {
+            position: absolute;
+            top: 0;
+            left: -45px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--light-gray);
+            color: var(--text-secondary);
+            z-index: 2;
+        }
+
+        .timeline-point.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #FFFFFF;
+        }
+
+        .timeline-point.complete {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: #FFFFFF;
+        }
+
+        .timeline-content {
+            background-color: #F9F9F9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-date {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .timeline-heading {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            padding-right: 80px;
+        }
+
+        .timeline-text {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .dialog-section {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .dialog-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .message-name {
+            font-weight: 600;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .message-bubble {
+            background-color: #F0F2F5;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            display: inline-block;
+            max-width: 90%;
+        }
+
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .message.sent .message-avatar {
+            margin-right: 0;
+            margin-left: 1rem;
+        }
+
+        .message.sent .message-header {
+            flex-direction: row-reverse;
+        }
+
+        .message.sent .message-bubble {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+        }
+
+        .rio-message .message-bubble {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .option-card {
+            background-color: #FFFFFF;
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+
+        .option-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(26, 115, 232, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+        }
+
+        .option-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .option-description {
+            padding-left: 3.5rem;
+            color: var(--text-secondary);
+        }
+
+        .rental-info {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .equipment-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .equipment-card {
+            background-color: #F9F9F9;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .equipment-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .equipment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .equipment-details {
+            flex: 1;
+        }
+
+        .equipment-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .equipment-type {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .equipment-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-unavailable {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+        }
+
+        .date-range {
+            background-color: rgba(26, 115, 232, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .date-range i {
+            color: var(--primary-color);
+        }
+
+        .alert {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--warning-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-section {
+            text-align: right;
+            margin-top: 2rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部選單 -->
+    <div class="top-bar">
+        <a href="home.html" class="back-button">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            <span>返回首頁</span>
+        </a>
+        <div class="top-bar-actions">
+            <div class="language-switcher">
+                <label for="language-switcher" class="sr-only">Select Language</label>
+                <select id="language-switcher" aria-label="Change language" title="Select language">
+                    <option value="en">English</option>
+                    <option value="zh-TW">繁體中文</option>
+                </select>
+            </div>
+            <button class="icon-btn" aria-label="Notifications" title="Notifications">
+                <i class="fas fa-bell" aria-hidden="true"></i>
+            </button>
+            <button class="icon-btn" aria-label="Scan QR Code" title="Scan QR Code">
+                <i class="fas fa-qrcode" aria-hidden="true"></i>
+            </button>
+            <a href="connect.html" class="icon-btn" aria-label="Connect Chat" title="聊天室">
+                <i class="fas fa-comments" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主內容 -->
+    <div class="process-container">
+        <!-- 頁面標題 -->
+        <div class="header-section">
+            <h1 class="page-title">專案設備租借流程</h1>
+            <p>管理您的訪談拍攝專案設備租借進度</p>
+        </div>
+        
+        <!-- 專案目標 -->
+        <div class="rental-info">
+            <div class="info-section">
+                <h2 class="info-title">專案詳情</h2>
+                <p><strong>專案名稱：</strong>訪談拍攝專案</p>
+                <p><strong>截止日期：</strong><span id="projectDeadline">2025年6月4日</span></p>
+                <p><strong>小組成員：</strong><span id="groupMembers">Zoe Siu, Rio Wong, Tintin Chen</span></p>
+                <p><strong>拍攝計劃日期：</strong>2025年5月10日至13日（Rio的建議）</p>
+            </div>
+            
+            <div class="info-section">
+                <h2 class="info-title">需要的設備</h2>
+                <div class="equipment-list">
+                    <div class="equipment-card">
+                        <div class="equipment-image">
+                            <img src="https://via.placeholder.com/80" alt="DJI Pocket 3">
+                        </div>
+                        <div class="equipment-details">
+                            <div class="equipment-name">DJI Pocket 3</div>
+                            <div class="equipment-type">口袋雲台相機</div>
+                            <div class="equipment-status status-unavailable">不可用</div>
+                            <div class="date-range">
+                                <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                                <span>已預約：5月9日至15日</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="equipment-card">
+                        <div class="equipment-image">
+                            <img src="https://via.placeholder.com/80" alt="Canon EOS R7">
+                        </div>
+                        <div class="equipment-details">
+                            <div class="equipment-name">Canon EOS R7</div>
+                            <div class="equipment-type">APS-C 無反光鏡相機</div>
+                            <div class="equipment-status status-available">可用</div>
+                            <div class="alert">
+                                <div class="alert-title">
+                                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                                    <span>需要等級 3 權限</span>
+                                </div>
+                                <p>完成「Canon R7 基礎視頻拍攝」課程可升級</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 小組討論 -->
+        <div class="dialog-section">
+            <h2 class="dialog-title">小組討論</h2>
+            
+            <div class="message">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Rio">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Rio Wong</div>
+                        <div class="message-time">上午 10:15</div>
+                    </div>
+                    <div class="message-bubble">
+                        我看了一下設備預約情況，發現我們計劃的拍攝日期（5月10-13日）所有的 DJI Pocket 3 都被預約了 😅
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Tintin">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Tintin Chen</div>
+                        <div class="message-time">上午 10:20</div>
+                    </div>
+                    <div class="message-bubble">
+                        真可惜，這個日期對我來說最理想。我們有什麼選擇？延期還是找替代設備？
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message sent">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Zoe">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Zoe Siu</div>
+                        <div class="message-time">上午 10:23</div>
+                    </div>
+                    <div class="message-bubble">
+                        我查看了一下，Canon R7 在那幾天是可用的，但我們需要先完成相關課程才能租借。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Rio">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Rio Wong</div>
+                        <div class="message-time">上午 10:25</div>
+                    </div>
+                    <div class="message-bubble">
+                        讓我們問問 Rio AI 有什麼建議
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message rio-message">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Rio AI">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Rio AI</div>
+                        <div class="message-time">上午 10:26</div>
+                    </div>
+                    <div class="message-bubble">
+                        根據你們的情況，我有兩個建議：<br><br>
+                        
+                        1) 學習「Canon R7 基礎視頻拍攝」課程，提升等級以租借 Canon EOS R7 和 RF 24-105 F4 鏡頭進行 5 月 10-13 日的拍攝<br><br>
+                        
+                        2) 將拍攝計劃延後到 5 月 16-19 日，屆時 DJI Pocket 3 將可用<br><br>
+                        
+                        考慮到截止日期是 6 月 4 日，兩個選項都可行。Canon R7 提供更專業的拍攝能力，但需要投入時間學習。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Tintin">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Tintin Chen</div>
+                        <div class="message-time">上午 10:30</div>
+                    </div>
+                    <div class="message-bubble">
+                        我支持第一個選項！學習 Canon R7 對我們未來的項目也會有幫助，而且 5 月 10-13 日的檔期對我來說最合適。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Rio">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Rio Wong</div>
+                        <div class="message-time">上午 10:32</div>
+                    </div>
+                    <div class="message-bubble">
+                        我同意，第一個選項更好。Zoe，你能開始學習那個課程嗎？我們可以一起討論內容，我之前有用過 Canon 相機，可以提供一些幫助。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message sent">
+                <div class="message-avatar">
+                    <img src="https://via.placeholder.com/40" alt="Zoe">
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-name">Zoe Siu</div>
+                        <div class="message-time">上午 10:35</div>
+                    </div>
+                    <div class="message-bubble">
+                        好的，我會開始學習那個課程。希望能儘快完成，這樣就可以及時預訂設備了。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 選擇方案 -->
+        <div class="timeline-section">
+            <h2 class="timeline-title">您的選擇</h2>
+            
+            <div class="options-container">
+                <div class="option-card selected" id="option1">
+                    <div class="option-header">
+                        <div class="option-icon">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                        </div>
+                        <div class="option-title">升級設備權限</div>
+                    </div>
+                    <div class="option-description">
+                        完成「Canon R7 基礎視頻拍攝」課程，提升等級以租借 Canon EOS R7 和 RF 24-105 F4 鏡頭進行 5 月 10-13 日的拍攝。
+                    </div>
+                </div>
+                
+                <div class="option-card" id="option2">
+                    <div class="option-header">
+                        <div class="option-icon">
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                        </div>
+                        <div class="option-title">延期拍攝計劃</div>
+                    </div>
+                    <div class="option-description">
+                        將拍攝計劃延後到 5 月 16-19 日，屆時 DJI Pocket 3 將可用。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 流程時間線 -->
+        <div class="timeline-section">
+            <h2 class="timeline-title">進度時間線</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-point complete">
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2025年5月3日</div>
+                        <h3 class="timeline-heading">專案討論</h3>
+                        <p class="timeline-text">與小組成員 Rio 和 Tintin 討論訪談拍攝專案，確定需要租借的設備。</p>
+                        <div class="timeline-actions">
+                            <a href="#" class="btn btn-outline btn-sm">查看會議記錄</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-point active">
+                        <i class="fas fa-play" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">進行中</div>
+                        <h3 class="timeline-heading">學習 Canon R7 課程</h3>
+                        <p class="timeline-text">完成「Canon R7 基礎視頻拍攝」課程，以提升等級並獲得租借高級設備的權限。</p>
+                        <div class="timeline-actions">
+                            <a href="Canon_R7_Basic_Video_shooting.html" class="btn btn-primary btn-sm">繼續學習</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-point">
+                        <i class="fas fa-unlock" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">待完成</div>
+                        <h3 class="timeline-heading">設備預約</h3>
+                        <p class="timeline-text">預約 Canon EOS R7 和 RF 24-105 F4 鏡頭用於 5 月 10-13 日的訪談拍攝。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-point">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2025年5月10-13日</div>
+                        <h3 class="timeline-heading">訪談拍攝</h3>
+                        <p class="timeline-text">使用租借的設備進行專案訪談拍攝。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-point">
+                        <i class="fas fa-film" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2025年5月14-28日</div>
+                        <h3 class="timeline-heading">後期製作</h3>
+                        <p class="timeline-text">對拍攝的素材進行剪輯和後期處理。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-point">
+                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2025年6月4日</div>
+                        <h3 class="timeline-heading">專案完成</h3>
+                        <p class="timeline-text">提交最終成果，確保在截止日期前完成所有工作。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 操作按鈕 -->
+        <div class="action-section">
+            <a href="learn.html" class="btn btn-primary">
+                <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                前往學習中心
+            </a>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <nav class="bottom-nav">
+        <a href="home.html" class="bottom-nav-item active">
+            <i class="fas fa-home bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="home">Home</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item">
+            <i class="fas fa-camera bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="equipment">Equipment</span>
+        </a>
+        <a href="learn.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="learn">Learn</span>
+        </a>
+        <a href="rio_ai.html" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="rio_ai">Rio AI</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="profile">Profile</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript -->
+    <script src="assets/js/language.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 檢查用戶是否已登入
+            const currentUser = authUtils.getCurrentUser();
+            if (!currentUser) {
+                // 未登入則跳轉到登入頁
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // 設置項目截止日期和小組成員
+            if (currentUser.projectDeadline) {
+                const deadlineDate = new Date(currentUser.projectDeadline);
+                document.getElementById('projectDeadline').textContent = deadlineDate.toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            if (currentUser.groupMates) {
+                document.getElementById('groupMembers').textContent = [currentUser.name, ...currentUser.groupMates].join(', ');
+            }
+            
+            // 選項點擊
+            document.querySelectorAll('.option-card').forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有選項的選中狀態
+                    document.querySelectorAll('.option-card').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // 設置當前選項為選中狀態
+                    this.classList.add('selected');
+                    
+                    // 如果選擇了第二個選項（延期），顯示確認
+                    if (this.id === 'option2') {
+                        if (confirm('您確定要將拍攝計劃延期到 5 月 16-19 日嗎？')) {
+                            // 在實際應用中，這裡可能會有更新資料庫的邏輯
+                            alert('拍攝計劃已更新！');
+                        } else {
+                            // 如果用戶取消，恢復選擇第一個選項
+                            this.classList.remove('selected');
+                            document.getElementById('option1').classList.add('selected');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - 設備</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/js/equipment-db.js"></script>
+    <script src="assets/database/database.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        .category-tabs {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        .category-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .category-tab {
+            display: inline-block;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px;
+            margin-right: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .equipment-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .equipment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .equipment-image {
+            height: 160px;
+            background-color: #f3f4f6;
+            background-size: cover;
+            background-position: center;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+        .availability-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        .search-input {
+            border: 1px solid #e2e8f0;
+            border-radius: 9999px;
+            padding: 0.625rem 1rem 0.625rem 2.5rem;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .qr-scan-button {
+            position: fixed;
+            right: 1rem;
+            bottom: 5rem;
+            background-color: var(--accent-color);
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .qr-scan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        .equipment-detail-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .equipment-detail-card.show {
+            transform: translateY(0);
+        }
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 15;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .drag-handle {
+            width: 3rem;
+            height: 0.375rem;
+            background-color: #cbd5e0;
+            border-radius: 9999px;
+            margin: 0.5rem auto;
+        }
+        .borrow-button {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .borrow-button:hover {
+            background-color: #1565c0;
+        }
+        .borrow-button:disabled {
+            background-color: #90caf9;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <img src="assets/images/App_Logo/REAL_LOGO.PNG" alt="REAL Logo" class="h-8">
+        <h1 class="text-xl font-bold" data-i18n="equipment_rental">設備借用</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <a href="chat.html" id="chat-link" class="text-white hover:text-gray-200 mr-3" aria-label="Chat Room" title="Chat Room" data-i18n-aria-label="chat_room_label" data-i18n-title="chat_room_label"><i class="fas fa-comments"></i></a>
+            <a href="qr-scanner.html" class="text-white" aria-label="QR碼掃描" data-i18n-aria="qr_scanner">
+                <i class="fas fa-qrcode text-lg"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 設備搜索和篩選區 -->
+    <div class="bg-white py-4 shadow-sm">
+        <div class="container mx-auto px-4">
+            <!-- 搜索欄 -->
+            <div class="relative mb-4">
+                <span class="search-icon">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="search-input" data-i18n-placeholder="search_equipment" placeholder="搜索設備...">
+            </div>
+            
+            <!-- 日期選擇 -->
+            <div class="mb-4">
+                <label for="rentalDate" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="rental_date">借用日期</label>
+                <input type="date" id="rentalDate" class="border border-gray-300 rounded-md p-2 w-full" min="">
+            </div>
+            
+            <!-- 類別標籤 -->
+            <div class="category-tabs py-2">
+                <button class="category-tab active" data-category="all" data-i18n="all">全部</button>
+                <button class="category-tab" data-category="Camera" data-i18n="camera">相機</button>
+                <button class="category-tab" data-category="Camera Len" data-i18n="lens">鏡頭</button>
+                <button class="category-tab" data-category="Audio" data-i18n="audio">音頻</button>
+                <button class="category-tab" data-category="Lighting" data-i18n="lighting">燈光</button>
+                <button class="category-tab" data-category="Stabilizer" data-i18n="stabilizer">穩定器</button>
+                <button class="category-tab" data-category="Battery" data-i18n="battery">電池</button>
+                <button class="category-tab" data-category="SD Card" data-i18n="sd_card">記憶卡</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-4 py-6">
+        <h2 class="text-xl font-semibold mb-4" data-i18n="available_equipment">可用設備</h2>
+        
+        <!-- 設備網格 -->
+        <div id="equipmentGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- 設備卡片將通過JavaScript生成 -->
+            <div class="col-span-2 md:col-span-3 lg:col-span-4 py-12 text-center text-gray-500" id="noEquipmentMessage" style="display: none;">
+                <i class="fas fa-search text-4xl mb-3"></i>
+                <p data-i18n="no_matching_equipment">沒有找到匹配的設備</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- QR掃描按鈕 -->
+    <a href="qr-scanner.html" class="qr-scan-button">
+        <i class="fas fa-qrcode text-xl"></i>
+    </a>
+
+    <!-- 設備詳情卡片 -->
+    <div class="backdrop" id="detailBackdrop"></div>
+    <div class="equipment-detail-card" id="equipmentDetail">
+        <div class="drag-handle"></div>
+        
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="detailTitle" class="text-xl font-semibold">設備名稱</h3>
+                <button id="closeDetailBtn" class="text-gray-500" aria-label="關閉" title="關閉">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                    <img id="detailImage" src="" alt="設備圖片" class="w-full h-full object-cover">
+                </div>
+                
+                <div class="flex items-center mb-2">
+                    <span id="detailCategory" class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full mr-2">類別</span>
+                    <span id="detailLevel" class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">難度</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-600" data-i18n="brand">品牌</p>
+                        <p id="detailBrand" class="font-medium">品牌名稱</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600" data-i18n="model">型號</p>
+                        <p id="detailModel" class="font-medium">型號名稱</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600" data-i18n="points_per_day">積分/天</p>
+                    <p id="detailPoints" class="text-2xl font-bold text-blue-600">100</p>
+                </div>
+                
+                <div class="mb-6">
+                    <p class="text-sm text-gray-600" data-i18n="required_level">所需等級</p>
+                    <div class="flex items-center">
+                        <div id="levelIndicator" class="flex mt-1">
+                            <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white mr-1">1</div>
+                            <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-white mr-1">2</div>
+                            <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-white mr-1">3</div>
+                            <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-white mr-1">4</div>
+                            <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-white">5</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="levelWarning" class="p-3 bg-yellow-50 text-yellow-800 rounded-md mb-6 hidden">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <span data-i18n="level_warning">您的等級不足，無法借用此設備。請先完成相關課程提升等級。</span>
+                </div>
+                
+                <button id="borrowBtn" class="borrow-button w-full">
+                    <i class="fas fa-calendar-plus mr-2"></i>
+                    <span data-i18n="reserve_equipment">預約借用</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item active flex flex-col items-center text-primary-color">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 應用語言翻譯
+            applyTranslations();
+            
+            // 語言切換器
+            const currentLang = localStorage.getItem('language') || 'zh';
+            document.getElementById('languageSwitcher').addEventListener('click', function() {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+            
+            // 獲取當前用戶信息
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 獲取用戶數據
+            let currentUserData = JSON.parse(localStorage.getItem('currentUserData'));
+            if (!currentUserData) {
+                try {
+                    // 嘗試重新初始化用戶會話
+                    const result = await window.Database.initUserSession(currentUser);
+                    if (result.success) {
+                        currentUserData = result.userData;
+                    } else {
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                } catch (error) {
+                    console.error('初始化用戶會話失敗：', error);
+                    window.location.href = 'index.html';
+                    return;
+                }
+            }
+            
+            // 獲取當前用戶等級
+            const currentUserLevel = parseInt(currentUserData.level);
+            localStorage.setItem('userPoints', currentUserData.points);
+            
+            // 設置日期選擇器的最小值為今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('rentalDate').min = today;
+            document.getElementById('rentalDate').value = today;
+            
+            // 設備類別篩選
+            let currentCategory = 'all';
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 更新標籤樣式
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新當前類別
+                    currentCategory = this.getAttribute('data-category');
+                    
+                    // 重新加載設備列表
+                    loadEquipment();
+                });
+            });
+            
+            // 搜索框事件
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', debounce(loadEquipment, 300));
+            
+            // 日期選擇事件
+            document.getElementById('rentalDate').addEventListener('change', loadEquipment);
+            
+            // 獲取可用設備並顯示
+            async function loadEquipment() {
+                const searchQuery = searchInput.value.trim().toLowerCase();
+                const selectedDate = document.getElementById('rentalDate').value;
+                
+                try {
+                    // 使用數據庫模塊獲取設備
+                    const equipmentList = await window.Database.loadEquipmentData();
+                    const bookings = await window.Database.loadBookingsData();
+                    
+                    // 過濾設備
+                    const filteredEquipment = equipmentList.filter(item => {
+                        // 檢查基本可用性 (Status for rent)
+                        const isGenerallyAvailable = item['Status for rent'] === 'Available';
+                        if (!isGenerallyAvailable) return false;
+
+                        // 檢查選定日期的可用性
+                        const itemCode = item['Item Code'];
+                        const isBookedOnSelectedDate = bookings.some(booking => 
+                            booking.ItemCode === itemCode &&
+                            booking.BookingStatus !== 'Cancelled' &&
+                            selectedDate >= booking.StartDate && 
+                            selectedDate <= booking.EndDate
+                        );
+                        if (isBookedOnSelectedDate) return false;
+                        
+                        // 類別篩選
+                        const categoryMatch = !currentCategory || currentCategory === 'all' || item['Item Category'] === currentCategory;
+                        
+                        // 難度等級篩選 (確保 currentUserLevel 是數字)
+                        const difficultyMatch = parseInt(item.DifficultyLevel) <= currentUserLevel;
+                        
+                        // 搜索查詢 (增加空值和類型檢查)
+                        const itemName = item['Item Name'] || '';
+                        const brand = item.Brand || '';
+                        const searchMatch = !searchQuery || 
+                            (typeof itemName === 'string' && itemName.toLowerCase().includes(searchQuery)) ||
+                            (typeof brand === 'string' && brand.toLowerCase().includes(searchQuery));
+                        
+                        return categoryMatch && difficultyMatch && searchMatch;
+                    });
+                    
+                    displayEquipment(filteredEquipment, selectedDate);
+                } catch (error) {
+                    console.error('加載設備列表失敗：', error);
+                    displayEquipment([], selectedDate);
+                }
+            }
+            
+            // 顯示設備列表
+            function displayEquipment(equipmentList, forDate) {
+                const equipmentGrid = document.getElementById('equipmentGrid');
+                
+                equipmentGrid.innerHTML = '';
+                
+                if (equipmentList.length === 0) {
+                    const lang = localStorage.getItem('language') || 'zh';
+                    const noEquipmentText = t('no_matching_equipment_for_date', lang, {date: forDate});
+                    equipmentGrid.innerHTML = `
+                        <div class="col-span-2 md:col-span-3 lg:col-span-4 py-12 text-center text-gray-500">
+                            <i class="fas fa-calendar-times text-4xl mb-3"></i>
+                            <p>${noEquipmentText}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                equipmentList.forEach(equipment => {
+                    const card = createEquipmentCard(equipment, forDate);
+                    equipmentGrid.appendChild(card);
+                });
+            }
+            
+            // 創建設備卡片
+            function createEquipmentCard(equipment, forDate) {
+                const card = document.createElement('div');
+                card.className = 'equipment-card relative';
+                const currentLang = localStorage.getItem('language') || 'zh';
+                
+                let imageUrl;
+                const baseImageUrlPath = 'assets/images/Item_image/';
+                const equipmentImageURL = equipment.ImageURL ? equipment.ImageURL.trim() : '';
+
+                if (equipmentImageURL !== '') {
+                    // Assuming ImageURL in CSV is just the filename like "canon_r5.jpg"
+                    imageUrl = baseImageUrlPath + equipmentImageURL;
+                } else {
+                    // Fallback to generating from Item Name if ImageURL is empty
+                    const generatedImageName = (equipment['Item Name'] || '').toLowerCase()
+                                            .replace(/\s+/g, '_')      // Replace spaces with underscores
+                                            .replace(/\//g, '-')       // Replace / with -
+                                            .replace(/[^a-z0-9_.-]/g, ''); // Remove other special chars, keep ., _
+                    imageUrl = `${baseImageUrlPath}${generatedImageName}.jpg`;
+                }
+                const fallbackImageUrl = `https://dummyimage.com//400x200?text=${encodeURIComponent(equipment['Item Name'] || 'N/A')}`;
+                
+                let availabilityText = t('available', currentLang);
+                let availabilityClass = 'bg-green-500'; // Default for Available
+
+                // Adjust badge based on actual status (even if filtered to be generally viewable)
+                // This part becomes more relevant if you relax the 'isGenerallyAvailable' filter in loadEquipment
+                if (item['Status for rent'] === 'In use') {
+                    availabilityText = t('in_use', currentLang); // Add translation for 'in_use'
+                    availabilityClass = 'bg-red-500';
+                } else if (item['Status for rent'] === 'Checking') {
+                    availabilityText = t('checking', currentLang); // Add translation for 'checking'
+                    availabilityClass = 'bg-yellow-500';
+                } else if (item['Status for rent'] !== 'Available') { // Other non-available states
+                    availabilityText = t('not_available', currentLang); // Add translation for 'not_available'
+                    availabilityClass = 'bg-gray-500';
+                }
+
+                card.innerHTML = `
+                    <div class="equipment-image" data-fallback="${fallbackImageUrl}"></div>
+                    <div class="availability-badge ${availabilityClass} text-white">${availabilityText}</div>
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-800 truncate">${equipment['Item Name'] || 'N/A'}</h3>
+                        <div class="flex items-center mt-1">
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${currentLang === 'zh' ? getCategoryNameChinese(equipment['Item Category']) : (equipment['Item Category'] || 'N/A')}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <div class="text-xs text-gray-600">
+                                <span class="font-medium text-blue-600">${equipment.PointsPerDay || '50'}</span>
+                                <span data-i18n="points_per_day">積分/天</span>
+                            </div>
+                            <div class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                                ${getDifficultyLevel(equipment.DifficultyLevel, currentLang)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                const imageContainer = card.querySelector('.equipment-image');
+                const img = new Image();
+                img.onload = () => {
+                    imageContainer.style.backgroundImage = `url('${imageUrl}')`;
+                };
+                img.onerror = () => {
+                    imageContainer.style.backgroundImage = `url('${fallbackImageUrl}')`;
+                };
+                img.src = imageUrl; // Start loading the image to trigger onload or onerror
+                
+                card.addEventListener('click', function() {
+                    showEquipmentDetail(equipment);
+                });
+                
+                return card;
+            }
+            
+            // 顯示設備詳情
+            function showEquipmentDetail(equipment) {
+                const detail = document.getElementById('equipmentDetail');
+                const backdrop = document.getElementById('detailBackdrop');
+                
+                // 填充詳情
+                document.getElementById('detailTitle').textContent = equipment['Item Name'];
+                
+                const imageName = equipment['Item Name'].toLowerCase().replace(/\s+/g, '_');
+                const imageUrl = `assets/images/Item_image/${imageName}.jpg`;
+                const detailImage = document.getElementById('detailImage');
+                detailImage.src = imageUrl;
+                detailImage.onerror = function() {
+                    this.src = `https://dummyimage.com//400x200?text=${encodeURIComponent(equipment['Item Name'])}`;
+                };
+                
+                document.getElementById('detailCategory').textContent = currentLang === 'zh' ? 
+                    getCategoryNameChinese(equipment['Item Category']) : equipment['Item Category'];
+                document.getElementById('detailLevel').textContent = getDifficultyLevel(equipment.DifficultyLevel, currentLang);
+                document.getElementById('detailBrand').textContent = equipment.Brand;
+                document.getElementById('detailModel').textContent = equipment.Model || equipment['Item Name'].replace(equipment.Brand, '').trim();
+                document.getElementById('detailPoints').textContent = equipment.PointsPerDay || '50';
+                
+                // 更新難度等級指示器
+                const difficultyLevel = parseInt(equipment.DifficultyLevel) || 1;
+                const levelIndicator = document.getElementById('levelIndicator');
+                levelIndicator.innerHTML = '';
+                
+                for (let i = 1; i <= 5; i++) {
+                    const levelDot = document.createElement('div');
+                    levelDot.className = `w-6 h-6 rounded-full flex items-center justify-center text-white ${i === 5 ? '' : 'mr-1'}`;
+                    
+                    if (i <= difficultyLevel) {
+                        levelDot.classList.add('bg-green-500');
+                    } else {
+                        levelDot.classList.add('bg-gray-300');
+                    }
+                    
+                    levelDot.textContent = i;
+                    levelIndicator.appendChild(levelDot);
+                }
+                
+                // 檢查用戶等級是否足夠
+                const levelWarning = document.getElementById('levelWarning');
+                const borrowBtn = document.getElementById('borrowBtn');
+                
+                if (currentUserLevel < difficultyLevel) {
+                    levelWarning.classList.remove('hidden');
+                    borrowBtn.disabled = true;
+                    borrowBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    levelWarning.classList.add('hidden');
+                    borrowBtn.disabled = false;
+                    borrowBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                
+                // 設置借用按鈕事件
+                borrowBtn.onclick = function() {
+                    if (!borrowBtn.disabled) {
+                        window.location.href = `rental-booking.html?id=${equipment['Item Code']}`;
+                    }
+                };
+                
+                // 顯示詳情卡片
+                detail.classList.add('show');
+                backdrop.classList.add('show');
+                
+                // 綁定關閉事件
+                document.getElementById('closeDetailBtn').setAttribute('aria-label', t('close', currentLang));
+                document.getElementById('closeDetailBtn').addEventListener('click', closeDetail);
+                backdrop.addEventListener('click', closeDetail);
+            }
+            
+            // 關閉詳情卡片
+            function closeDetail() {
+                const detail = document.getElementById('equipmentDetail');
+                const backdrop = document.getElementById('detailBackdrop');
+                
+                detail.classList.remove('show');
+                backdrop.classList.remove('show');
+            }
+            
+            // 初始加載設備
+            loadEquipment();
+            
+            // 工具函數：防抖
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+            
+            // 獲取類別中文名稱
+            function getCategoryNameChinese(category) {
+                const categoryMap = {
+                    'Camera': '相機',
+                    'Camera Len': '鏡頭',
+                    'Audio': '音頻',
+                    'Microphone': '麥克風',
+                    'Lighting': '燈光',
+                    'Stabilizer': '穩定器',
+                    'Battery': '電池',
+                    'SD Card': '記憶卡',
+                    'Tripod/Lightstand': '三腳架/燈架',
+                    'Monitor': '監視器',
+                    'Video': '視頻設備',
+                    'Communication': '通訊設備',
+                    'Utility': '實用工具',
+                    'Stroage': '儲存設備',
+                    'Computer': '電腦'
+                };
+                
+                return categoryMap[category] || category;
+            }
+            
+            // 獲取難度等級文字
+            function getDifficultyLevel(level, lang) {
+                const levelMap = {
+                    zh: ['未知', '基礎', '進階', '進階', '專業', '專家'],
+                    en: ['Unknown', 'Basic', 'Intermediate', 'Advanced', 'Professional', 'Expert']
+                };
+                
+                return levelMap[lang][parseInt(level)] || level;
+            }
+        });
+    </script>
+</body>
+</html> 

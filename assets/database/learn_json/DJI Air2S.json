@@ -1,0 +1,49 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "title_zh": "第一階段：基礎操作",
+      "title_en": "Stage 1: Basic Operation",
+      "video_url": "https://www.youtube.com/watch?v=IKOWAbpw5n4",
+      "intro_zh": "取出機身，確認槳葉無損壞，安裝於對應馬達上。將電池裝入機身，長按電源鍵兩次開啟空拍機與遙控器。在手機安裝DJI Fly App，連接遙控器，依指示完成配對。按畫面提示校正指南針，確認有足夠GPS訊號才起飛。",
+      "intro_en": "Take out the drone, check propellers for damage, and mount them on the correct motors. Insert the battery, double press and hold the power button to turn on the drone and remote. Download DJI Fly App, connect to the remote controller, and pair as instructed. Calibrate compass on screen prompt, ensure strong GPS signal before takeoff.",
+      "quiz": {
+        "question_zh": "DJI Air 2S 使用哪個App遙控？",
+        "question_en": "Which app controls the DJI Air 2S?",
+        "options_zh": ["DJI Go 4", "DJI Fly", "DJI Ronin"],
+        "options_en": ["DJI Go 4", "DJI Fly", "DJI Ronin"],
+        "correct_answer_index": 1
+      }
+    },
+    {
+      "id": 2,
+      "title_zh": "第二階段：功能運用",
+      "title_en": "Stage 2: Feature Usage",
+      "video_url": "https://www.youtube.com/watch?v=IBmLzH_XtJY",
+      "intro_zh": "在App選擇主題，點選「跟隨」即可自動追蹤拍攝對象。開啟避障功能，飛行過程自動偵測四周障礙物。選擇Dronie、Helix等智能拍攝模式，輕鬆創作專業影片。在App設定最高5.4K解析度錄影，適合記錄校園專題。",
+      "intro_en": "Select the subject in the app and tap “Follow” for automatic tracking. Activate obstacle avoidance, so the drone automatically detects obstacles while flying. Use Dronie, Helix, and other QuickShots for creative, professional-looking clips. Set the video resolution to 5.4K in the app for high-quality project footage.",
+      "quiz": {
+        "question_zh": "FocusTrack 可做到什麼？",
+        "question_en": "What does FocusTrack allow?",
+        "options_zh": ["自動追蹤", "手動變焦", "拍照"],
+        "options_en": ["Automatic Tracking", "Manual zoom", "Photo only"],
+        "correct_answer_index": 0
+      }
+    },
+    {
+      "id": 3,
+      "title_zh": "第三階段：器材協作",
+      "title_en": "Stage 3: Device Collaboration",
+      "video_url": "https://www.youtube.com/playlist?list=PLTHHnG-OHfxkKk2NqcNerEEU66oqZ01fC",
+      "intro_zh": "可將影像同步直播到大螢幕，進行現場討論或遠端教學。使用 DJI Fly App 內建工具剪輯影片，直接分享到社群或雲端。一人操控飛行、一人負責特寫或出鏡，提高攝製效率。錄下課堂、運動會、校慶等素材，後期結合多來源資料製成專案影片。",
+      "intro_en": "Stream live preview to a big screen for group discussion or remote teaching. Edit and share videos using the built-in DJI Fly App editor. Assign one to fly, another to manage subjects or scenes for efficient teamwork. Document classes, events, and combine footage with other devices for comprehensive projects.",
+      "quiz": {
+        "question_zh": "DJI Air 2S 可以同步影像到哪裡？",
+        "question_en": "Where can Air 2S live stream or preview its video?",
+        "options_zh": ["手機", "平板", "電腦", "以上皆可"],
+        "options_en": ["Phone", "Tablet", "Computer", "All of the above"],
+        "correct_answer_index": 3
+      }
+    }
+  ]
+}

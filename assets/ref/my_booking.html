@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+    <!-- 樣式表 -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Font Awesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定義樣式 -->
+    <style>
+        body {
+            padding-bottom: 60px;
+            background-color: var(--background-color);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar-logo {
+            max-height: 32px;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--primary-color);
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+
+        .booking-container {
+            padding: 1rem;
+        }
+
+        .booking-header {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .booking-status {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 0 12px 0 12px;
+            color: #FFFFFF;
+        }
+
+        .status-approved {
+            background-color: var(--accent-color);
+        }
+
+        .status-pending {
+            background-color: var(--warning-color);
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+        }
+
+        .status-completed {
+            background-color: var(--text-secondary);
+        }
+
+        .status-canceled {
+            background-color: var(--error-color);
+        }
+
+        .booking-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-date {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-equipment {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .equipment-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        .equipment-details {
+            flex: 1;
+        }
+
+        .equipment-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .equipment-category {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .booking-info-section {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .pickup-location {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: rgba(26, 115, 232, 0.05);
+            border-radius: 8px;
+        }
+
+        .location-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-extend {
+            background-color: var(--warning-color);
+            color: #FFFFFF;
+        }
+
+        .btn-cancel {
+            background-color: var(--light-gray);
+            color: var(--text-secondary);
+        }
+
+        .btn-return {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            border: 1px solid var(--light-gray);
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+        
+        .qr-instruction {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部選單 -->
+    <div class="top-bar">
+        <a href="home.html" class="back-button">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            <span>返回</span>
+        </a>
+        <div class="top-bar-actions">
+            <div class="language-switcher">
+                <label for="language-switcher" class="sr-only">Select Language</label>
+                <select id="language-switcher" aria-label="Change language" title="Select language">
+                    <option value="en">English</option>
+                    <option value="zh-TW">繁體中文</option>
+                </select>
+            </div>
+            <button class="icon-btn" aria-label="Notifications" title="Notifications">
+                <i class="fas fa-bell" aria-hidden="true"></i>
+            </button>
+            <button class="icon-btn" aria-label="Scan QR Code" title="Scan QR Code">
+                <i class="fas fa-qrcode" aria-hidden="true"></i>
+            </button>
+            <a href="connect.html" class="icon-btn" aria-label="Connect Chat" title="聊天室">
+                <i class="fas fa-comments" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 預約內容 -->
+    <div class="booking-container">
+        <!-- 預約頭部 -->
+        <div class="booking-header">
+            <div class="booking-status status-approved">已核准</div>
+            <h1 class="booking-title">Sony Alpha A7 III</h1>
+            <div class="booking-date">
+                <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                2024年6月15日（星期六） • 10:00-17:00
+            </div>
+            <div class="booking-equipment">
+                <img src="https://via.placeholder.com/80" alt="Sony Alpha A7 III" class="equipment-image">
+                <div class="equipment-details">
+                    <div class="equipment-name">Sony Alpha A7 III</div>
+                    <div class="equipment-category">相機 • 全片幅無反光鏡</div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary btn-extend">
+                    <i class="fas fa-calendar-plus" aria-hidden="true"></i>
+                    延長租借
+                </button>
+                <button class="btn btn-outline btn-cancel">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    取消預約
+                </button>
+            </div>
+        </div>
+
+        <!-- 預約詳情 -->
+        <div class="booking-info-section">
+            <h2 class="section-title">預約詳情</h2>
+            <div class="info-row">
+                <div class="info-label">預約號碼</div>
+                <div class="info-value">BK-2406-00123</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">預約狀態</div>
+                <div class="info-value">已核准</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">提交日期</div>
+                <div class="info-value">2024年6月1日</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">租借日期</div>
+                <div class="info-value">2024年6月15日（星期六）</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">租借時間</div>
+                <div class="info-value">10:00-17:00（7小時）</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">押金金額</div>
+                <div class="info-value">$500 HKD（已支付）</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">租借用途</div>
+                <div class="info-value">學生專案攝影</div>
+            </div>
+        </div>
+
+        <!-- 領取資訊 -->
+        <div class="booking-info-section">
+            <h2 class="section-title">領取資訊</h2>
+            <div class="info-row">
+                <div class="info-label">領取日期</div>
+                <div class="info-value">2024年6月15日（星期六）</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">領取時間</div>
+                <div class="info-value">10:00-10:30</div>
+            </div>
+            <div class="pickup-location">
+                <div class="location-title">領取地點</div>
+                <p>設備租借中心 - 主校區 A座2樓 A203室</p>
+                <p>開放時間：週一至週五 9:00-18:00，週六 10:00-16:00</p>
+            </div>
+            
+            <div class="qr-section">
+                <img src="https://via.placeholder.com/200" alt="Pickup QR Code" class="qr-code">
+                <div class="qr-instruction">請在領取時出示此二維碼</div>
+            </div>
+            
+            <div class="action-buttons" style="grid-template-columns: 1fr;">
+                <button class="btn btn-primary btn-return">
+                    <i class="fas fa-undo" aria-hidden="true"></i>
+                    歸還設備
+                </button>
+            </div>
+        </div>
+
+        <!-- 設備描述 -->
+        <div class="booking-info-section">
+            <h2 class="section-title">設備描述</h2>
+            <p>Sony Alpha A7 III 是一款專業級全片幅無反光鏡相機，配備24.2MP Exmor R BSI CMOS感測器和改進的圖像處理器。它支援4K HDR視頻錄製，擁有卓越的低光性能和15級動態範圍。</p>
+            
+            <div class="info-row" style="margin-top: 1rem;">
+                <div class="info-label">附件</div>
+                <div class="info-value">標準變焦鏡頭、電池 x2、充電器、相機包</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">使用限制</div>
+                <div class="info-value">不可在下雨情況下使用，需避免灰塵環境</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <nav class="bottom-nav">
+        <a href="home.html" class="bottom-nav-item active">
+            <i class="fas fa-home bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="home">Home</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item">
+            <i class="fas fa-camera bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="equipment">Equipment</span>
+        </a>
+        <a href="learn.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="learn">Learn</span>
+        </a>
+        <a href="rio_ai.html" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="rio_ai">Rio AI</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="profile">Profile</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript -->
+    <script src="assets/js/language.js"></script>
+    <!-- 添加jsQR庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- QR掃描器腳本 -->
+    <script src="assets/js/qr-scanner.js"></script>
+</body>
+</html>

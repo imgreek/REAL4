@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="how_to_earn">How to Earn Points</title>
+    <!-- 樣式表 -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Font Awesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定義樣式 -->
+    <style>
+        body {
+            padding-bottom: 60px;
+            background-color: var(--background-color);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar-logo {
+            max-height: 32px;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--primary-color);
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .large-card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin: 1rem 0;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            width: 100%;
+        }
+        
+        .card-section:last-child {
+            border-bottom: none;
+        }
+
+        .page-header {
+            background-color: var(--primary-color);
+            padding: 2rem 1rem;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .points-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 0.75rem;
+        }
+
+        .points-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #FFFFFF;
+            font-size: 20px;
+        }
+
+        .points-icon.equipment {
+            background-color: var(--primary-color);
+        }
+
+        .points-icon.learning {
+            background-color: var(--secondary-color);
+        }
+
+        .points-icon.activity {
+            background-color: var(--accent-color);
+        }
+
+        .points-icon.special {
+            background-color: var(--warning-color);
+        }
+
+        .points-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .points-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .points-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .points-item:last-child {
+            border-bottom: none;
+        }
+
+        .points-item-title {
+            flex: 1;
+            color: var(--text-color);
+        }
+
+        .points-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .tips-card {
+            background-color: rgba(26, 115, 232, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 1rem;
+        }
+
+        .tips-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .tips-list {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+            color: var(--text-color);
+        }
+
+        .tips-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+    <!-- 添加用戶數據庫腳本 -->
+    <script src="assets/js/users.js"></script>
+    <script src="assets/js/common.js"></script>
+</head>
+<body>
+    <!-- 頂部選單 -->
+    <div class="top-bar">
+        <div class="top-bar-brand">
+            <img src="assets/images/logo/REAL_SIM_ICON.png" alt="REAL" class="top-bar-logo">
+        </div>
+        <div class="top-bar-actions">
+            <div class="language-switcher">
+                <label for="language-switcher" class="sr-only">Select Language</label>
+                <select id="language-switcher" aria-label="Change language" title="Select language">
+                    <option value="en">English</option>
+                    <option value="zh-TW">繁體中文</option>
+                </select>
+            </div>
+            <button class="icon-btn" aria-label="Notifications" title="Notifications">
+                <i class="fas fa-bell" aria-hidden="true"></i>
+            </button>
+            <button class="icon-btn" id="qrScannerBtn" aria-label="Scan QR Code" title="Scan QR Code">
+                <i class="fas fa-qrcode" aria-hidden="true"></i>
+            </button>
+            <a href="connect.html" class="icon-btn" aria-label="Connect Chat" title="聊天室">
+                <i class="fas fa-comments" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 頁面頭部 -->
+    <div class="page-header">
+        <h1 class="page-title" data-i18n="how_to_earn">如何獲取積分</h1>
+        <p>積分是升級和解鎖更多設備的關鍵</p>
+    </div>
+
+    <!-- 積分說明 -->
+    <div class="container">
+        <!-- 小提示 -->
+        <div class="large-card">
+            <div class="card-section">
+                <div class="tips-card">
+                    <h3 class="tips-title">積分小提示</h3>
+                    <ul class="tips-list">
+                        <li>專注於完成完整學習路徑可以獲得額外的積分獎勵</li>
+                        <li>定期租借不同類型的設備可以解鎖隱藏成就</li>
+                        <li>參與季度主題活動可以獲得加倍積分</li>
+                        <li>達到等級 5 後，您可以成為導師並獲得教導他人的積分</li>
+                        <li>在同一天歸還多個設備可以獲得效率獎勵</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 設備租借積分 -->
+        <div class="large-card">
+            <div class="card-section">
+                <div class="points-header">
+                    <div class="points-icon equipment">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                    </div>
+                    <h2 class="points-title">設備租借</h2>
+                </div>
+                <ul class="points-list">
+                    <li class="points-item">
+                        <div class="points-item-title">首次租借任意設備</div>
+                        <div class="points-value">+100 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">租借設備（每次）</div>
+                        <div class="points-value">+50 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">準時歸還設備</div>
+                        <div class="points-value">+25 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">設備使用評價（每次）</div>
+                        <div class="points-value">+10 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">使用新設備類型（首次）</div>
+                        <div class="points-value">+30 分</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 學習積分 -->
+        <div class="large-card">
+            <div class="card-section">
+                <div class="points-header">
+                    <div class="points-icon learning">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <h2 class="points-title">學習與課程</h2>
+                </div>
+                <ul class="points-list">
+                    <li class="points-item">
+                        <div class="points-item-title">完成入門課程</div>
+                        <div class="points-value">+50 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">完成中級課程</div>
+                        <div class="points-value">+100 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">完成高級課程</div>
+                        <div class="points-value">+200 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">通過課程知識測驗</div>
+                        <div class="points-value">+30 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">完成課程評價</div>
+                        <div class="points-value">+10 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">分享學習成果</div>
+                        <div class="points-value">+20 分</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 社區活動 -->
+        <div class="large-card">
+            <div class="card-section">
+                <div class="points-header">
+                    <div class="points-icon activity">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                    </div>
+                    <h2 class="points-title">社區活動</h2>
+                </div>
+                <ul class="points-list">
+                    <li class="points-item">
+                        <div class="points-item-title">參加實體工作坊</div>
+                        <div class="points-value">+100 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">參加線上研討會</div>
+                        <div class="points-value">+50 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">分享創作作品</div>
+                        <div class="points-value">+75 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">在論壇發表有價值的經驗</div>
+                        <div class="points-value">+30 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">回答其他用戶的問題</div>
+                        <div class="points-value">+15 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">幫助新用戶（導師計劃）</div>
+                        <div class="points-value">+50 分</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 特殊任務 -->
+        <div class="large-card">
+            <div class="card-section">
+                <div class="points-header">
+                    <div class="points-icon special">
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                    </div>
+                    <h2 class="points-title">特殊任務</h2>
+                </div>
+                <ul class="points-list">
+                    <li class="points-item">
+                        <div class="points-item-title">完成每日任務</div>
+                        <div class="points-value">+20 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">完成每週挑戰</div>
+                        <div class="points-value">+100 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">連續使用 App 7 天</div>
+                        <div class="points-value">+50 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">邀請新用戶（每位）</div>
+                        <div class="points-value">+200 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">發現並報告 Bug</div>
+                        <div class="points-value">+30 分</div>
+                    </li>
+                    <li class="points-item">
+                        <div class="points-item-title">提供有價值的功能建議</div>
+                        <div class="points-value">+50 分</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <nav class="bottom-nav">
+        <a href="home.html" class="bottom-nav-item">
+            <i class="fas fa-home bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="home">Home</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item">
+            <i class="fas fa-camera bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="equipment">Equipment</span>
+        </a>
+        <a href="learn.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="learn">Learn</span>
+        </a>
+        <a href="rio_ai.html" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="rio_ai">Rio AI</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item active">
+            <i class="fas fa-user bottom-nav-icon" aria-hidden="true"></i>
+            <span class="bottom-nav-text" data-i18n="profile">Profile</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript -->
+    <script src="assets/js/language.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 初始化用戶信息
+            const currentUser = await initUserInfo();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // 更新用戶積分信息
+            const userPointsElements = document.querySelectorAll('.user-points');
+            userPointsElements.forEach(element => {
+                element.textContent = currentUser.points;
+            });
+            
+            // 更新用戶等級信息
+            const userLevelElements = document.querySelectorAll('.user-level');
+            userLevelElements.forEach(element => {
+                element.textContent = currentUser.level;
+            });
+            
+            const userLevelNameElements = document.querySelectorAll('.user-level-name');
+            userLevelNameElements.forEach(element => {
+                element.textContent = currentUser.levelName;
+            });
+            
+            // 如果頁面上有進度條，根據當前積分和下一級別所需積分來更新進度條
+            const progressBarElements = document.querySelectorAll('.progress-bar-fill');
+            
+            // 計算獲得下一等級所需的積分
+            let nextLevelPoints = 0;
+            switch(currentUser.level) {
+                case 1:
+                    nextLevelPoints = 300;
+                    break;
+                case 2:
+                    nextLevelPoints = 500;
+                    break;
+                case 3:
+                    nextLevelPoints = 1000;
+                    break;
+                case 4:
+                    nextLevelPoints = 2000;
+                    break;
+                case 5:
+                    nextLevelPoints = 2000; // 已是最高等級
+                    break;
+                default:
+                    nextLevelPoints = 300;
+            }
+            
+            // 計算當前等級的基礎積分
+            let currentLevelBasePoints = 0;
+            switch(currentUser.level) {
+                case 2:
+                    currentLevelBasePoints = 300;
+                    break;
+                case 3:
+                    currentLevelBasePoints = 500;
+                    break;
+                case 4:
+                    currentLevelBasePoints = 1000;
+                    break;
+                case 5:
+                    currentLevelBasePoints = 2000;
+                    break;
+                default:
+                    currentLevelBasePoints = 0;
+            }
+            
+            // 計算進度百分比
+            let progressPercent = 100;
+            if (currentUser.level < 5) {
+                const pointsToNextLevel = nextLevelPoints - currentLevelBasePoints;
+                const currentProgress = currentUser.points - currentLevelBasePoints;
+                progressPercent = Math.min(100, Math.max(0, (currentProgress / pointsToNextLevel) * 100));
+            }
+            
+            // 更新進度條
+            progressBarElements.forEach(element => {
+                element.style.width = `${progressPercent}%`;
+            });
+            
+            // 更新顯示下一等級所需的積分
+            const nextLevelPointsElements = document.querySelectorAll('.next-level-points');
+            nextLevelPointsElements.forEach(element => {
+                element.textContent = nextLevelPoints;
+            });
+            
+            // 更新顯示距離下一等級還差多少積分
+            const pointsRemainingElements = document.querySelectorAll('.points-remaining');
+            const pointsRemaining = Math.max(0, nextLevelPoints - currentUser.points);
+            pointsRemainingElements.forEach(element => {
+                element.textContent = pointsRemaining;
+            });
+        });
+    </script>
+</body>
+</html>

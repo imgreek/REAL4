@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL 平台 - 聊天室</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/lang.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+        .bottom-nav-item:hover {
+            color: var(--primary-color);
+        }
+        .chat-list-item {
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .chat-list-item:hover {
+            background-color: #f5f5f5;
+        }
+        .chat-list-item.active {
+            background-color: #e3f2fd;
+        }
+        .user-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #e0e0e0;
+        }
+        .chat-time {
+            font-size: 0.75rem;
+            color: #9e9e9e;
+        }
+        .unread-badge {
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            min-width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 10rem);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .message {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .message-sent {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+        .message-received {
+            background-color: #f5f5f5;
+            color: #212121;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            opacity: 0.7;
+        }
+        .input-container {
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            position: fixed;
+            bottom: 4rem;
+            left: 0;
+            right: 0;
+        }
+        .chat-input {
+            border: 1px solid #e0e0e0;
+            border-radius: 1.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            outline: none;
+        }
+        .chat-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+        }
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .send-btn:hover {
+            background-color: #0d47a1;
+        }
+        .new-chat-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            bottom: 5rem;
+            right: 1rem;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+        .new-chat-btn:hover {
+            background-color: #00a896;
+            transform: scale(1.05);
+        }
+        .ai-badge {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <!-- 頂部欄 -->
+    <header class="header text-white py-4 px-4 flex justify-between items-center">
+        <img src="assets/images/App_Logo/REAL_LOGO.PNG" alt="REAL Logo" class="h-8">
+        <h1 class="text-xl font-bold" data-i18n="chat">聊天室</h1>
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <button id="newChatBtn" class="text-white" aria-label="New Chat" data-i18n-aria="new_chat">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="container mx-auto px-0 py-0">
+        <!-- 聊天列表視圖 (初始顯示) -->
+        <div id="chatListView">
+            <div class="px-4 py-3 flex justify-between items-center border-b border-gray-200">
+                <h2 class="text-lg font-medium" data-i18n="recent_conversations">最近對話</h2>
+                <button class="text-blue-600 text-sm font-medium" aria-label="編輯" data-i18n="edit" data-i18n-aria="edit">編輯</button>
+            </div>
+            
+            <div id="chatList" class="divide-y divide-gray-100">
+                <!-- 聊天項目將由JavaScript動態填充 -->
+            </div>
+        </div>
+        
+        <!-- 聊天詳情視圖 (點擊聊天項目後顯示，初始隱藏) -->
+        <div id="chatDetailView" class="hidden flex flex-col h-[calc(100vh-8rem)]">
+            <div class="px-4 py-3 flex items-center border-b border-gray-200">
+                <button id="backToChatList" class="mr-3 text-gray-600" aria-label="返回">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="user-avatar w-8 h-8 mr-3">
+                    <img id="chatDetailAvatar" src="" alt="頭像" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h2 id="chatDetailName" class="text-lg font-medium">聊天名稱</h2>
+                    <p id="chatDetailStatus" class="text-xs text-gray-500">正在輸入...</p>
+                </div>
+                <div>
+                    <button id="chatInfoBtn" class="text-gray-600 ml-2" aria-label="聊天資訊">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="messageContainer" class="message-container flex-1 bg-gray-50">
+                <!-- 訊息將由JavaScript動態填充 -->
+            </div>
+            
+            <div class="input-container flex items-center">
+                <input type="text" id="messageInput" class="chat-input flex-1 mr-2" placeholder="輸入訊息..." data-i18n-placeholder="message_placeholder">
+                <button id="sendMessageBtn" class="send-btn" aria-label="發送" data-i18n-aria="send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around items-center py-3 px-2">
+        <a href="home.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="home">首頁</span>
+        </a>
+        <a href="equipment.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-camera text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="equipment">設備</span>
+        </a>
+        <a href="learning.html" class="bottom-nav-item flex flex-col items-center text-gray-500">
+            <i class="fas fa-graduation-cap text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="learning">學習</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-item flex flex-col items-center active">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1" data-i18n="profile">我的</span>
+        </a>
+    </nav>
+
+    <!-- 新建聊天模態框 (默認隱藏) -->
+    <div id="newChatModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white w-full max-w-md rounded-lg overflow-hidden">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-lg font-bold">新建聊天</h2>
+                <button id="closeNewChatModal" class="text-gray-500" aria-label="關閉">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <label for="chatTypeSelect" class="block text-sm font-medium text-gray-700 mb-1">聊天類型</label>
+                    <select id="chatTypeSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="individual">個人聊天</option>
+                        <option value="group">群組聊天</option>
+                        <option value="ai">AI 助手</option>
+                    </select>
+                </div>
+                
+                <div id="contactsSelect" class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">選擇聯絡人</label>
+                    <div class="space-y-2 max-h-48 overflow-y-auto">
+                        <!-- 聯絡人選項將由JavaScript動態填充 -->
+                    </div>
+                </div>
+                
+                <div id="groupNameInput" class="mb-4 hidden">
+                    <label for="groupName" class="block text-sm font-medium text-gray-700 mb-1">群組名稱</label>
+                    <input type="text" id="groupName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="輸入群組名稱">
+                </div>
+                
+                <button id="createChatBtn" class="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition">
+                    建立聊天
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Apply language translations
+        applyTranslations();
+        
+        // Language switcher
+        const currentLang = localStorage.getItem('language') || 'zh';
+        document.getElementById('languageSwitcher').addEventListener('click', function() {
+            const newLang = currentLang === 'zh' ? 'en' : 'zh';
+            switchLanguage(newLang);
+        });
+        
+        // 獲取當前用戶資訊
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // 用戶資料 (Demo用)
+        const users = {
+            'ST020123': { name: 'Zoe Siu', avatar: 'assets/images/user_icon/user_zoe.png' },
+            'ST020124': { name: 'Rio Wong', avatar: 'assets/images/user_icon/user_rio.png' },
+            'ST020125': { name: 'Tintin Chen', avatar: 'assets/images/user_icon/user_Tintin.png' },
+            'AI': { name: 'RIO AI 助手', avatar: 'https://dummyimage.com//300?text=AI' }
+        };
+
+        // 聊天資料 (Demo用)
+        const chats = [
+            { 
+                id: 'chat1', 
+                type: 'group', 
+                name: '專案討論小組',
+                participants: ['ST020123', 'ST020124', 'ST020125'],
+                lastMessage: { sender: 'ST020124', content: '我們一起學習Canon R7使用方法，然後採用方案1吧!', timestamp: '10:30' },
+                unread: 3
+            },
+            { 
+                id: 'chat2', 
+                type: 'individual', 
+                participants: ['ST020123', 'ST020125'],
+                lastMessage: { sender: 'ST020125', content: '你看了Rio的建議了嗎？我覺得學習Canon R7是好主意', timestamp: '昨天' },
+                unread: 1
+            },
+            { 
+                id: 'chat3', 
+                type: 'ai', 
+                participants: ['ST020123', 'AI'],
+                lastMessage: { sender: 'AI', content: '我已經為您提供了可行的解決方案，建議優先選擇方案1', timestamp: '星期三' },
+                unread: 0
+            }
+        ];
+
+        // 聊天訊息 (Demo用)
+        const messages = {
+            'chat1': [
+                { sender: 'ST020124', content: '嗨，大家好！關於我們的專案，我們得安排一個面試拍攝時間', timestamp: '昨天 09:15' },
+                { sender: 'ST020123', content: '是的，截止日期是5月21日，我們需要儘快拍攝', timestamp: '昨天 09:20' },
+                { sender: 'ST020124', content: '我可以在5月10-13日之間拍攝，這段時間對我來說最方便', timestamp: '昨天 09:22' },
+                { sender: 'ST020125', content: '我這段時間也可以，但是有個問題：我剛剛查了設備借用系統，DJI Pocket 3在5月9-15日都已被預訂了', timestamp: '昨天 09:30' },
+                { sender: 'ST020123', content: '哦不...那我們該怎麼辦？我們需要這個設備來錄製面試', timestamp: '昨天 09:35' },
+                { sender: 'ST020124', content: '我們可以邀請AI助手幫我們分析一下可能的解決方案', timestamp: '昨天 10:00' },
+                { sender: 'ST020123', content: '好主意！@RIO AI，我們有個問題需要你幫忙', timestamp: '昨天 10:05' },
+                { sender: 'AI', content: '你好！我是RIO AI，很高興幫助你們。請問有什麼需要協助的？', timestamp: '昨天 10:06' },
+                { sender: 'ST020123', content: '我們需要在5月21日前完成一個訪談視頻，但DJI Pocket 3在Rio偏好的時間（5月10-13日）已經被預定了。有什麼替代方案嗎？', timestamp: '昨天 10:10' },
+                { sender: 'AI', content: '根據你們的情況，我有兩個建議：\n\n方案1：通過學習提升等級，以獲取更高級設備的使用權限。目前Zoe是基礎等級，如果完成「Canon R7基礎視頻拍攝」課程，可以升級並借用Canon EOS R7和RF 24-105 F4鏡頭，這組設備實際上比DJI Pocket 3更專業。\n\n方案2：將拍攝時間推遲到5月16-19日，屆時DJI Pocket 3將可用。\n\n考慮到你們的專案截止日期是5月21日，方案1更為合適，因為它能確保你們有足夠的時間完成拍攝，同時提供更高質量的效果。', timestamp: '昨天 10:15' },
+                { sender: 'ST020125', content: '我投票選擇方案1！學習新設備對我們未來的項目也有幫助', timestamp: '昨天 10:20' },
+                { sender: 'ST020124', content: '我也支持方案1！Canon R7的畫質確實比DJI Pocket 3好很多', timestamp: '昨天 10:25' },
+                { sender: 'ST020123', content: '謝謝大家和AI的建議！我會去學習中心完成Canon R7的課程，然後我們就可以借用更高級的設備了', timestamp: '昨天 10:28' },
+                { sender: 'ST020124', content: '我們一起學習Canon R7使用方法，然後採用方案1吧!', timestamp: '10:30' },
+            ],
+            'chat2': [
+                { sender: 'ST020125', content: '嗨，Zoe！', timestamp: '昨天 15:20' },
+                { sender: 'ST020123', content: '嗨，Tintin！有什麼事嗎？', timestamp: '昨天 15:25' },
+                { sender: 'ST020125', content: '你看了Rio的建議了嗎？我覺得學習Canon R7是好主意', timestamp: '昨天 15:30' },
+                { sender: 'ST020123', content: '是的，我正打算去學習中心完成那個課程', timestamp: '昨天 15:35' },
+                { sender: 'ST020125', content: '太好了！我也想學習，這樣我們都能熟悉新設備的使用', timestamp: '昨天 15:40' },
+                { sender: 'ST020123', content: '完美！我們可以一起學習，然後一起準備面試拍攝', timestamp: '昨天 15:45' },
+            ],
+            'chat3': [
+                { sender: 'ST020123', content: '你好，RIO！我需要為一個重要的訪談視頻選擇合適的設備', timestamp: '星期三 14:20' },
+                { sender: 'AI', content: '你好，Zoe！很高興能幫助你。請告訴我更多關於你的訪談視頻的信息，比如拍攝環境、訪談時長、參與人數等。', timestamp: '星期三 14:21' },
+                { sender: 'ST020123', content: '這是一個室內訪談，大約30分鐘，有兩位受訪者。我們的專案截止日期是5月21日，需要儘快完成拍攝', timestamp: '星期三 14:25' },
+                { sender: 'AI', content: '對於室內訪談，你需要考慮以下幾點：\n\n1. 穩定的攝像設備\n2. 良好的音頻收集設備\n3. 適當的燈光\n\n基於你的情況，DJI Pocket 3搭配DJI Mic 2是不錯的組合。DJI Pocket 3提供優秀的穩定性，而DJI Mic 2可以確保清晰的音頻。\n\n如果這些設備不可用，Canon EOS R7搭配RF 24-105mm鏡頭也是很好的替代方案，實際上在畫質上更為專業。', timestamp: '星期三 14:30' },
+                { sender: 'ST020123', content: '謝謝建議！我們計劃在5月10-13日拍攝，但DJI Pocket 3已被預訂。我應該推遲拍攝時間還是尋找替代設備？', timestamp: '星期四 10:00' },
+                { sender: 'AI', content: '根據你的情況，我有兩個建議：\n\n方案1：完成「Canon R7基礎視頻拍攝」課程，升級你的設備權限等級，然後借用Canon EOS R7和RF 24-105 F4鏡頭。這實際上是更高級的設備組合，能夠提供更專業的拍攝效果。\n\n方案2：將拍攝時間推遲到5月16-19日，屆時DJI Pocket 3將可用。\n\n考慮到你的專案時間還算充裕，我個人推薦方案1，因為：\n1. 能立即解決設備問題\n2. 提供更高品質的拍攝效果\n3. 幫助你學習更專業的設備使用技巧\n\n這樣你可以按計劃在5月10-13日進行拍攝，同時獲得更好的拍攝效果。', timestamp: '星期四 10:05' },
+                { sender: 'ST020123', content: '感謝你的詳細分析！我會選擇方案1，完成Canon R7的課程並借用更專業的設備', timestamp: '星期四 10:10' },
+                { sender: 'AI', content: '我已經為您提供了可行的解決方案，建議優先選擇方案1', timestamp: '星期四 10:15' },
+            ]
+        };
+
+        // 聯絡人資料 (Demo用)
+        const contacts = [
+            { id: 'ST020123', name: 'Zoe Siu' },
+            { id: 'ST020124', name: 'Rio Wong' },
+            { id: 'ST020125', name: 'Tintin Chen' },
+            { id: 'AI', name: 'RIO AI 助手', isAI: true }
+        ];
+
+        // 填充聊天列表
+        function renderChatList() {
+            const chatListEl = document.getElementById('chatList');
+            chatListEl.innerHTML = '';
+            
+            chats.forEach(chat => {
+                const otherParticipant = chat.participants.find(p => p !== currentUser) || chat.participants[0];
+                const displayName = chat.type === 'group' ? chat.name : users[otherParticipant].name;
+                const avatar = users[otherParticipant].avatar;
+                const lastMessage = chat.lastMessage;
+                const senderName = lastMessage.sender === currentUser ? '你' : 
+                                   (users[lastMessage.sender] ? users[lastMessage.sender].name.split(' ')[0] : 'Unknown');
+                const hasUnread = chat.unread > 0;
+                const isAI = otherParticipant === 'AI';
+                
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-list-item flex p-4';
+                chatItem.dataset.chatId = chat.id;
+                
+                chatItem.innerHTML = `
+                    <div class="user-avatar mr-3">
+                        <img src="${avatar}" alt="${displayName}" class="w-full h-full object-cover" onerror="this.src='https://dummyimage.com//48?text=${displayName[0]}'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-medium text-gray-800 truncate">
+                                ${displayName}
+                                ${isAI ? '<span class="ai-badge">AI</span>' : ''}
+                                ${chat.type === 'group' ? '<span class="text-xs text-gray-500 ml-1">· ' + chat.participants.length + ' 人</span>' : ''}
+                            </h3>
+                            <span class="chat-time whitespace-nowrap">${lastMessage.timestamp}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <p class="text-gray-600 text-sm truncate max-w-[70%]">
+                                ${chat.type !== 'individual' ? senderName + ': ' : ''}${lastMessage.content}
+                            </p>
+                            ${hasUnread ? `<span class="unread-badge">${chat.unread}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                chatItem.addEventListener('click', () => showChatDetail(chat));
+                
+                chatListEl.appendChild(chatItem);
+            });
+        }
+
+        // 顯示聊天詳情
+        function showChatDetail(chat) {
+            const chatListView = document.getElementById('chatListView');
+            const chatDetailView = document.getElementById('chatDetailView');
+            
+            // 隱藏聊天列表，顯示詳情視圖
+            chatListView.classList.add('hidden');
+            chatDetailView.classList.remove('hidden');
+            
+            // 獲取聊天對象資訊
+            const otherParticipant = chat.participants.find(p => p !== currentUser) || chat.participants[0];
+            const displayName = chat.type === 'group' ? chat.name : users[otherParticipant].name;
+            const avatar = users[otherParticipant].avatar;
+            const isAI = otherParticipant === 'AI';
+            
+            // 更新詳情視圖
+            document.getElementById('chatDetailName').textContent = displayName;
+            if (isAI) {
+                document.getElementById('chatDetailName').innerHTML = `${displayName} <span class="ai-badge">AI</span>`;
+            }
+            document.getElementById('chatDetailAvatar').src = avatar;
+            document.getElementById('chatDetailStatus').textContent = chat.type === 'group' ? 
+                `${chat.participants.length} 位成員` : '在線';
+            
+            // 填充訊息
+            renderMessages(chat.id);
+            
+            // 重置未讀數
+            chats.find(c => c.id === chat.id).unread = 0;
+        }
+
+        // 填充訊息
+        function renderMessages(chatId) {
+            const messageContainerEl = document.getElementById('messageContainer');
+            messageContainerEl.innerHTML = '';
+            
+            const chatMessages = messages[chatId] || [];
+            
+            chatMessages.forEach(message => {
+                const isSent = message.sender === currentUser;
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${isSent ? 'message-sent' : 'message-received'}`;
+                
+                // 處理換行符
+                const formattedContent = message.content.replace(/\n/g, '<br>');
+                
+                messageEl.innerHTML = `
+                    <div>${formattedContent}</div>
+                    <div class="message-time text-right">${message.timestamp}</div>
+                `;
+                
+                messageContainerEl.appendChild(messageEl);
+            });
+            
+            // 滾動到底部
+            messageContainerEl.scrollTop = messageContainerEl.scrollHeight;
+        }
+
+        // 返回聊天列表
+        document.getElementById('backToChatList').addEventListener('click', function() {
+            document.getElementById('chatDetailView').classList.add('hidden');
+            document.getElementById('chatListView').classList.remove('hidden');
+            
+            // 更新聊天列表以反映新狀態
+            renderChatList();
+        });
+
+        // 發送訊息
+        document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message) {
+                // 獲取當前活動的聊天
+                const activeChatId = document.querySelector('.chat-list-item.active')?.dataset.chatId || 
+                                     chats[0].id;
+                
+                // 新增訊息
+                const newMessage = {
+                    sender: currentUser,
+                    content: message,
+                    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+                
+                if (!messages[activeChatId]) {
+                    messages[activeChatId] = [];
+                }
+                
+                messages[activeChatId].push(newMessage);
+                
+                // 更新最後一條訊息
+                const activeChat = chats.find(c => c.id === activeChatId);
+                activeChat.lastMessage = newMessage;
+                
+                // 重新渲染訊息
+                renderMessages(activeChatId);
+                
+                // 清空輸入框
+                messageInput.value = '';
+                
+                // 模擬回覆 (僅對 AI 聊天)
+                if (activeChat.type === 'ai') {
+                    setTimeout(() => {
+                        const aiReply = {
+                            sender: 'AI',
+                            content: getAIResponse(message),
+                            timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                        };
+                        
+                        messages[activeChatId].push(aiReply);
+                        activeChat.lastMessage = aiReply;
+                        renderMessages(activeChatId);
+                    }, 1000);
+                }
+            }
+        }
+
+        // 簡易的 AI 回應生成（Demo用）
+        function getAIResponse(message) {
+            if (message.includes('Canon R7') || message.includes('學習') || message.includes('課程')) {
+                return "我建議你現在就去學習中心完成「Canon R7基礎視頻拍攝」課程。這將使您能夠達到必要的等級，從而借用Canon EOS R7和RF 24-105mm鏡頭。這些設備對於您的訪談視頻是絕佳的選擇。";
+            } else if (message.includes('DJI Pocket') || message.includes('預訂') || message.includes('借用')) {
+                return "根據設備預訂系統，DJI Pocket 3在5月9-15日期間已被預訂。您可以考慮在5月16-19日借用，或者通過學習課程提升等級後借用Canon EOS R7。";
+            } else if (message.includes('時間') || message.includes('日期') || message.includes('截止')) {
+                return "根據您的情況，您需要在5月21日前完成拍攝，這是您的專案截止日期。建議您盡快完成Canon R7的學習課程，以便能借用更專業的設備，並在5月10-13日期間進行拍攝。";
+            } else {
+                return "感謝您的提問。為了幫助您解決訪談視頻設備問題，我建議您完成Canon R7的學習課程。這將使您能夠借用更專業的設備，並按照您的時間表進行拍攝。";
+            }
+        }
+
+        // 新建聊天相關功能
+        const newChatBtn = document.getElementById('newChatBtn');
+        const newChatModal = document.getElementById('newChatModal');
+        const closeNewChatModal = document.getElementById('closeNewChatModal');
+        const chatTypeSelect = document.getElementById('chatTypeSelect');
+        const contactsSelectDiv = document.getElementById('contactsSelect');
+        const groupNameInput = document.getElementById('groupNameInput');
+        const createChatBtn = document.getElementById('createChatBtn');
+
+        // 打開新建聊天模態框
+        newChatBtn.addEventListener('click', function() {
+            newChatModal.classList.remove('hidden');
+            renderContacts();
+        });
+
+        // 關閉新建聊天模態框
+        closeNewChatModal.addEventListener('click', function() {
+            newChatModal.classList.add('hidden');
+        });
+
+        // 聊天類型變更
+        chatTypeSelect.addEventListener('change', function() {
+            const chatType = this.value;
+            
+            if (chatType === 'group') {
+                groupNameInput.classList.remove('hidden');
+            } else {
+                groupNameInput.classList.add('hidden');
+            }
+            
+            renderContacts();
+        });
+
+        // 填充聯絡人列表
+        function renderContacts() {
+            const chatType = chatTypeSelect.value;
+            contactsSelectDiv.innerHTML = '';
+            
+            let label = document.createElement('label');
+            label.className = 'block text-sm font-medium text-gray-700 mb-1';
+            label.textContent = chatType === 'ai' ? '選擇 AI 助手' : '選擇聯絡人';
+            contactsSelectDiv.appendChild(label);
+            
+            const filteredContacts = chatType === 'ai' 
+                ? contacts.filter(c => c.isAI) 
+                : contacts.filter(c => c.id !== currentUser && !c.isAI);
+            
+            const containerDiv = document.createElement('div');
+            containerDiv.className = 'space-y-2 max-h-48 overflow-y-auto';
+            
+            filteredContacts.forEach(contact => {
+                const contactDiv = document.createElement('div');
+                contactDiv.className = 'flex items-center p-2 hover:bg-gray-50 rounded-md';
+                
+                contactDiv.innerHTML = `
+                    <input type="checkbox" id="contact_${contact.id}" class="mr-3 h-4 w-4 text-blue-600 border-gray-300 rounded" value="${contact.id}">
+                    <label for="contact_${contact.id}" class="flex-1 cursor-pointer">
+                        <div class="font-medium">${contact.name}</div>
+                    </label>
+                `;
+                
+                if (chatType === 'ai' || chatType === 'individual') {
+                    contactDiv.querySelector('input').type = 'radio';
+                    contactDiv.querySelector('input').name = 'contact';
+                }
+                
+                containerDiv.appendChild(contactDiv);
+            });
+            
+            contactsSelectDiv.appendChild(containerDiv);
+        }
+
+        // 建立聊天
+        createChatBtn.addEventListener('click', function() {
+            const chatType = chatTypeSelect.value;
+            let selectedContacts = [];
+            
+            if (chatType === 'individual' || chatType === 'ai') {
+                const selectedRadio = document.querySelector('input[name="contact"]:checked');
+                if (selectedRadio) {
+                    selectedContacts = [selectedRadio.value];
+                }
+            } else {
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    selectedContacts.push(cb.value);
+                });
+            }
+            
+            if (selectedContacts.length === 0) {
+                alert('請選擇至少一個聯絡人');
+                return;
+            }
+            
+            if (chatType === 'group' && !document.getElementById('groupName').value.trim()) {
+                alert('請輸入群組名稱');
+                return;
+            }
+            
+            // 建立新聊天 (Demo用)
+            alert('聊天已建立！在完整版本中，這將創建一個新的聊天頻道。');
+            newChatModal.classList.add('hidden');
+        });
+
+        // 初始化聊天列表
+        renderChatList();
+
+        // 如果進入頁面時有指定聊天ID的參數，則自動打開該聊天
+        const urlParams = new URLSearchParams(window.location.search);
+        const chatId = urlParams.get('chatId');
+        if (chatId) {
+            const chat = chats.find(c => c.id === chatId);
+            if (chat) {
+                showChatDetail(chat);
+            }
+        }
+    });
+</script> 

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="course_detail_page">課程詳情</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/database/database.js"></script>
+    <style>
+        :root {
+            --primary-color: #1A73E8; /* 教育藍 */
+            --secondary-color: #FF5722; /* 活力橙色 */
+            --accent-color: #00BFA5; /* 薄荷綠 */
+        }
+        body {
+            background-color: #f8f9fa; /* Slightly off-white background */
+            font-family: "SF Pro TC", "SF Pro Text", "SF Pro Icons", "PingFang TC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            color: #333; /* Default text color */
+        }
+        .header {
+            background-color: var(--primary-color);
+        }
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .markdown-content h1 { font-size: 1.875rem; }
+        .markdown-content h2 { font-size: 1.5rem; }
+        .markdown-content h3 { font-size: 1.25rem; }
+        .markdown-content p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .markdown-content ul, .markdown-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-content li {
+            margin-bottom: 0.25rem;
+        }
+        .markdown-content a {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        .markdown-content code {
+            background-color: #e9ecef;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .markdown-content pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .markdown-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .stage { 
+            border: 1px solid #e0e0e0; 
+            padding: 1.5rem; 
+            margin-bottom: 1.5rem; 
+            border-radius: 0.75rem; 
+            background-color: white; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stage h3 { 
+            font-size: 1.5rem; /* Larger stage title */
+            font-weight: 600; /* Bolder */
+            margin-bottom: 1rem; 
+            color: var(--primary-color);
+        }
+        .video-container { 
+            position: relative; 
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0; 
+            overflow: hidden; 
+            max-width: 100%; 
+            background: #000; 
+            margin-bottom: 1rem; 
+            border-radius: 0.5rem;
+        }
+        .video-container iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+        }
+        .quiz-option { 
+            margin-bottom: 0.75rem; 
+            padding: 0.75rem;
+            border: 1px solid #eee;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .quiz-option:hover {
+            background-color: #f9f9f9;
+        }
+        .quiz-option input[type="radio"] {
+            margin-right: 0.75rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1565C0; /* Darker blue */
+        }
+        .btn-secondary {
+            background-color: #6c757d; /* Gray */
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-green {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-green:hover {
+            background-color: #008c7a; /* Darker accent */
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <header class="header text-white py-4 px-4 flex justify-between items-center sticky top-0 z-50">
+        <a href="learning.html" class="text-white hover:text-gray-200" aria-label="Back to Learning" data-i18n-aria-label="back_to_learning">
+            <i class="fas fa-arrow-left text-xl"></i>
+        </a>
+        <h1 id="coursePageTitle" class="text-xl font-bold mx-auto"></h1> <!-- Title will be set by JS -->
+        <div class="flex items-center">
+            <button id="languageSwitcher" class="text-white hover:text-gray-200 mr-3" aria-label="Switch Language" data-i18n-aria-label="switch_language">
+                <i class="fas fa-globe text-xl"></i>
+            </button>
+             <a href="qr-scanner.html" class="text-white hover:text-gray-200" aria-label="QR碼掃描" data-i18n-aria="qr_scanner">
+                <i class="fas fa-qrcode text-xl"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div id="courseContent">
+            <!-- Stages will be rendered here by JavaScript -->
+        </div>
+        <div id="courseNavigation" class="mt-6 flex justify-between items-center">
+            <button id="prevStageBtn" class="btn btn-secondary hidden" data-i18n="previous_stage">上一階段</button>
+            <button id="nextStageBtn" class="btn btn-primary" data-i18n="next_stage_val">下一階段</button>
+        </div>
+         <div id="completionMessage" class="mt-8 p-6 bg-green-50 border border-green-200 text-green-700 rounded-lg hidden text-center">
+            <h2 class="text-2xl font-semibold mb-3" data-i18n="course_completed_title">恭喜！課程已完成！</h2>
+            <p class="mb-4" data-i18n="course_completed_text">您已成功完成此課程所有階段。</p>
+            <a href="learning.html" class="btn btn-primary" data-i18n="back_to_courses_list">返回課程列表</a>
+        </div>
+    </main>
+
+    <script>
+    let currentStageIndex = 0;
+    let courseStages = [];
+    let pageCurrentLang = localStorage.getItem('language') || 'zh';
+    let currentUser = ''; 
+    let courseFileIdentifier = ''; 
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        currentUser = localStorage.getItem('currentUser');
+        // No explicit redirect if no user, page might still display content without progress saving.
+
+        applyTranslations(); 
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseFile = urlParams.get('file');
+        courseFileIdentifier = courseFile ? courseFile.replace('.md', '') : '';
+        const courseTitleFromURL = urlParams.get('title');
+
+        const pageTitleEl = document.getElementById('coursePageTitle');
+        if (pageTitleEl) pageTitleEl.textContent = courseTitleFromURL || t('course_detail_page', pageCurrentLang);
+        document.title = courseTitleFromURL || t('course_detail_page', pageCurrentLang);
+
+        if (typeof window.Database === 'undefined' || !window.Database.init) {
+            console.error("Database module not found or not initialized. Progress features disabled.");
+            displayCourseContentError(t('error_loading_database_module', pageCurrentLang) + " (DB missing)");
+            return; // Stop further execution if database is not available
+        }
+
+        // Ensure Database is initialized (or wait for it)
+        // This basic check might need a more robust ready/promise mechanism in a complex app
+        if (!window.Database.getAllCourses) { // Simple check if init has run
+            await window.Database.init(); // Attempt to initialize if not ready
+        }
+
+        if (courseFileIdentifier) {
+            const jsonPath = `assets/database/learn_json/${courseFileIdentifier}.json`;
+            try {
+                const response = await fetch(jsonPath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}, file: ${jsonPath}`);
+                }
+                const courseSpecificData = await response.json();
+                
+                if (courseSpecificData && courseSpecificData.stages) {
+                    courseStages = courseSpecificData.stages;
+                    if (currentUser) {
+                        const { passedStages: userPassedStageIds, courseCompleted: isCourseMarkedCompleted } = 
+                            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+                        
+                        if (isCourseMarkedCompleted && courseStages.length > 0) {
+                            currentStageIndex = courseStages.length; 
+                        } else {
+                            let startingStage = 0;
+                            for (let i = 0; i < courseStages.length; i++) {
+                                if (!userPassedStageIds.includes(courseStages[i].id.toString())) {
+                                    startingStage = i;
+                                    break;
+                                }
+                                if (i === courseStages.length - 1) { 
+                                    startingStage = courseStages.length;
+                                }
+                            }
+                            currentStageIndex = startingStage;
+                        }
+                    } else {
+                        currentStageIndex = 0; // No user, start from beginning
+                    }
+                    renderStage(currentStageIndex);
+                } else {
+                    displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (Invalid data format)');
+                }
+            } catch (error) {
+                console.error('Error fetching course data:', error);
+                displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (File not found or network error)');
+            }
+        } else {
+             displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (No course file specified)');
+        }
+        
+        const languageSwitcherBtn = document.getElementById('languageSwitcher');
+        if (languageSwitcherBtn) {
+            languageSwitcherBtn.addEventListener('click', function() {
+                const oldLang = localStorage.getItem('language') || 'zh';
+                const newLang = oldLang === 'zh' ? 'en' : 'zh';
+                pageCurrentLang = newLang; 
+                switchLanguage(newLang); 
+                if (courseStages.length > 0) {
+                    renderStage(currentStageIndex); 
+                } else {
+                     document.getElementById('courseContent').innerHTML = 
+                        `<p class="text-red-500 text-center py-8">${t('course_content_not_found', pageCurrentLang)}</p>`;
+                }
+            });
+        }
+        document.getElementById('nextStageBtn').addEventListener('click', handleNextStage);
+        document.getElementById('prevStageBtn').addEventListener('click', handlePrevStage);
+    });
+
+    function displayCourseContentError(errorMessage) {
+        document.getElementById('courseContent').innerHTML = 
+            `<p class="text-red-500 text-center py-8">${errorMessage}</p>`;
+        const courseNav = document.getElementById('courseNavigation');
+        if(courseNav) courseNav.style.display = 'none';
+    }
+
+    function renderStage(stageIndex) {
+        if (currentStageIndex >= courseStages.length && courseStages.length > 0) {
+            document.getElementById('courseContent').innerHTML = ''; 
+            updateNavigationButtons(); 
+            return;
+        }
+        if (!courseStages || stageIndex < 0 || stageIndex >= courseStages.length) {
+            if (courseStages.length > 0) {
+                 console.warn("Invalid stageIndex for renderStage or course completed:", stageIndex);
+                 document.getElementById('courseContent').innerHTML = ''; 
+                 updateNavigationButtons();
+            }
+            return;
+        }
+
+        pageCurrentLang = localStorage.getItem('language') || 'zh'; 
+        const stage = courseStages[stageIndex];
+        const courseContentEl = document.getElementById('courseContent');
+        
+        const { passedStages: userPassedStageIds } = (currentUser && courseFileIdentifier && window.Database) ? 
+            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier) : { passedStages: [] };
+        const isStageQuizPassed = userPassedStageIds.includes(stage.id.toString());
+        
+        let isStageAccessible = true;
+        if (stageIndex > 0 && currentUser && courseFileIdentifier && window.Database) {
+            const prevStageProgress = window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+            const prevStageId = courseStages[stageIndex - 1].id.toString();
+            if (!prevStageProgress.passedStages.includes(prevStageId)) {
+                isStageAccessible = false;
+            }
+        }
+
+        const stageTitle = pageCurrentLang === 'zh' ? stage.title_zh : stage.title_en;
+        const stageIntro = pageCurrentLang === 'zh' ? stage.intro_zh : stage.intro_en;
+        const quizQuestion = pageCurrentLang === 'zh' ? stage.quiz.question_zh : stage.quiz.question_en;
+        const quizOptions = pageCurrentLang === 'zh' ? stage.quiz.options_zh : stage.quiz.options_en;
+
+        let optionsHTML = '';
+        quizOptions.forEach((option, index) => {
+            optionsHTML += `
+                <label class="quiz-option block ${!isStageAccessible || isStageQuizPassed ? 'opacity-50 cursor-not-allowed' : ''}">
+                    <input type="radio" name="quizOption_${stage.id}" value="${index}" class="mr-2" ${!isStageAccessible || isStageQuizPassed ? 'disabled' : ''}>
+                    <span>${option}</span>
+                </label>
+            `;
+        });
+
+        courseContentEl.innerHTML = `
+            <div class="stage" id="stage-${stage.id}">
+                <h3>${stageTitle}</h3>
+                <p class="mb-4 text-gray-600" data-i18n="stage_content_intro_text">${t('stage_content_intro_text', pageCurrentLang)}</p>
+                <div class="video-container">
+                    <iframe src="${stage.video_url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Course video for ${stageTitle}"></iframe>
+                </div>
+                <p class="my-4 text-gray-700">${stageIntro}</p>
+                
+                ${!isStageAccessible ? `<p class='text-yellow-600 font-semibold mb-3'>${t('complete_previous_stage_to_unlock', pageCurrentLang || 'zh')}</p>` : ''}
+
+                <h4 class="font-semibold text-lg mt-6 mb-3 ${!isStageAccessible ? 'opacity-50' : ''}" data-i18n="quiz_title_text">${t('quiz_title_text_val', pageCurrentLang)}</h4>
+                <form id="quizForm_${stage.id}" class="${!isStageAccessible ? 'opacity-50 cursor-not-allowed' : ''}">
+                    <p class="mb-3 font-medium">${quizQuestion}</p>
+                    <div class="space-y-2">${optionsHTML}</div>
+                    <button type="submit" class="btn btn-green mt-4" data-i18n="submit_answer_val" ${!isStageAccessible || isStageQuizPassed ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+                        ${isStageQuizPassed ? t('quiz_passed_label', pageCurrentLang || 'zh') : t('submit_answer_val', pageCurrentLang)}
+                    </button>
+                </form>
+                <p id="quizResult_${stage.id}" class="mt-3 text-sm font-medium">
+                    ${isStageQuizPassed ? `<span class='text-green-600'>${t('quiz_already_passed_message', pageCurrentLang || 'zh')}</span>` : ''}
+                </p>
+            </div>
+        `;
+        
+        if (isStageAccessible) {
+            const quizForm = document.getElementById(`quizForm_${stage.id}`);
+            if (quizForm && !isStageQuizPassed) {
+                quizForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    handleQuizSubmit(stage.id, stage.quiz.correct_answer_index);
+                });
+            }
+        }
+        updateNavigationButtons();
+    }
+
+    function handleQuizSubmit(stageId, correctAnswerIndex) {
+        if (!currentUser || !courseFileIdentifier || !window.Database) {
+            alert(t('login_to_save_progress_alert', pageCurrentLang || 'zh'));
+            // Simulate visual feedback without saving (copied from previous version)
+            const form = document.getElementById(`quizForm_${stageId}`);
+            const resultEl = document.getElementById(`quizResult_${stageId}`);
+            const selectedOption = form.querySelector(`input[name="quizOption_${stageId}"]:checked`);
+            if (!selectedOption) { 
+                resultEl.textContent = t('select_an_answer', pageCurrentLang);
+                resultEl.className = 'mt-3 text-sm font-medium text-yellow-600';
+                return; 
+            }
+            if (parseInt(selectedOption.value) === correctAnswerIndex) {
+                resultEl.textContent = t('correct_answer_next_stage', pageCurrentLang);
+                resultEl.className = 'mt-3 text-sm font-medium text-green-600';
+                Array.from(form.elements).forEach(el => el.disabled = true);
+                const submitButton = form.querySelector('button[type="submit"]');
+                if(submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                    submitButton.textContent = t('quiz_passed_label', pageCurrentLang);
+                }
+                document.getElementById('nextStageBtn').disabled = false;
+            } else {
+                resultEl.textContent = t('incorrect_answer_try_again', pageCurrentLang);
+                resultEl.className = 'mt-3 text-sm font-medium text-red-600';
+                document.getElementById('nextStageBtn').disabled = true;
+            }
+            updateNavigationButtons(); // Still call to reflect button state based on visual changes
+            return;
+        }
+
+        pageCurrentLang = localStorage.getItem('language') || 'zh';
+        const form = document.getElementById(`quizForm_${stageId}`);
+        const resultEl = document.getElementById(`quizResult_${stageId}`);
+        const selectedOption = form.querySelector(`input[name="quizOption_${stageId}"]:checked`);
+
+        if (!selectedOption) {
+            resultEl.textContent = t('select_an_answer', pageCurrentLang);
+            resultEl.className = 'mt-3 text-sm font-medium text-yellow-600';
+            return;
+        }
+
+        const nextBtn = document.getElementById('nextStageBtn');
+        if (parseInt(selectedOption.value) === correctAnswerIndex) {
+            resultEl.textContent = t('correct_answer_next_stage', pageCurrentLang);
+            resultEl.className = 'mt-3 text-sm font-medium text-green-600';
+            
+            window.Database.saveUserStagePass(currentUser, courseFileIdentifier, stageId.toString());
+            
+            const { passedStages: updatedPassedStages } = window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+            const isNowCourseCompleted = updatedPassedStages.length === courseStages.length;
+            const progressPercentage = courseStages.length > 0 ? (updatedPassedStages.length / courseStages.length) * 100 : 0;
+            window.Database.updateUserCourseOverallProgress(currentUser, courseFileIdentifier, progressPercentage, isNowCourseCompleted);
+
+            if(nextBtn) nextBtn.disabled = false;
+            Array.from(form.elements).forEach(el => el.disabled = true);
+            const submitButton = form.querySelector('button[type="submit"]');
+            if(submitButton) {
+                 submitButton.disabled = true;
+                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                 submitButton.textContent = t('quiz_passed_label', pageCurrentLang);
+            }
+
+        } else {
+            resultEl.textContent = t('incorrect_answer_try_again', pageCurrentLang);
+            resultEl.className = 'mt-3 text-sm font-medium text-red-600';
+            if(nextBtn) nextBtn.disabled = true;
+        }
+        updateNavigationButtons();
+    }
+    
+    function updateNavigationButtons() {
+        pageCurrentLang = localStorage.getItem('language') || 'zh';
+        const prevBtn = document.getElementById('prevStageBtn');
+        const nextBtn = document.getElementById('nextStageBtn');
+        const completionMessageEl = document.getElementById('completionMessage');
+        const courseNavigationEl = document.getElementById('courseNavigation');
+        const courseContentEl = document.getElementById('courseContent');
+
+        if (!prevBtn || !nextBtn || !completionMessageEl || !courseNavigationEl || !courseContentEl) return;
+
+        const { passedStages: userPassedStageIds, courseCompleted: isCourseOverallCompleted } = (currentUser && courseFileIdentifier && window.Database) ? 
+            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier) : { passedStages: [], courseCompleted: false };
+
+        if (isCourseOverallCompleted && courseStages.length > 0) {
+            courseContentEl.innerHTML = ''; 
+            courseNavigationEl.style.display = 'none';
+            completionMessageEl.classList.remove('hidden');
+            return; 
+        }
+        
+        if (!courseStages || courseStages.length === 0) {
+            prevBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden'); 
+            courseNavigationEl.style.display = 'none';
+            completionMessageEl.classList.add('hidden');
+            return;
+        }
+
+        prevBtn.classList.toggle('hidden', currentStageIndex === 0);
+        
+        if (currentStageIndex >= courseStages.length -1) { 
+           nextBtn.textContent = t('complete_course_val', pageCurrentLang);
+        } else {
+           nextBtn.textContent = t('next_stage_val', pageCurrentLang);
+        }
+        
+        if (currentStageIndex < courseStages.length) {
+            const currentStageData = courseStages[currentStageIndex];
+            if (currentStageData && currentStageData.quiz) {
+                const isCurrentQuizPassed = userPassedStageIds.includes(currentStageData.id.toString());
+                nextBtn.disabled = !isCurrentQuizPassed;
+            } else { 
+                nextBtn.disabled = false;
+            }
+        } else { 
+            nextBtn.classList.add('hidden'); 
+        }
+
+        if (currentStageIndex >= courseStages.length) { 
+            courseContentEl.innerHTML = ''; 
+            courseNavigationEl.style.display = 'none';
+            completionMessageEl.classList.remove('hidden');
+        } else {
+            courseNavigationEl.style.display = 'flex';
+            completionMessageEl.classList.add('hidden');
+        }
+    }
+
+    function handleNextStage() {
+        if (!window.Database) return;
+        const { courseCompleted: isCourseMarkedCompleted } = (currentUser && courseFileIdentifier) ? 
+            window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier) : { courseCompleted: false };
+
+        if (isCourseMarkedCompleted) return; 
+
+        if (currentStageIndex < courseStages.length - 1) {
+            currentStageIndex++;
+            renderStage(currentStageIndex);
+        } else if (currentStageIndex === courseStages.length - 1) {             
+            if (currentUser && courseFileIdentifier) {
+                const { passedStages: userPassedStageIds } = window.Database.getUserStageSpecificProgress(currentUser, courseFileIdentifier);
+                const allPassed = courseStages.every(s => userPassedStageIds.includes(s.id.toString()));
+                if (allPassed) {
+                    const progressPercentage = 100;
+                    window.Database.updateUserCourseOverallProgress(currentUser, courseFileIdentifier, progressPercentage, true);
+                    console.log("Course marked as completed via Database module!");
+                } else {
+                    console.warn("Attempted to complete course, but not all stages are marked as passed (DB check).");
+                    renderStage(currentStageIndex);
+                    return;
+                }
+            }
+            currentStageIndex++; 
+            renderStage(currentStageIndex); 
+        }
+    }
+
+    function handlePrevStage() {
+        if (currentStageIndex > 0) {
+            currentStageIndex--;
+            renderStage(currentStageIndex);
+        }
+    }
+    </script>
+</body>
+</html> 
