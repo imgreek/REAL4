@@ -414,7 +414,8 @@
             
             // 關閉按鈕事件
             document.getElementById('closeBtn').addEventListener('click', function() {
-                window.location.href = 'equipment.html';
+                sessionStorage.setItem('refreshDataOnLoad', 'true');
+                window.location.href = 'equipment.html?refresh=true';
             });
             
             // 確認借用按鈕事件
@@ -504,6 +505,16 @@
                         
                         // 禁用確認按鈕
                         document.getElementById('confirmBtn').disabled = true;
+                        document.getElementById('confirmBtn').classList.add('opacity-50', 'cursor-not-allowed');
+                        document.getElementById('cancelBtn').style.display = 'none';
+                        
+                        const returnButton = document.getElementById('returnToEquipmentBtn');
+                        returnButton.style.display = 'inline-block';
+                        returnButton.onclick = function() {
+                            sessionStorage.setItem('refreshDataOnLoad', 'true');
+                            const returnUrl = 'equipment.html?refresh=true';
+                            window.location.href = returnUrl;
+                        };
                     } else {
                         // 預訂失敗
                         const resultAlert = document.getElementById('resultAlert');
@@ -534,11 +545,6 @@
                     resultTitle.textContent = t('booking_failed', currentLang);
                     resultMessage.textContent = t('error_during_booking', currentLang);
                 }
-            });
-            
-            // 返回設備頁面按鈕事件
-            document.getElementById('returnToEquipmentBtn').addEventListener('click', function() {
-                window.location.href = 'equipment.html';
             });
         });
         

@@ -4,46 +4,151 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=nNapondAUWc",
+      "video_url": "https://www.youtube.com/embed/nNapondAUWc",
       "intro_zh": "長按電源鍵開機，再長按一次可關機。手持設備，輕鬆調整雲台方向至合適角度。透過觸控螢幕選擇錄影或拍照模式。插入microSD卡後，在設定中完成格式化。",
       "intro_en": "Press and hold the power button to turn on; press and hold again to turn off. Hold the device and smoothly adjust the gimbal direction as needed. Select video or photo mode from the touchscreen. Insert microSD card and format it via settings.",
-      "quiz": {
-        "question_zh": "DJI Pocket 3的感光元件多大？",
-        "question_en": "What is the sensor size of the DJI Pocket 3?",
-        "options_zh": ["1/2.3吋", "2吋", "1吋"],
-        "options_en": ["1/2.3 inch", "2 inch", "1 inch"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "DJI Pocket 3的感光元件多大？",
+          "question_en": "What is the sensor size of the DJI Pocket 3?",
+          "options_zh": ["1/2.3吋", "2吋", "1吋"],
+          "options_en": ["1/2.3 inch", "2 inch", "1 inch"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "需要長按哪個按鈕才能開機？",
+          "question_en": "Which button must you hold to power on?",
+          "options_zh": ["快門鍵", "電源鍵", "模式切換鍵"],
+          "options_en": ["Shutter", "Power", "Mode"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "如何切換到拍照模式？",
+          "question_en": "How do you switch to photo mode?",
+          "options_zh": ["用螢幕觸控", "長按快門鍵", "拔出記憶卡"],
+          "options_en": ["Touchscreen", "Hold shutter", "Remove memory card"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "安裝記憶卡後需做什麼？",
+          "question_en": "What do you need to do after inserting the memory card?",
+          "options_zh": ["拍照", "格式化記憶卡", "關機"],
+          "options_en": ["Take photos", "Format the memory card", "Turn off"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_5",
+          "question_zh": "Pocket 3 屬於哪類型相機？",
+          "question_en": "What type of camera is the Pocket 3?",
+          "options_zh": ["無反相機", "雲台相機", "單眼"],
+          "options_en": ["Mirrorless", "Gimbal camera", "DSLR"],
+          "correct_answer_index": 1
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=iA0gOWdzHBk",
+      "video_url": "https://www.youtube.com/embed/iA0gOWdzHBk",
       "intro_zh": "進入設定選單調整解析度至4K。旋轉螢幕或選單啟用直拍/橫拍模式。啟動ActiveTrack，讓相機自動追蹤主體。選擇「延時攝影」並預設間隔、時長。",
       "intro_en": "In setting menu, set resolution to 4K. Rotate the screen or use the menu to switch between portrait and landscape. Activate ActiveTrack for auto subject tracking. Select “Timelapse” and set the interval and duration.",
-      "quiz": {
-        "question_zh": "DJI Pocket 3最高可錄製幾K的影片？",
-        "question_en": "What is the maximum video resolution DJI Pocket 3 supports?",
-        "options_zh": ["1080P", "2.7K", "4K"],
-        "options_en": ["1080P", "2.7K", "4K"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "DJI Pocket 3最高可錄製幾K的影片？",
+          "question_en": "What is the maximum video resolution DJI Pocket 3 supports?",
+          "options_zh": ["1080P", "2.7K", "4K"],
+          "options_en": ["1080P", "2.7K", "4K"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "如何啟用ActiveTrack功能？",
+          "question_en": "How do you enable ActiveTrack?",
+          "options_zh": ["用螢幕框選主體", "快門兩下", "長按電源"],
+          "options_en": ["Select subject on screen", "Double-tap shutter", "Hold power button"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "要切換直拍與橫拍應怎麼做？",
+          "question_en": "How do you switch between portrait and landscape?",
+          "options_zh": ["旋轉螢幕", "插拔記憶卡", "換鏡頭"],
+          "options_en": ["Rotate screen", "Insert or remove memory card", "Change lens"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "Pocket 3 可錄製延時攝影嗎？",
+          "question_en": "Can Pocket 3 record timelapse?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "跟隨模式允許相機自動追蹤主體嗎？",
+          "question_en": "Does the follow mode allow the camera to track subjects automatically?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.dji.com/hk/osmo-pocket-3/video",
+      "video_url": "https://www.dji.com/hk/osmo-pocket-3/video", 
       "intro_zh": "透過Type-C/Lightning介面連接手機啟動DJI Mimo App。使用DJI Mic或其他支援的無線麥克風接收器。插入外部配件開啟HDMI或Type-C影像輸出。將Pocket 3以Type-C連線至電腦進行資料備份和充電。",
       "intro_en": "Connect via Type-C/Lightning port and launch DJI Mimo App. Attach DJI Mic or other supported wireless mic receivers. Use external accessories for HDMI/Type-C video output. Connect Pocket 3 to computer via Type-C for data backup and charging.",
-      "quiz": {
-        "question_zh": "Pocket 3需要哪個App與手機協作？",
-        "question_en": "Which App is used for Pocket 3 and smartphone collaboration?",
-        "options_zh": ["DJI GO", "DJI Fly", "DJI Mimo"],
-        "options_en": ["DJI GO", "DJI Fly", "DJI Mimo"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "Pocket 3需要哪個App與手機協作？",
+          "question_en": "Which App is used for Pocket 3 and smartphone collaboration?",
+          "options_zh": ["DJI GO", "DJI Fly", "DJI Mimo"],
+          "options_en": ["DJI GO", "DJI Fly", "DJI Mimo"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "如何連接無線麥克風錄音？",
+          "question_en": "How do you connect a wireless microphone?",
+          "options_zh": ["插入接收器", "用WiFi連線", "插拔記憶卡"],
+          "options_en": ["Insert the receiver", "Use WiFi", "Insert or remove card"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "可以外接螢幕預覽嗎？",
+          "question_en": "Can you preview using an external monitor?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "文件傳輸時建議使用哪種端口？",
+          "question_en": "Which port is recommended for file transfer?",
+          "options_zh": ["USB-A", "Type-C", "SD卡槽"],
+          "options_en": ["USB-A", "Type-C", "SD slot"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "Pocket 3 可否同時充電和傳輸資料？",
+          "question_en": "Can Pocket 3 charge and transfer data simultaneously?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        }
+      ]
     }
   ]
 }

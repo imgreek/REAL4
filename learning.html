@@ -171,21 +171,21 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             applyTranslations();
-
+            
             const languageSwitcherBtn = document.getElementById('languageSwitcher');
             if (languageSwitcherBtn) {
                 languageSwitcherBtn.addEventListener('click', function() {
-                    const currentLang = localStorage.getItem('language') || 'zh';
-                    const newLang = currentLang === 'zh' ? 'en' : 'zh';
-                    switchLanguage(newLang);
+            const currentLang = localStorage.getItem('language') || 'zh';
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
 
                     // Re-render courses with the new language
                     const activeTab = document.querySelector('.tab.active');
                     const filter = activeTab ? activeTab.dataset.tab : 'all';
                     renderCourses(filter);
-                });
+            });
             }
-
+            
             const currentUser = localStorage.getItem('currentUser');
             const currentLang = localStorage.getItem('language') || 'zh';
 
@@ -353,7 +353,7 @@
             }
 
             if (currentUser || confirm(t('proceed_without_login_progress_warning', currentLang || 'zh'))) {
-                 renderCourses('all');
+            renderCourses('all');
             } else {
                  const coursesListEl = document.getElementById('coursesList');
                  if (coursesListEl) {

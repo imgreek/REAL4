@@ -157,11 +157,13 @@
         </a>
         <h1 id="coursePageTitle" class="text-xl font-bold mx-auto"></h1> <!-- Title will be set by JS -->
         <div class="flex items-center">
-            <button id="languageSwitcher" class="text-white hover:text-gray-200 mr-3" aria-label="Switch Language" data-i18n-aria-label="switch_language">
-                <i class="fas fa-globe text-xl"></i>
+            <button id="languageSwitcher" class="text-white mr-3" aria-label="Switch Language">
+                <i class="fas fa-globe"></i>
             </button>
-             <a href="qr-scanner.html" class="text-white hover:text-gray-200" aria-label="QR碼掃描" data-i18n-aria="qr_scanner">
-                <i class="fas fa-qrcode text-xl"></i>
+            <a href="chat.html" id="chat-link" class="text-white hover:text-gray-200 mr-3" aria-label="Chat Room" title="Chat Room" data-i18n-aria-label="chat_room_label" data-i18n-title="chat_room_label"><i class="fas fa-comments"></i></a>
+            <a href="qr-scanner.html" class="text-white" aria-label="QR碼掃描" data-i18n-aria="qr_scanner">
+                <i class="fas fa-qrcode text-lg"></i>
+            </a>
             </a>
         </div>
     </header>
@@ -186,51 +188,42 @@
     let courseStages = [];
     let pageCurrentLang = localStorage.getItem('language') || 'zh';
     let currentUser = ''; 
-    let courseFileIdentifier = ''; // Original MD filename (e.g., "DJI Pocket 3") for loading JSON
     let actualCourseId = ''; // The true ID from courses.csv (e.g., "C001") for progress tracking
 
     document.addEventListener('DOMContentLoaded', async function() {
         currentUser = localStorage.getItem('currentUser');
-        // No explicit redirect if no user, page might still display content without progress saving.
-
         applyTranslations(); 
 
         const urlParams = new URLSearchParams(window.location.search);
-        const courseFileFromUrl = urlParams.get('file'); // e.g., "DJI Pocket 3.md"
-        actualCourseId = urlParams.get('courseId'); // e.g., "C001"
-        courseFileIdentifier = courseFileFromUrl ? courseFileFromUrl.replace('.md', '') : '';
+        const courseFileFromUrl = urlParams.get('file');
+        actualCourseId = urlParams.get('courseId');
+        const courseFileIdentifier = courseFileFromUrl ? courseFileFromUrl.replace('.md', '') : '';
         const courseTitleFromURL = urlParams.get('title');
 
         const pageTitleEl = document.getElementById('coursePageTitle');
         if (pageTitleEl) pageTitleEl.textContent = courseTitleFromURL || t('course_detail_page', pageCurrentLang);
-        document.title = courseTitleFromURL || t('course_detail_page', pageCurrentLang);
+        document.title = (courseTitleFromURL || t('course_detail_page', pageCurrentLang)) + " - " + t('platform_name', pageCurrentLang);
 
         if (typeof window.Database === 'undefined' || !window.Database.init) {
-            console.error("Database module not found or not initialized. Progress features disabled.");
             displayCourseContentError(t('error_loading_database_module', pageCurrentLang) + " (DB missing)");
-            return; // Stop further execution if database is not available
+            return;
+        }
+        if (!window.Database.getAllCourses) { 
+            await window.Database.init(); 
         }
 
-        // Ensure Database is initialized (or wait for it)
-        // This basic check might need a more robust ready/promise mechanism in a complex app
-        if (!window.Database.getAllCourses) { // Simple check if init has run
-            await window.Database.init(); // Attempt to initialize if not ready
-        }
-
-        if (courseFileIdentifier && actualCourseId) { // Need both to proceed with course content and progress
+        if (courseFileIdentifier && actualCourseId) {
             const jsonPath = `assets/database/learn_json/${courseFileIdentifier}.json`;
             try {
                 const response = await fetch(jsonPath);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}, file: ${jsonPath}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}, file: ${jsonPath}`);
                 const courseSpecificData = await response.json();
                 
-                if (courseSpecificData && courseSpecificData.stages) {
+                if (courseSpecificData && Array.isArray(courseSpecificData.stages)) {
                     courseStages = courseSpecificData.stages;
                     if (currentUser) {
                         const { passedStages: userPassedStageIds, courseCompleted: isCourseMarkedCompleted } = 
-                            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId); // Use actualCourseId
+                            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
                         
                         if (isCourseMarkedCompleted && courseStages.length > 0) {
                             currentStageIndex = courseStages.length; 
@@ -248,18 +241,17 @@
                             currentStageIndex = startingStage;
                         }
                     } else {
-                        currentStageIndex = 0; // No user, start from beginning
+                        currentStageIndex = 0; 
                     }
                     renderStage(currentStageIndex);
                 } else {
                     displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (Invalid data format)');
                 }
             } catch (error) {
-                console.error('Error fetching course data:', error);
-                displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (File not found or network error)');
+                displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (File error: ' + error.message + ')');
             }
         } else {
-             displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (No course file specified)');
+             displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (Missing parameters)');
         }
         
         const languageSwitcherBtn = document.getElementById('languageSwitcher');
@@ -269,6 +261,8 @@
                 const newLang = oldLang === 'zh' ? 'en' : 'zh';
                 pageCurrentLang = newLang; 
                 switchLanguage(newLang); 
+                document.title = (courseTitleFromURL || t('course_detail_page', pageCurrentLang)) + " - " + t('platform_name', pageCurrentLang);
+                if (pageTitleEl) pageTitleEl.textContent = courseTitleFromURL || t('course_detail_page', pageCurrentLang);
                 if (courseStages.length > 0) {
                     renderStage(currentStageIndex); 
                 } else {
@@ -282,37 +276,47 @@
     });
 
     function displayCourseContentError(errorMessage) {
-        document.getElementById('courseContent').innerHTML = 
-            `<p class="text-red-500 text-center py-8">${errorMessage}</p>`;
+        const courseContentEl = document.getElementById('courseContent');
+        if (courseContentEl) {
+            courseContentEl.innerHTML = `<p class="text-red-500 text-center py-8">${errorMessage}</p>`;
+        }
         const courseNav = document.getElementById('courseNavigation');
         if(courseNav) courseNav.style.display = 'none';
     }
 
     function renderStage(stageIndex) {
-        if (currentStageIndex >= courseStages.length && courseStages.length > 0) {
-            document.getElementById('courseContent').innerHTML = ''; 
-            updateNavigationButtons(); 
-            return;
-        }
-        if (!courseStages || stageIndex < 0 || stageIndex >= courseStages.length) {
-            if (courseStages.length > 0) {
-                 console.warn("Invalid stageIndex for renderStage or course completed:", stageIndex);
-                 document.getElementById('courseContent').innerHTML = ''; 
-                 updateNavigationButtons();
-            }
+        pageCurrentLang = localStorage.getItem('language') || 'zh'; 
+        const courseContentEl = document.getElementById('courseContent');
+
+        if (!courseStages || courseStages.length === 0) {
+            displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ' (No stages defined)');
             return;
         }
 
-        pageCurrentLang = localStorage.getItem('language') || 'zh'; 
+        if (stageIndex >= courseStages.length) { // Completed all stages
+            if (courseContentEl) courseContentEl.innerHTML = ''; 
+            updateNavigationButtons(); 
+            return;
+        }
+        if (stageIndex < 0) { // Should not happen with current nav logic
+            currentStageIndex = 0; // Reset to first stage if somehow out of bounds low
+            stageIndex = 0;
+        }
+
         const stage = courseStages[stageIndex];
-        const courseContentEl = document.getElementById('courseContent');
+        if (!stage) {
+            displayCourseContentError(t('course_content_not_found', pageCurrentLang) + ` (Stage ${stageIndex} data missing)`);
+            return;
+        }
         
-        const { passedStages: userPassedStageIds } = (currentUser && actualCourseId && window.Database) ? 
-            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId) : { passedStages: [] };
-        const isStageQuizPassed = userPassedStageIds.includes(stage.id.toString());
+        let userProgress = { passedStages: [], courseCompleted: false };
+        if (currentUser && actualCourseId && window.Database) {
+            userProgress = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
+        }
+        const allQuizzesInStagePassed = userProgress.passedStages.includes(stage.id.toString());
         
         let isStageAccessible = true;
-        if (stageIndex > 0 && currentUser && actualCourseId && window.Database) {
+        if (stageIndex > 0 && currentUser && actualCourseId && window.Database) { 
             const prevStageProgress = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
             const prevStageId = courseStages[stageIndex - 1].id.toString();
             if (!prevStageProgress.passedStages.includes(prevStageId)) {
@@ -321,127 +325,157 @@
         }
 
         const stageTitle = pageCurrentLang === 'zh' ? stage.title_zh : stage.title_en;
-        const stageIntro = pageCurrentLang === 'zh' ? stage.intro_zh : stage.intro_en;
-        const quizQuestion = pageCurrentLang === 'zh' ? stage.quiz.question_zh : stage.quiz.question_en;
-        const quizOptions = pageCurrentLang === 'zh' ? stage.quiz.options_zh : stage.quiz.options_en;
+        const stageIntro = (pageCurrentLang === 'zh' ? stage.intro_zh : stage.intro_en) || '';
+        
+        let videoEmbedUrl = stage.video_url || '';
+        if (videoEmbedUrl.includes("youtube.com/watch?v=")) {
+            videoEmbedUrl = videoEmbedUrl.replace("watch?v=", "embed/");
+        } else if (videoEmbedUrl.includes("youtu.be/")) {
+            videoEmbedUrl = videoEmbedUrl.replace("youtu.be/", "youtube.com/embed/");
+        }
+        if (videoEmbedUrl.includes("embed/")) {
+            const videoIdMatch = videoEmbedUrl.match(/embed\/([^&?#]+)/);
+            if (videoIdMatch && videoIdMatch[1]) {
+                videoEmbedUrl = `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+            }
+        }
 
-        let optionsHTML = '';
-        quizOptions.forEach((option, index) => {
-            optionsHTML += `
-                <label class="quiz-option block ${!isStageAccessible || isStageQuizPassed ? 'opacity-50 cursor-not-allowed' : ''}">
-                    <input type="radio" name="quizOption_${stage.id}" value="${index}" class="mr-2" ${!isStageAccessible || isStageQuizPassed ? 'disabled' : ''}>
-                    <span>${option}</span>
-                </label>
-            `;
-        });
+        let quizzesHTML = '';
+        if (stage.quiz && Array.isArray(stage.quiz) && stage.quiz.length > 0) {
+            stage.quiz.forEach((quizItem, quizIndex) => {
+                const questionText = pageCurrentLang === 'zh' ? quizItem.question_zh : quizItem.question_en;
+                const options = pageCurrentLang === 'zh' ? quizItem.options_zh : quizItem.options_en;
+                let optionsHtmlSegment = '';
+                if (Array.isArray(options)) {
+                    options.forEach((option, optIndex) => {
+                        optionsHtmlSegment += `
+                            <label class="quiz-option block ${!isStageAccessible || allQuizzesInStagePassed ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}">
+                                <input type="radio" name="quizOption_${stage.id}_${quizItem.id}" value="${optIndex}" class="mr-2" ${!isStageAccessible || allQuizzesInStagePassed ? 'disabled' : ''}>
+                                <span>${option}</span>
+                            </label>
+                        `;
+                    });
+                } else {
+                    console.warn("Quiz options are not an array for stage:", stage.id, "quizItem:", quizItem.id);
+                }
+                quizzesHTML += `
+                    <div class="quiz-item mb-6 p-4 border border-gray-200 rounded-md ${!isStageAccessible ? 'opacity-50' : ''}" id="quizItem-${stage.id}-${quizItem.id}">
+                        <p class="mb-3 font-medium">${t('quiz_question_prefix', pageCurrentLang, {num: quizIndex + 1})} ${questionText}</p>
+                        <div class="space-y-2">${optionsHtmlSegment}</div>
+                        <p id="quizResult_${stage.id}_${quizItem.id}" class="mt-3 text-sm font-medium"></p>
+                    </div>
+                `;
+            });
+        }
 
         courseContentEl.innerHTML = `
             <div class="stage" id="stage-${stage.id}">
                 <h3>${stageTitle}</h3>
-                <p class="mb-4 text-gray-600" data-i18n="stage_content_intro_text">${t('stage_content_intro_text', pageCurrentLang)}</p>
-                <div class="video-container">
-                    <iframe src="${stage.video_url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Course video for ${stageTitle}"></iframe>
-                </div>
-                <p class="my-4 text-gray-700">${stageIntro}</p>
+                <p class="mb-4 text-gray-600">${t('stage_content_intro_text', pageCurrentLang)}</p>
+                ${videoEmbedUrl ? 
+                    `<div class="video-container"><iframe src="${videoEmbedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="Course video"></iframe></div>`
+                    : '<p class="text-sm text-gray-500 mb-2">(' + t('no_video_for_stage', pageCurrentLang) + ')</p>'
+                }
+                <div class="my-4 text-gray-700 prose max-w-none">${marked.parse(stageIntro.replace(/\n/g, '  \n'))}</div> 
                 
-                ${!isStageAccessible ? `<p class='text-yellow-600 font-semibold mb-3'>${t('complete_previous_stage_to_unlock', pageCurrentLang || 'zh')}</p>` : ''}
-
-                <h4 class="font-semibold text-lg mt-6 mb-3 ${!isStageAccessible ? 'opacity-50' : ''}" data-i18n="quiz_title_text">${t('quiz_title_text_val', pageCurrentLang)}</h4>
-                <form id="quizForm_${stage.id}" class="${!isStageAccessible ? 'opacity-50 cursor-not-allowed' : ''}">
-                    <p class="mb-3 font-medium">${quizQuestion}</p>
-                    <div class="space-y-2">${optionsHTML}</div>
-                    <button type="submit" class="btn btn-green mt-4" data-i18n="submit_answer_val" ${!isStageAccessible || isStageQuizPassed ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
-                        ${isStageQuizPassed ? t('quiz_passed_label', pageCurrentLang || 'zh') : t('submit_answer_val', pageCurrentLang)}
-                    </button>
-                </form>
-                <p id="quizResult_${stage.id}" class="mt-3 text-sm font-medium">
-                    ${isStageQuizPassed ? `<span class='text-green-600'>${t('quiz_already_passed_message', pageCurrentLang || 'zh')}</span>` : ''}
-                </p>
+                ${!isStageAccessible ? `<p class='text-yellow-600 font-semibold mb-3 p-3 bg-yellow-50 rounded-md'><i class="fas fa-lock mr-2"></i>${t('complete_previous_stage_to_unlock', pageCurrentLang)}</p>` : ''}
+                
+                ${(stage.quiz && stage.quiz.length > 0) ? `
+                    <h4 class="font-semibold text-lg mt-6 mb-3 ${!isStageAccessible ? 'opacity-50' : ''}">${t('quiz_title_text_val', pageCurrentLang)}</h4>
+                    <form id="stageQuizForm_${stage.id}" class="${!isStageAccessible ? 'opacity-50' : ''}">
+                        ${quizzesHTML}
+                        <button type="submit" class="btn btn-green mt-4" ${!isStageAccessible || allQuizzesInStagePassed ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+                            ${allQuizzesInStagePassed ? t('quiz_passed_label', pageCurrentLang) : t('submit_answer_val', pageCurrentLang)}
+                        </button>
+                    </form>
+                ` : '<p class="text-sm text-gray-500 mt-4">(' + t('no_quiz_for_stage', pageCurrentLang) + ')</p>'}
+                ${allQuizzesInStagePassed ? `<p class='mt-4 text-green-600 font-semibold'><i class="fas fa-check-circle mr-1"></i>${t('quiz_already_passed_message', pageCurrentLang)}</p>` : ''}
             </div>
         `;
         
-        if (isStageAccessible) {
-            const quizForm = document.getElementById(`quizForm_${stage.id}`);
-            if (quizForm && !isStageQuizPassed) {
-                quizForm.addEventListener('submit', function(event) {
+        if (isStageAccessible && !allQuizzesInStagePassed && stage.quiz && stage.quiz.length > 0) {
+            const stageQuizForm = document.getElementById(`stageQuizForm_${stage.id}`);
+            if (stageQuizForm) {
+                stageQuizForm.addEventListener('submit', function(event) {
                     event.preventDefault();
-                    handleQuizSubmit(stage.id, stage.quiz.correct_answer_index);
+                    handleStageQuizSubmit(stage.id, stage.quiz); 
                 });
             }
         }
-        updateNavigationButtons();
+        updateNavigationButtons(); 
     }
 
-    function handleQuizSubmit(stageId, correctAnswerIndex) {
+    function handleStageQuizSubmit(stageId, quizItemsArray) {
         if (!currentUser || !actualCourseId || !window.Database) {
-            alert(t('login_to_save_progress_alert', pageCurrentLang || 'zh'));
-            // Simulate visual feedback without saving (copied from previous version)
-            const form = document.getElementById(`quizForm_${stageId}`);
-            const resultEl = document.getElementById(`quizResult_${stageId}`);
-            const selectedOption = form.querySelector(`input[name="quizOption_${stageId}"]:checked`);
-            if (!selectedOption) { 
-                resultEl.textContent = t('select_an_answer', pageCurrentLang);
-                resultEl.className = 'mt-3 text-sm font-medium text-yellow-600';
+            alert(t('login_to_save_progress_alert', pageCurrentLang));
+            return;
+        }
+
+        let allCorrectThisSubmission = true;
+        let firstIncorrectResultEl = null;
+
+        if (!Array.isArray(quizItemsArray)) {
+            console.error("quizItemsArray is not an array in handleStageQuizSubmit", quizItemsArray);
+            return;
+        }
+
+        quizItemsArray.forEach(quizItem => {
+            const form = document.getElementById(`stageQuizForm_${stageId}`); 
+            const resultEl = document.getElementById(`quizResult_${stageId}_${quizItem.id}`);
+            const selectedOptionEl = form.querySelector(`input[name="quizOption_${stageId}_${quizItem.id}"]:checked`);
+
+            if (!selectedOptionEl) {
+                if (resultEl) {
+                    resultEl.textContent = t('select_an_answer', pageCurrentLang);
+                    resultEl.className = 'mt-3 text-sm font-medium text-yellow-600';
+                }
+                allCorrectThisSubmission = false;
+                if (!firstIncorrectResultEl && resultEl) firstIncorrectResultEl = resultEl; 
                 return; 
             }
-            if (parseInt(selectedOption.value) === correctAnswerIndex) {
-                resultEl.textContent = t('correct_answer_next_stage', pageCurrentLang);
-                resultEl.className = 'mt-3 text-sm font-medium text-green-600';
-                Array.from(form.elements).forEach(el => el.disabled = true);
-                const submitButton = form.querySelector('button[type="submit"]');
-                if(submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-                    submitButton.textContent = t('quiz_passed_label', pageCurrentLang);
+
+            if (parseInt(selectedOptionEl.value) === quizItem.correct_answer_index) {
+                if (resultEl) {
+                    resultEl.textContent = t('correct_answer_short', pageCurrentLang);
+                    resultEl.className = 'mt-3 text-sm font-medium text-green-600';
                 }
-                document.getElementById('nextStageBtn').disabled = false;
             } else {
-                resultEl.textContent = t('incorrect_answer_try_again', pageCurrentLang);
-                resultEl.className = 'mt-3 text-sm font-medium text-red-600';
-                document.getElementById('nextStageBtn').disabled = true;
+                if (resultEl) {
+                    resultEl.textContent = t('incorrect_answer_short', pageCurrentLang); 
+                    resultEl.className = 'mt-3 text-sm font-medium text-red-600';
+                }
+                allCorrectThisSubmission = false;
+                if (!firstIncorrectResultEl && resultEl) firstIncorrectResultEl = resultEl; 
             }
-            updateNavigationButtons(); // Still call to reflect button state based on visual changes
-            return;
-        }
+        });
 
-        pageCurrentLang = localStorage.getItem('language') || 'zh';
-        const form = document.getElementById(`quizForm_${stageId}`);
-        const resultEl = document.getElementById(`quizResult_${stageId}`);
-        const selectedOption = form.querySelector(`input[name="quizOption_${stageId}"]:checked`);
+        if (allCorrectThisSubmission) {
+            const stageSubmitButton = document.querySelector(`#stageQuizForm_${stageId} button[type="submit"]`);
+            if(stageSubmitButton) {
+                stageSubmitButton.disabled = true;
+                stageSubmitButton.textContent = t('quiz_passed_label', pageCurrentLang);
+                stageSubmitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            document.querySelectorAll(`#stageQuizForm_${stageId} input[type="radio"]`).forEach(rb => rb.disabled = true);
 
-        if (!selectedOption) {
-            resultEl.textContent = t('select_an_answer', pageCurrentLang);
-            resultEl.className = 'mt-3 text-sm font-medium text-yellow-600';
-            return;
-        }
-
-        const nextBtn = document.getElementById('nextStageBtn');
-        if (parseInt(selectedOption.value) === correctAnswerIndex) {
-            resultEl.textContent = t('correct_answer_next_stage', pageCurrentLang);
-            resultEl.className = 'mt-3 text-sm font-medium text-green-600';
-            
             window.Database.saveUserStagePass(currentUser, actualCourseId, stageId.toString());
             
             const { passedStages: updatedPassedStages } = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
-            const isNowCourseCompleted = updatedPassedStages.length === courseStages.length;
+            const isNowCourseCompleted = courseStages.every(s => updatedPassedStages.includes(s.id.toString()));
             const progressPercentage = courseStages.length > 0 ? (updatedPassedStages.length / courseStages.length) * 100 : 0;
+            
             window.Database.updateUserCourseOverallProgress(currentUser, actualCourseId, progressPercentage, isNowCourseCompleted);
+            
+            const nextButton = document.getElementById('nextStageBtn');
+            if (nextButton) nextButton.disabled = false;
 
-            if(nextBtn) nextBtn.disabled = false;
-            Array.from(form.elements).forEach(el => el.disabled = true);
-            const submitButton = form.querySelector('button[type="submit"]');
-            if(submitButton) {
-                 submitButton.disabled = true;
-                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-                 submitButton.textContent = t('quiz_passed_label', pageCurrentLang);
-            }
-
+            updateNavigationButtons(); 
         } else {
-            resultEl.textContent = t('incorrect_answer_try_again', pageCurrentLang);
-            resultEl.className = 'mt-3 text-sm font-medium text-red-600';
-            if(nextBtn) nextBtn.disabled = true;
+            const nextButton = document.getElementById('nextStageBtn');
+            if (nextButton) nextButton.disabled = true;
+            if(firstIncorrectResultEl) firstIncorrectResultEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+            updateNavigationButtons();
         }
-        updateNavigationButtons();
     }
     
     function updateNavigationButtons() {
@@ -454,10 +488,14 @@
 
         if (!prevBtn || !nextBtn || !completionMessageEl || !courseNavigationEl || !courseContentEl) return;
 
-        const { passedStages: userPassedStageIds, courseCompleted: isCourseOverallCompleted } = (currentUser && actualCourseId && window.Database) ? 
-            window.Database.getUserStageSpecificProgress(currentUser, actualCourseId) : { passedStages: [], courseCompleted: false };
+        let userProgress = { passedStages: [], courseCompleted: false };
+        if (currentUser && actualCourseId && window.Database) {
+            userProgress = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
+        }
+        const userPassedStageIds = userProgress.passedStages;
+        const isCourseOverallCompleted = userProgress.courseCompleted;
 
-        if (isCourseOverallCompleted && courseStages.length > 0) {
+        if (isCourseOverallCompleted && courseStages && courseStages.length > 0) {
             courseContentEl.innerHTML = ''; 
             courseNavigationEl.style.display = 'none';
             completionMessageEl.classList.remove('hidden');
@@ -482,14 +520,16 @@
         
         if (currentStageIndex < courseStages.length) {
             const currentStageData = courseStages[currentStageIndex];
-            if (currentStageData && currentStageData.quiz) {
-                const isCurrentQuizPassed = userPassedStageIds.includes(currentStageData.id.toString());
-                nextBtn.disabled = !isCurrentQuizPassed;
-            } else { 
-                nextBtn.disabled = false;
+            if (currentStageData) { 
+                 const isCurrentStagePassed = userPassedStageIds.includes(currentStageData.id.toString());
+                 if (!isCurrentStagePassed && nextBtn) {
+                     nextBtn.disabled = true;
+                 }
+            } else {
+                 if(nextBtn) nextBtn.disabled = true; 
             }
         } else { 
-            nextBtn.classList.add('hidden'); 
+            if(nextBtn) nextBtn.classList.add('hidden'); 
         }
 
         if (currentStageIndex >= courseStages.length) { 
@@ -503,29 +543,34 @@
     }
 
     function handleNextStage() {
-        if (!window.Database || !currentUser || !actualCourseId) return;
-        const { courseCompleted: isCourseMarkedCompleted } = 
+        if (!window.Database || !currentUser || !actualCourseId || !courseStages || courseStages.length === 0) return;
+
+        const { courseCompleted: isCourseMarkedCompleted, passedStages: userPassedStageIds } = 
             window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
 
-        if (isCourseMarkedCompleted) return; 
+        if (isCourseMarkedCompleted && currentStageIndex >= courseStages.length -1 ) { 
+             currentStageIndex = courseStages.length; 
+             renderStage(currentStageIndex);
+             return;
+        }
 
         if (currentStageIndex < courseStages.length - 1) {
             currentStageIndex++;
             renderStage(currentStageIndex);
-        } else if (currentStageIndex === courseStages.length - 1) {             
-            const { passedStages: userPassedStageIds } = window.Database.getUserStageSpecificProgress(currentUser, actualCourseId);
-            const allPassed = courseStages.every(s => userPassedStageIds.includes(s.id.toString()));
+        } else if (currentStageIndex === courseStages.length - 1) {
+            const allActualStageIds = courseStages.map(s => s.id.toString());
+            const allPassed = allActualStageIds.every(stageId => userPassedStageIds.includes(stageId));
+            
             if (allPassed) {
-                const progressPercentage = 100;
-                window.Database.updateUserCourseOverallProgress(currentUser, actualCourseId, progressPercentage, true);
-                console.log("Course marked as completed via Database module using actualCourseId:", actualCourseId);
-            } else {
-                console.warn("Attempted to complete course, but not all stages are marked as passed (DB check).");
+                window.Database.updateUserCourseOverallProgress(currentUser, actualCourseId, 100, true);
+                console.log("Course explicitly marked as completed by user for actualCourseId:", actualCourseId);
+                currentStageIndex++;
                 renderStage(currentStageIndex);
-                return;
+            } else {
+                console.warn("Attempted to complete course via NextStage, but not all stages are passed.");
+                alert(t('complete_all_stage_quizzes', pageCurrentLang)); 
+                renderStage(currentStageIndex); 
             }
-            currentStageIndex++; 
-            renderStage(currentStageIndex); 
         }
     }
 

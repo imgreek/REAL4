@@ -4,46 +4,151 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=bUtBrh7WYPo",
+      "video_url": "https://www.youtube.com/embed/bUtBrh7WYPo",
       "intro_zh": "將發射器和接收器放入充電盒，用5V/2A充電器供電。長按電源鍵2秒開啟裝置、發射器與接收器自動配對。根據用途選配不同轉接頭，連接到手機、相機或電腦。開機、開始說話，觀察接收器音量指示燈/螢幕。",
       "intro_en": "Place transmitters and receiver into the charging case. Use a 5V/2A charger. Press and hold the power button for 2 seconds. Devices pair automatically. Choose the right adapter to connect to smartphone, camera, or computer. Speak while monitoring the receiver's volume indicators or screen.",
-      "quiz": {
-        "question_zh": "充電時建議用多少伏特的充電器？",
-        "question_en": "What is the recommended charger voltage for charging?",
-        "options_zh": ["3V", "5V", "12V"],
-        "options_en": ["3V", "5V", "12V"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "充電時建議用多少伏特的充電器？",
+          "question_en": "What is the recommended charger voltage for charging?",
+          "options_zh": ["3V", "5V", "12V"],
+          "options_en": ["3V", "5V", "12V"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "發射器與接收器可自動配對嗎？",
+          "question_en": "Can the transmitters and receiver pair automatically?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "正確連接裝置時需用什麼？",
+          "question_en": "What is required for a correct device connection?",
+          "options_zh": ["轉接頭", "WiFi", "SD卡"],
+          "options_en": ["Adapter", "WiFi", "SD card"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "開機需要長按幾秒？",
+          "question_en": "How many seconds do you hold the power button to turn it on?",
+          "options_zh": ["1秒", "2秒", "5秒"],
+          "options_en": ["1 sec", "2 sec", "5 sec"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_5",
+          "question_zh": "測試收聲時應看哪個裝置的指示？",
+          "question_en": "Which device's indicator should you check during sound test?",
+          "options_zh": ["手機", "相機", "接收器"],
+          "options_en": ["Smartphone", "Camera", "Receiver"],
+          "correct_answer_index": 2
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=bUtBrh7WYPo",
+      "video_url": "https://www.youtube.com/embed/bUtBrh7WYPo", 
       "intro_zh": "接收器可選擇單聲道或立體聲錄音。按一下電源鍵可開啟/關閉降噪功能。透過接收器插入耳機可即時監聽聲音及調節音量。DJI Mic 2 部分手機支援用接收器按鍵控制手機拍攝。",
       "intro_en": "Receiver allows you to select mono or stereo recording. Press the power button once to enable/disable noise reduction. Plug headphones into the receiver for live monitoring and volume adjustment. Some phones support using the receiver's button to start/stop recording.",
-      "quiz": {
-        "question_zh": "DJI Mic 2 可以錄單聲道和立體聲嗎？",
-        "question_en": "Can DJI Mic 2 record in both mono and stereo?",
-        "options_zh": ["是", "否"],
-        "options_en": ["Yes", "No"],
-        "correct_answer_index": 0
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "DJI Mic 2 可以錄單聲道和立體聲嗎？",
+          "question_en": "Can DJI Mic 2 record in both mono and stereo?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "降噪功能如何切換？",
+          "question_en": "How to toggle noise reduction?",
+          "options_zh": ["電源鍵一次", "充電盒按鈕", "拔插線材"],
+          "options_en": ["Press power button once", "Charging case button", "Unplug cable"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "接收器可插耳機實時監聽嗎？",
+          "question_en": "Can you plug headphones into the receiver for real-time monitoring?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "收發器按鍵能控制哪些手機錄影？",
+          "question_en": "Can the receiver control video recording on all phones?",
+          "options_zh": ["能", "不能"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "設定錄音品質需要切換什麼？",
+          "question_en": "What do you switch to change recording quality?",
+          "options_zh": ["錄音模式", "手機型號", "充電盒"],
+          "options_en": ["Recording mode", "Phone model", "Charging case"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.youtube.com/watch?v=bUtBrh7WYPo",
+      "video_url": "https://www.youtube.com/embed/bUtBrh7WYPo", 
       "intro_zh": "選擇對應轉接頭分別連接至不同設備。插拔接收器或選用雙發射器模式。將錄音檔通過電腦或手機下載進行儲存與剪輯。可搭配混音器或專業錄音設備擴充使用。",
       "intro_en": "Use the appropriate adapter to connect to each device. Detach and replug the receiver or use dual transmitter mode. Download recordings via computer/phone for storage and editing. Expand with mixers or professional recording equipment if needed.",
-      "quiz": {
-        "question_zh": "DJI Mic 2 發射器可同時連接幾台設備？",
-        "question_en": "How many devices can a DJI Mic 2 transmitter connect at once?",
-        "options_zh": ["1", "2", "同時1台"],
-        "options_en": ["1", "2", "Only one at a time"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "DJI Mic 2 發射器可同時連接幾台設備？",
+          "question_en": "How many devices can a DJI Mic 2 transmitter connect at once?",
+          "options_zh": ["1", "2", "同時1台"],
+          "options_en": ["1", "2", "Only one at a time"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "錄音檔下載時可否用手機？",
+          "question_en": "Can you download recordings using a smartphone?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "可以與混音器搭配使用嗎？",
+          "question_en": "Can it be used with a mixer?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "收發器能否跨品牌連接？",
+          "question_en": "Can the transmitter and receiver be connected across different brands?",
+          "options_zh": ["能", "不能"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "支援多台設備同步錄音嗎？",
+          "question_en": "Does DJI Mic 2 support simultaneous recording to multiple devices?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 1
+        }
+      ]
     }
   ]
 }

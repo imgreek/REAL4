@@ -93,7 +93,15 @@
                     <h2 class="text-lg font-semibold user-name">載入中...</h2>
                     <div class="flex items-center text-sm text-gray-600">
                         <span class="mr-4"><i class="fas fa-star mr-1 text-yellow-500"></i><span id="userPoints">0</span> <span data-i18n="points">積分</span></span>
-                        <span><i class="fas fa-trophy mr-1 text-blue-500"></i><span id="userLevelText">Level</span> <span id="userLevel">0</span></span>
+                        <span><i class="fas fa-trophy mr-1 text-blue-500"></i><span id="userLevelText" data-i18n="level">等級</span> <span id="userLevel">0</span> (<span id="userLevelName"></span>)</span>
+                    </div>
+                    <div class="mt-2">
+                        <div class="text-xs text-gray-500 mb-1">
+                            <span data-i18n="experience_points">經驗值 (XP)</span>: <span id="userXP">0</span> / <span id="userXPToNext">0</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div id="xpProgressBar" class="bg-green-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -187,6 +195,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
+            // **** 新增：檢查刷新標記 ****
+            if (sessionStorage.getItem('refreshDataOnLoad') === 'true') {
+                console.log('Home page: refreshDataOnLoad is true, re-initializing session and clearing flag.');
+                localStorage.removeItem('currentUserData'); // 強制重新從 initUserSession 加載
+                localStorage.removeItem('rentalHistory');
+                localStorage.removeItem('bookings');
+                // learningProgress 可能也需要，取決於你的邏輯
+                // localStorage.removeItem('learningProgress'); 
+                sessionStorage.removeItem('refreshDataOnLoad');
+                // initUserSession 會在後續代碼中被調用（如果 userData 為空）
+            }
+            // **************************
+
             applyTranslations();
             
             const currentLang = localStorage.getItem('language') || 'zh';
@@ -258,21 +279,39 @@
             const userNameEl = document.querySelector('.user-name');
             const userPointsEl = document.getElementById('userPoints');
             const userLevelEl = document.getElementById('userLevel');
+            const userLevelNameEl = document.getElementById('userLevelName');
+            const userXPEl = document.getElementById('userXP');
+            const userXPToNextEl = document.getElementById('userXPToNext');
+            const xpProgressBarEl = document.getElementById('xpProgressBar');
             const profileImgEl = document.querySelector('.profile-card img');
 
-            if (userNameEl) userNameEl.textContent = currentLang === 'zh' ? userData.name : userData.nameEN;
-            if (userPointsEl) userPointsEl.textContent = userData.points;
-            if (userLevelEl) userLevelEl.textContent = userData.level;
-            
-            if (profileImgEl && userData.profileImage) {
-                const userAvatar = `assets/images/user_icon/${userData.profileImage}`;
-                profileImgEl.src = userAvatar;
-                profileImgEl.onerror = function() {
-                    this.onerror = null;
-                    this.src = 'https://dummyimage.com//56x56/eeeeee/aaaaaa&text=' + (userData.name ? userData.name[0] : 'U');
-                };
-            } else if (profileImgEl) {
-                 profileImgEl.src = 'https://dummyimage.com//56x56/eeeeee/aaaaaa&text=' + (userData.name ? userData.name[0] : 'U');
+            if (userData) {
+                if (userNameEl) userNameEl.textContent = currentLang === 'zh' ? userData.name : userData.nameEN;
+                if (userPointsEl) userPointsEl.textContent = userData.points;
+                if (userLevelEl) userLevelEl.textContent = userData.level;
+                if (userLevelNameEl) userLevelNameEl.textContent = currentLang === 'zh' ? userData.levelNameZH : userData.levelNameEN;
+                
+                if (userXPEl) userXPEl.textContent = userData.xp || 0;
+                if (userXPToNextEl) userXPToNextEl.textContent = userData.xpToNextLevel || 'N/A';
+                if (xpProgressBarEl && userData.xpToNextLevel && userData.xpToNextLevel !== 'Infinity' && userData.xpToNextLevel > 0) {
+                    const xpProgressPercent = Math.min(100, ((parseInt(userData.xp) || 0) / parseInt(userData.xpToNextLevel)) * 100);
+                    xpProgressBarEl.style.width = `${xpProgressPercent}%`;
+                } else if (xpProgressBarEl) {
+                    xpProgressBarEl.style.width = '100%';
+                }
+
+                if (profileImgEl && userData.profileImage) {
+                    const userAvatar = `assets/images/user_icon/${userData.profileImage}`;
+                    profileImgEl.src = userAvatar;
+                    profileImgEl.onerror = function() { 
+                        this.onerror = null; 
+                        this.src = 'https://dummyimage.com//56x56/eeeeee/aaaaaa&text=' + (userData.name ? userData.name[0] : 'U');
+                    };
+                } else if (profileImgEl) {
+                     profileImgEl.src = 'https://dummyimage.com//56x56/eeeeee/aaaaaa&text=' + (userData.name ? userData.name[0] : 'U');
+                }
+            } else {
+                if (userNameEl) userNameEl.textContent = t('loading', currentLang);
             }
 
             if (window.Database && window.Database.getAllCourses) {
@@ -313,7 +352,7 @@
                     );
                     
                     if (inProgressCourses.length > 0) {
-                        ongoingCoursesEl.innerHTML = '';
+                ongoingCoursesEl.innerHTML = '';
                         inProgressCourses.forEach(progress => {
                             const course = courses.find(c => c.courseId === progress.courseId);
                             if (!course) return;
@@ -414,42 +453,48 @@
             }
             
             function createRentalCard(rental, equipmentDetails) {
-                const card = document.createElement('div');
+                const cardOuter = document.createElement('a');
+                const bookingIdToPass = rental.id || rental.BookingID;
+                cardOuter.href = `rental-detail.html?bookingId=${bookingIdToPass}`;
+                cardOuter.className = `block rental-card-link flex items-center border-l-4 p-3 rounded-md mb-2 shadow-sm`;
+
                 const equipmentName = rental.equipmentName || rental.ItemName || 'N/A';
                 const startDate = rental.startDate || rental.StartDate;
                 const endDate = rental.endDate || rental.EndDate;
-                let status = rental.status;
+                let status = rental.status; 
 
                 let statusText = '';
                 let statusColorClass = 'bg-gray-100 text-gray-700';
                 let iconClass = 'fas fa-question-circle'; 
                 let categoryIcon = 'fas fa-tools';
+                let cardBgColor = 'bg-white';
+                let cardBorderColor = 'border-gray-200';
                 
                 const today = new Date();
                 today.setHours(0,0,0,0); 
                 const rentStartDate = new Date(startDate);
                 const rentEndDate = new Date(endDate);
-
                 const normalizedStatus = status ? status.toLowerCase() : 'unknown';
 
                 if (normalizedStatus === 'returned') {
                     statusText = t('returned', currentLang);
-                    statusColorClass = 'bg-green-100 text-green-700';
+                    statusColorClass = 'bg-green-100 text-green-700'; cardBgColor = 'bg-green-50'; cardBorderColor = 'border-green-300';
                     iconClass = 'fas fa-check-circle';
                 } else if (normalizedStatus === 'active' || normalizedStatus === 'in use' || (normalizedStatus === 'confirmed' && today >= rentStartDate && today <= rentEndDate) ){
                     statusText = t('rented', currentLang); 
-                    statusColorClass = 'bg-yellow-100 text-yellow-700';
+                    statusColorClass = 'bg-yellow-100 text-yellow-700'; cardBgColor = 'bg-yellow-50'; cardBorderColor = 'border-yellow-300';
                     iconClass = 'fas fa-hourglass-half';
                 } else if (normalizedStatus === 'pending' || (normalizedStatus === 'confirmed' && today < rentStartDate) ){
-                    statusText = t('pending_pickup', currentLang) || '待取/預約中'; 
-                    statusColorClass = 'bg-blue-100 text-blue-700';
+                    statusText = t('pending_pickup', currentLang);
+                    statusColorClass = 'bg-blue-100 text-blue-700'; cardBgColor = 'bg-blue-50'; cardBorderColor = 'border-blue-300';
                     iconClass = 'fas fa-clock';
                 } else if (today > rentEndDate && normalizedStatus !== 'returned') {
-                    statusText = t('overdue', currentLang) || '已逾期'; 
-                    statusColorClass = 'bg-red-100 text-red-700';
+                    statusText = t('overdue', currentLang);
+                    statusColorClass = 'bg-red-100 text-red-700'; cardBgColor = 'bg-red-50'; cardBorderColor = 'border-red-300';
                     iconClass = 'fas fa-exclamation-triangle';
                 } else {
                      statusText = t(`status_${normalizedStatus}`, currentLang, {status: status}); 
+                     cardBgColor = 'bg-gray-50'; cardBorderColor = 'border-gray-300';
                 }
 
                 if (equipmentDetails && equipmentDetails['Item Category']) {
@@ -469,29 +514,14 @@
                     else if (category.includes('utility')) categoryIcon = 'fas fa-toolbox';
                     else if (category.includes('video') && !category.includes('camera')) categoryIcon = 'fas fa-video';
                 }
-
-                let cardBgColor = 'bg-white';
-                let cardBorderColor = 'border-gray-200';
-
-                if (normalizedStatus === 'returned') {
-                    cardBgColor = 'bg-green-50'; cardBorderColor = 'border-green-300';
-                } else if (normalizedStatus === 'active' || normalizedStatus === 'in use' || (normalizedStatus === 'confirmed' && today >= rentStartDate && today <= rentEndDate)) {
-                    cardBgColor = 'bg-yellow-50'; cardBorderColor = 'border-yellow-300';
-                } else if (normalizedStatus === 'pending' || (normalizedStatus === 'confirmed' && today < rentStartDate)) {
-                    cardBgColor = 'bg-blue-50'; cardBorderColor = 'border-blue-300';
-                } else if (today > rentEndDate && normalizedStatus !== 'returned') {
-                    cardBgColor = 'bg-red-50'; cardBorderColor = 'border-red-300';
-                } else {
-                     cardBgColor = 'bg-gray-50'; cardBorderColor = 'border-gray-300';
-                }
-
-                card.className = `flex items-center ${cardBorderColor} border-l-4 p-3 rounded-md mb-2 shadow-sm ${cardBgColor}`;
+                
+                cardOuter.classList.add(cardBorderColor, cardBgColor);
                 
                 const daysRemaining = (normalizedStatus !== 'returned' && today <= rentEndDate) ? Math.ceil((rentEndDate - today) / (1000 * 60 * 60 * 24)) : '-';
                 const daysRemainingText = (daysRemaining !== '-') ? `${t('days_remaining', currentLang)}: ${daysRemaining} ${t('days', currentLang)}` : '';
-                
-                card.innerHTML = `
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mr-3 text-xl ${statusColorClass.split(' ')[1]}">
+
+                cardOuter.innerHTML = `
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mr-3 text-xl ${statusColorClass.split(' ')[1]} bg-white">
                         <i class="${categoryIcon}"></i>
                     </div>
                     <div class="flex-1">
@@ -504,8 +534,11 @@
                             ${daysRemainingText ? `<span class="text-xs text-gray-500">${daysRemainingText}</span>` : ''}
                         </div>
                     </div>
+                    <div class="ml-2 text-gray-400 hover:text-gray-600">
+                         <i class="fas fa-chevron-right"></i>
+                    </div>
                 `;
-                return card;
+                return cardOuter;
             }
 
             const aiAssistantBtn = document.getElementById('aiAssistantBtn');

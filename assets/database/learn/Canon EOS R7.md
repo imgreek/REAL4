@@ -15,7 +15,7 @@ The Canon EOS R7 is a mirrorless digital camera with a 24.2-megapixel APS-C sens
 ### 教學影片 Tutorial Video
 
 - **Canon EOS R7基礎開箱操作教學 | Basic Unboxing and Operation Guide (中文/Chinese)**
-    - [【開箱】Canon EOS R7 新機入門設置全解析 / Canon EOS R7 Beginners' Setup Guide](https://www.youtube.com/watch?v=MZ-GL4Zm5mA)
+    - [【開箱】Canon EOS R7 新機入門設置全解析 / Canon EOS R7 Beginners' Setup Guide](https://youtu.be/xZGsoreLuIs)
 
 ### 分步詳解 Step-by-Step Guide
 
@@ -80,7 +80,7 @@ The Canon EOS R7 is a mirrorless digital camera with a 24.2-megapixel APS-C sens
 ### 教學影片 Tutorial Video
 
 - **Canon EOS R7 進階功能設定教學 | Advanced Feature Settings (中文/Chinese)**
-    - [R7新手教學！相機內的好用拍攝功能介紹 | Canon EOS R7 Useful Shooting Features](https://www.youtube.com/watch?v=SJ3wqFf2vyo)
+    - [R7新手教學！相機內的好用拍攝功能介紹 | Canon EOS R7 Useful Shooting Features](https://youtu.be/xZGsoreLuIs)
 
 ### 分步詳解 Step-by-Step Guide
 
@@ -146,7 +146,7 @@ The Canon EOS R7 is a mirrorless digital camera with a 24.2-megapixel APS-C sens
 ### 教學影片 Tutorial Video
 
 - **Canon R7 無線傳輸及手機連線教學 | Wireless Transfer & Phone Connection (中文/Chinese)**
-    - [如何使用Canon R7無線傳檔與手機連線 | How to Use Canon R7’s Wireless File Transfer and Mobile Connection](https://www.youtube.com/watch?v=qaM7AEQ0Txg)
+    - [如何使用Canon R7無線傳檔與手機連線 | How to Use Canon R7’s Wireless File Transfer and Mobile Connection](https://youtu.be/xZGsoreLuIs)
 
 ### 分步詳解 Step-by-Step Guide
 

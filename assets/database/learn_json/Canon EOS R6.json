@@ -4,46 +4,151 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=4FvBNzLTVek",
+      "video_url": "https://www.youtube.com/embed/4FvBNzLTVek",
       "intro_zh": "打開底部電池艙，插入電池和SD卡。向右撥動開關開啟相機，按螢幕指示設定語言、日期與時間。將鏡頭紅點對準機身紅點，輕轉固定。半按快門鍵自動對焦，全按拍照。",
       "intro_en": "Open the battery compartment at the bottom, insert the battery and SD card. Flip the switch to the right to turn on the camera, then set language, date, and time as prompted. Align the red dot on the lens with the camera body, gently twist until it clicks. Half-press the shutter to focus, press fully to take a photo.",
-      "quiz": {
-        "question_zh": "Canon EOS R6感光元件屬於哪一種類型？",
-        "question_en": "What type of sensor does the Canon EOS R6 use?",
-        "options_zh": ["APS-C", "1英吋", "全片幅"],
-        "options_en": ["APS-C", "1 inch", "Full-frame"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "Canon EOS R6感光元件屬於哪一種類型？",
+          "question_en": "What type of sensor does the Canon EOS R6 use?",
+          "options_zh": ["APS-C", "1英吋", "全片幅"],
+          "options_en": ["APS-C", "1 inch", "Full-frame"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "電池與SD卡應該放在哪裡？",
+          "question_en": "Where should you insert the battery and SD card?",
+          "options_zh": ["底部電池艙", "鏡頭底座", "手把上"],
+          "options_en": ["Bottom compartment", "Lens mount", "Grip"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "換鏡頭時需對齊哪個標記？",
+          "question_en": "When changing lenses, which mark should be aligned?",
+          "options_zh": ["綠點", "藍點", "紅點"],
+          "options_en": ["Green dot", "Blue dot", "Red dot"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "半按快門有什麼作用？",
+          "question_en": "What happens when you half-press the shutter button?",
+          "options_zh": ["直接拍照", "自動對焦", "關機"],
+          "options_en": ["Take photo immediately", "Autofocus", "Power off"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_5",
+          "question_zh": "開機時需設定哪些基本資訊？",
+          "question_en": "What basic info should you set on power-up?",
+          "options_zh": ["鏡頭型號", "語言與日期", "充電狀態"],
+          "options_en": ["Lens type", "Language & date", "Charging status"],
+          "correct_answer_index": 1
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=y-mBrssGkd8",
+      "video_url": "https://www.youtube.com/embed/y-mBrssGkd8",
       "intro_zh": "轉盤或選單設定選擇連拍或單張拍攝。轉到錄影模式，選擇4K畫質開始錄影。選擇單點AF、區域AF或人臉/眼睛優先追蹤。菜單中可開啟或關閉防震（IBIS）功能。透過設定選單連線到手機或平板。",
       "intro_en": "Use the dial or menu to choose single or burst shooting mode. Turn to video mode, select 4K quality and start recording. Choose single point, zone, or face/eye detection autofocus. In the menu, enable or disable the In-Body Image Stabilization (IBIS). Connect to your phone or tablet via menu settings.",
-      "quiz": {
-        "question_zh": "EOS R6最高可錄製什麼畫質影片？",
-        "question_en": "What is the maximum video resolution of EOS R6?",
-        "options_zh": ["1080P", "4K", "8K"],
-        "options_en": ["1080P", "4K", "8K"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "EOS R6最高可錄製什麼畫質影片？",
+          "question_en": "What is the maximum video resolution of EOS R6?",
+          "options_zh": ["1080P", "4K", "8K"],
+          "options_en": ["1080P", "4K", "8K"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "機身防震功能簡稱為？",
+          "question_en": "The acronym for in-body stabilization is?",
+          "options_zh": ["IBIS", "OIS", "IS"],
+          "options_en": ["IBIS", "OIS", "IS"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "哪一種自動對焦適合追蹤移動主體？",
+          "question_en": "Which autofocus mode is best for tracking moving subjects?",
+          "options_zh": ["單點AF", "區域AF", "人臉/眼睛追蹤AF"],
+          "options_en": ["Single point", "Zone", "Face/Eye detection"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "設定WiFi/藍牙可做什麼？",
+          "question_en": "What can be done by setting WiFi/Bluetooth?",
+          "options_zh": ["遊戲", "遠端控制", "安裝鏡頭"],
+          "options_en": ["Game", "Remote control", "Install lens"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "如何切換單拍與連拍？",
+          "question_en": "How to switch between single and burst shooting?",
+          "options_zh": ["選單或轉盤", "記憶卡更換", "關機"],
+          "options_en": ["Menu or dial", "Change memory card", "Power off"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.youtube.com/watch?v=UvsZvlTGphg",
+      "video_url": "https://www.youtube.com/embed/UvsZvlTGphg",
       "intro_zh": "在手機安裝並開啟Camera Connect，依畫面步驟配對。選擇遙控功能，可用手機螢幕操控相機拍照與錄影。選取檔案後快速傳到手機相簿編輯分享。透過麥克風端口或熱靴安裝外接設備。用USB-C傳輸線將檔案直接匯入電腦。",
       "intro_en": "Install and open Camera Connect on your phone, follow on-screen pairing instructions. Select the remote function to control photo/video shooting from your phone. Choose files to quickly transfer to your phone gallery for editing and sharing. Connect external devices via mic jack or hot shoe. Use a USB-C cable to import files to your computer.",
-      "quiz": {
-        "question_zh": "哪個App可手機連線EOS R6？",
-        "question_en": "Which App connects EOS R6 to a smartphone?",
-        "options_zh": ["Camera Connect", "Canon Print", "Zoom"],
-        "options_en": ["Camera Connect", "Canon Print", "Zoom"],
-        "correct_answer_index": 0
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "哪個App可手機連線EOS R6？",
+          "question_en": "Which App connects EOS R6 to a smartphone?",
+          "options_zh": ["Camera Connect", "Canon Print", "Zoom"],
+          "options_en": ["Camera Connect", "Canon Print", "Zoom"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "能否用手機遙控拍照？",
+          "question_en": "Can you take pictures remotely with a phone?",
+          "options_zh": ["能", "不能"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "可否無線傳輸相片到手機？",
+          "question_en": "Can you transfer photos wirelessly to a smartphone?",
+          "options_zh": ["可", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "外接麥克風該插在哪裡？",
+          "question_en": "Where should you connect an external microphone?",
+          "options_zh": ["熱靴", "麥克風插孔", "兩者皆可"],
+          "options_en": ["Hot shoe", "Mic jack", "Both are correct"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "可以直接用USB-C與電腦備份檔案嗎？",
+          "question_en": "Can you back up files to computer via USB-C?",
+          "options_zh": ["可以", "不行"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        }
+      ]
     }
   ]
 }

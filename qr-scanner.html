@@ -118,25 +118,20 @@
     </nav>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Apply language translations
+        document.addEventListener('DOMContentLoaded', async () => {
             applyTranslations();
-            
-            // Language switcher
             const currentLang = localStorage.getItem('language') || 'zh';
             document.getElementById('languageSwitcher').addEventListener('click', function() {
                 const newLang = currentLang === 'zh' ? 'en' : 'zh';
                 switchLanguage(newLang);
             });
             
-            // 獲取當前用戶資訊
             const currentUser = localStorage.getItem('currentUser');
             if (!currentUser) {
                 window.location.href = 'index.html';
                 return;
             }
             
-            // 設備資料 (Demo用)
             const equipment = [
                 { id: 'E001', name: 'Canon EOS R7', category: 'camera', categoryName: '相機', brand: 'Canon', model: 'EOS R7', level: 3, levelName: '專業', pointsPerDay: 150, image: 'https://dummyimage.com//400x200?text=Canon+R7', status: 'available' },
                 { id: 'E002', name: 'Canon RF 24-105mm f/4L', category: 'lens', categoryName: '鏡頭', brand: 'Canon', model: 'RF 24-105mm', level: 2, levelName: '進階', pointsPerDay: 100, image: 'https://dummyimage.com//400x200?text=Canon+RF+24-105', status: 'available' },
@@ -144,78 +139,122 @@
                 { id: 'E004', name: 'DJI Mic 2', category: 'audio', categoryName: '音頻', brand: 'DJI', model: 'Mic 2', level: 1, levelName: '基礎', pointsPerDay: 30, image: 'https://dummyimage.com//400x200?text=DJI+Mic+2', status: 'available' }
             ];
             
-            // QR碼掃描功能
-            const html5QrCode = new Html5Qrcode("reader");
-            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-            
-            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess).catch(function (err) {
-                console.error("掃描啟動失敗:", err);
-                if (currentLang === 'zh') {
-                    alert("無法啟動相機，���確認已授予攝像頭權限。");
-                } else {
-                    alert("Could not start camera. Please make sure camera permissions are granted.");
-                }
-            });
+            const qrResultEl = document.getElementById('qr-result');
+            const scannedOrderInfoEl = document.getElementById('scannedOrderInfo');
+            const confirmScannedActionBtn = document.getElementById('confirmScannedActionBtn');
+            const scanActionMessageEl = document.getElementById('scanActionMessage');
 
-            // 掃描成功回調函數
             function onScanSuccess(decodedText, decodedResult) {
-                // 停止掃描
-                html5QrCode.stop().then(() => {
-                    console.log('掃描已停止');
-                }).catch((err) => {
-                    console.error('停止掃描出錯:', err);
-                });
+                console.log(`QR Code scanned: ${decodedText}`);
+                qrResultEl.textContent = `${t('scan_success', currentLang)}: ${decodedText}`;
+
+                // 假設 decodedText 就是 BookingID
+                const bookingId = decodedText.trim();
                 
-                // 解析掃描結果（實際應用中應更複雜，這裡假設QR碼內容為設備ID）
-                const equipmentId = decodedText;
-                const foundEquipment = equipment.find(item => item.id === equipmentId);
-                
-                if (foundEquipment) {
-                    // 更新顯示結果
-                    document.getElementById('equipmentImage').src = foundEquipment.image;
-                    document.getElementById('equipmentName').textContent = foundEquipment.name;
-                    
-                    const categoryText = currentLang === 'zh' ? foundEquipment.categoryName : foundEquipment.category;
-                    document.getElementById('equipmentCategory').textContent = categoryText;
-                    
-                    const levelText = currentLang === 'zh' ? foundEquipment.levelName : 
-                                     (foundEquipment.level === 1 ? 'Basic' : 
-                                     (foundEquipment.level === 2 ? 'Intermediate' : 'Advanced'));
-                    document.getElementById('equipmentLevel').textContent = levelText;
-                    
-                    const statusText = currentLang === 'zh' ? 
-                                     (foundEquipment.status === 'available' ? '可借用' : '已借出') :
-                                     (foundEquipment.status === 'available' ? 'Available' : 'Borrowed');
-                    document.getElementById('equipmentStatus').textContent = `${currentLang === 'zh' ? '狀態' : 'Status'}: ${statusText}`;
-                    
-                    // 設置按鈕連結
-                    document.getElementById('detailsBtn').href = `equipment.html?id=${foundEquipment.id}`;
-                    document.getElementById('borrowBtn').href = `equipment.html?id=${foundEquipment.id}&action=borrow`;
-                    
-                    // 如果設備已借出，禁用借用按鈕
-                    if (foundEquipment.status === 'borrowed') {
-                        const borrowBtn = document.getElementById('borrowBtn');
-                        borrowBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                        borrowBtn.classList.remove('bg-green-600');
-                        borrowBtn.classList.add('bg-gray-400');
-                    }
-                    
-                    // 顯示結果區域
-                    document.getElementById('scanResult').classList.remove('hidden');
+                if (window.Database && window.Database.getBookingById) {
+                    window.Database.getBookingById(bookingId).then(booking => {
+                        if (booking) {
+                            document.getElementById('scannedBookingId').textContent = booking.BookingID || booking.id;
+                            document.getElementById('scannedUserId').textContent = booking.UserID || booking.userId;
+                            document.getElementById('scannedEquipmentName').textContent = booking.ItemName || booking.equipmentName;
+                            document.getElementById('scannedStartDate').textContent = booking.StartDate || booking.startDate;
+                            document.getElementById('scannedEndDate').textContent = booking.EndDate || booking.endDate;
+                            
+                            const status = booking.BookingStatus || booking.status;
+                            const statusEl = document.getElementById('scannedStatus');
+                            statusEl.textContent = t('status_' + status.toLowerCase().replace(/\s+/g, '_'), currentLang, {status: status});
+
+                            scannedOrderInfoEl.classList.remove('hidden');
+                            confirmScannedActionBtn.classList.remove('hidden');
+                            scanActionMessageEl.textContent = '';
+
+                            if (status.toLowerCase() === 'confirmed' || status.toLowerCase() === 'pending') {
+                                confirmScannedActionBtn.textContent = t('confirm_pickup_action', currentLang);
+                                confirmScannedActionBtn.onclick = () => handleScannedActionConfirm(bookingId, 'Active', t('pickup_confirmed_message', currentLang));
+                            } else if (status.toLowerCase() === 'active' || status.toLowerCase() === 'in use' || status.toLowerCase() === 'overdue') {
+                                confirmScannedActionBtn.textContent = t('confirm_return_action', currentLang);
+                                confirmScannedActionBtn.onclick = () => handleScannedActionConfirm(bookingId, 'Returned', t('return_confirmed_message', currentLang));
+                            } else {
+                                confirmScannedActionBtn.classList.add('hidden');
+                                scanActionMessageEl.textContent = t('order_action_not_applicable', currentLang); // e.g. for already returned
+                            }
+
+                        } else {
+                            scannedOrderInfoEl.classList.add('hidden');
+                            confirmScannedActionBtn.classList.add('hidden');
+                            qrResultEl.textContent = t('order_not_found_for_qr', currentLang, {qr_content: decodedText});
+                        }
+                    }).catch(err => {
+                        console.error("Error fetching booking from QR scan:", err);
+                        qrResultEl.textContent = t('error_processing_qr', currentLang);
+                    });
                 } else {
-                    // 找不到設備
-                    const message = currentLang === 'zh' ? '找不到對應的設備資訊，請檢查QR碼是否正確。' : 
-                                                          'Equipment information not found. Please check if the QR code is correct.';
-                    alert(message);
+                    qrResultEl.textContent = t('error_database_module_unavailable', currentLang);
+                }
+            }
+
+            function onScanFailure(error) {
+                // console.warn(`QR error = ${error}`);
+                qrResultEl.textContent = t('scan_failed_try_again', currentLang, {error_msg: error});
+            }
+            
+            // 替換為你選擇的QR掃描庫的初始化代碼
+            // 例如，使用 html5-qrcode:
+            const html5QrCode = new Html5Qrcode("qr-reader");
+            const qrConfig = { fps: 10, qrbox: { width: 250, height: 250 } };
+            const startScanner = () => {
+                html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    qrConfig, 
+                    onScanSuccess,
+                    onScanFailure
+                ).catch(err => {
+                    console.error("Failed to start QR scanner", err);
+                    qrResultEl.textContent = t('camera_permission_or_error', currentLang);
+                });
+            };
+
+            // 請求相機權限並啟動掃描器
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(stream => {
+                        stream.getTracks().forEach(track => track.stop()); // 立即停止，只為請求權限
+                        startScanner();
+                    })
+                    .catch(err => {
+                        console.error("Camera permission denied or error:", err);
+                        qrResultEl.textContent = t('camera_permission_or_error', currentLang);
+                    });
+            } else {
+                qrResultEl.textContent = "getUserMedia not supported";
+                startScanner(); // Fallback for browsers that might not need explicit pre-permission
+            }
+
+            async function handleScannedActionConfirm(bookingId, newStatus, successMessageKey) {
+                if(window.Database && window.Database.updateBookingStatus) {
+                    const result = await window.Database.updateBookingStatus(bookingId, newStatus);
+                    if (result.success) {
+                        scanActionMessageEl.textContent = t(successMessageKey, currentLang, {bookingId: bookingId});
+                        scanActionMessageEl.className = 'mt-2 text-sm text-green-600 font-semibold';
+                        confirmScannedActionBtn.classList.add('hidden');
+                        // Optionally re-fetch and update displayed status
+                        document.getElementById('scannedStatus').textContent = t('status_' + newStatus.toLowerCase().replace(/\s+/g, '_'), currentLang, {status: newStatus});
+                        sessionStorage.setItem('refreshDataOnLoad', 'true'); // Trigger refresh for other pages
+
+                    } else {
+                        scanActionMessageEl.textContent = t('action_failed_error', currentLang, {error: result.error});
+                        scanActionMessageEl.className = 'mt-2 text-sm text-red-600 font-semibold';
+                    }
+                } else {
+                    scanActionMessageEl.textContent = t('error_database_module_unavailable', currentLang);
+                     scanActionMessageEl.className = 'mt-2 text-sm text-red-600 font-semibold';
                 }
             }
             
-            // 關閉按鈕
             document.getElementById('closeBtn').addEventListener('click', function() {
                 window.history.back();
             });
             
-            // Demo功能：點擊掃描區域模擬掃描結果
             document.getElementById('reader').addEventListener('click', function() {
                 // 隨機選擇一個設備作為模擬掃描結果
                 const randomIndex = Math.floor(Math.random() * equipment.length);

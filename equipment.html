@@ -759,6 +759,48 @@
                 return levelMap[lang][parseInt(level)] || level;
             }
         });
+
+        window.addEventListener('pageshow', async function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const needsRefreshFromUrl = urlParams.get('refresh') === 'true';
+
+            if (event.persisted || sessionStorage.getItem('refreshDataOnLoad') === 'true' || needsRefreshFromUrl) {
+                console.log('Equipment page: pageshow event (persisted or refresh flag/param set), preparing to reload equipment data.');
+                sessionStorage.removeItem('refreshDataOnLoad');
+                
+                if (needsRefreshFromUrl) {
+                    urlParams.delete('refresh');
+                }
+
+                if (typeof window.Database === 'undefined' || !window.Database.init) {
+                    console.error("Equipment page (pageshow): Database module not ready.");
+                    return;
+                }
+                if (!window.Database.loadEquipmentData) {
+                    console.log("Equipment page (pageshow): Database likely not initialized, calling init.");
+                    await window.Database.init();
+                }
+
+                const currentUser = localStorage.getItem('currentUser');
+                if (currentUser) {
+                    const updatedUserDataResult = await window.Database.initUserSession(currentUser);
+                    if (updatedUserDataResult.success && updatedUserDataResult.userData) {
+                        console.log("Equipment page (pageshow): User session re-initialized for level check.");
+                    } else {
+                        console.error("Equipment page (pageshow): Failed to re-init user session.");
+                    }
+                }
+                
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    if(typeof loadEquipment === 'function'){
+                         console.log("Re-running loadEquipment due to pageshow/refresh trigger.");
+                         loadEquipment(); 
+                    }
+                } else {
+                     document.addEventListener('DOMContentLoaded', loadEquipment);
+                }
+            }
+        });
     </script>
 </body>
 </html> 

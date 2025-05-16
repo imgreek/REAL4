@@ -4,46 +4,143 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=8GABmexhOpg",
-      "intro_zh": "將鏡頭模組、主機核心與電池底座扣合。長按開機鍵開機，首次使用可調語言、時間、WiFi設定。打開側蓋裝入microSD卡。触控螢幕滑動或按模式鍵切換功能。",
+      "video_url": "https://www.youtube.com/embed/8GABmexhOpg",
+      "intro_zh": "將鏡頭模組、主機核心與電池底座扣合。長按開機鍵開機，首次使用可調語言、時間、WiFi設定。打開側蓋裝入microSD卡。觸控螢幕滑動或按模式鍵切換功能。",
       "intro_en": "Attach the lens module, core, and battery base together. Long press the power button to turn on; on the first use, set language, time, WiFi. Open the side cover and insert a microSD card. Swipe the touchscreen or press the mode button to switch between functions.",
-      "quiz": {
-        "question_zh": "ONE R 屬於哪種類型的相機？",
-        "question_en": "What type of camera is the ONE R?",
-        "options_zh": ["數碼單眼", "運動相機", "監視器"],
-        "options_en": ["Digital SLR", "Action Camera", "Surveillance Cam"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "ONE R 屬於哪種類型的相機？",
+          "question_en": "What type of camera is the ONE R?",
+          "options_zh": ["數碼單眼", "運動相機", "監視器"],
+          "options_en": ["Digital SLR", "Action Camera", "Surveillance Cam"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "ONE R 的鏡頭有什麼特別設計？",
+          "question_en": "What is unique about ONE R's lenses?",
+          "options_zh": ["勿拆設計", "可模組化更換", "支援4鏡同時輸出"],
+          "options_en": ["Fixed", "Modular and interchangeable", "4-lens simultaneous output"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "如何開啟ONE R？",
+          "question_en": "How do you power on the ONE R?",
+          "options_zh": ["短按菜單鍵", "長按開機鍵", "插入充電器"],
+          "options_en": ["Short-press menu button", "Long-press power button", "Insert charger"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "記憶卡應裝在？",
+          "question_en": "Where does the memory card go?",
+          "options_zh": ["底座", "側蓋", "機頂"],
+          "options_en": ["base", "side cover", "top of the camera"],
+          "correct_answer_index": 1
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=A6EkRAaQRxE",
-      "intro_zh": "拆下安裝不同鏡頭模組，覆蓋不同拍攝需求。開啟FlowState功能，防止畫面晃動。選擇HDR模式增強動態，或選擇Slow Motion錄製高速動作。直接触控螢幕預覽並調整各種參數。支援指定語音指令啟動錄影或拍照。",
+      "video_url": "https://www.youtube.com/embed/A6EkRAaQRxE",
+      "intro_zh": "拆下安裝不同鏡頭模組，覆蓋不同拍攝需求。開啟FlowState功能，防止畫面晃動。選擇HDR模式增強動態，或選擇Slow Motion錄製高速動作。直接觸控螢幕預覽並調整各種參數。支援指定語音指令啟動錄影或拍照。",
       "intro_en": "Detach and attach different lens modules for varied shooting options. Turn on FlowState for steady, shake-free footage. Select HDR for vivid scenes or Slow Motion for capturing fast action. Use the touchscreen for live preview and parameter adjustment. Use voice commands to start recording or take photos.",
-      "quiz": {
-        "question_zh": "\"FlowState\" 的主要功能是？",
-        "question_en": "What is the main function of FlowState?",
-        "options_zh": ["虛擬實境", "防手震", "藍牙連線"],
-        "options_en": ["Virtual reality", "Stabilization", "Bluetooth pairing"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "\"FlowState\" 的主要功能是？",
+          "question_en": "What is the main function of FlowState?",
+          "options_zh": ["虛擬實境", "防手震", "藍牙連線"],
+          "options_en": ["Virtual reality", "Stabilization", "Bluetooth pairing"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "更換360°鏡頭需如何操作？",
+          "question_en": "How to switch to the 360° lens?",
+          "options_zh": ["切換螢幕選單", "拆下目前鏡頭，換上360°鏡頭", "插SD卡"],
+          "options_en": ["Switch in screen menu", "Detach the current lens and attach 360° lens", "Insert SD card"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "實現HDR應在哪裡設定？",
+          "question_en": "Where do you set HDR mode?",
+          "options_zh": ["APP端", "機身螢幕", "以上皆可"],
+          "options_en": ["App", "on the camera screen", "Both"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "ONE R 可以用語音操作開始錄影嗎？",
+          "question_en": "Can you start recording with a voice command on ONE R?",
+          "options_zh": ["可以", "不可以"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "若想預覽影片畫面該用什麼操作？",
+          "question_en": "How to preview footage on ONE R?",
+          "options_zh": ["觸控螢幕", "WiFi連線", "小螢幕按鍵"],
+          "options_en": ["Touchscreen", "WiFi connection", "Mini screen button"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.youtube.com/watch?v=KiO0aliM7wE",
+      "video_url": "https://www.youtube.com/embed/KiO0aliM7wE",
       "intro_zh": "開啟相機WiFi，使用Insta360 APP實時預覽與遠端控制。相片/影片自動匯入APP，啟用AI剪輯一鍵出片。利用Insta360 Studio軟體進階編輯與導出。一鍵分享到Instagram, YouTube, Facebook等。支援自動備份至雲端或外接硬碟保護資料安全。",
       "intro_en": "Turn on the camera's WiFi and use the Insta360 App for live preview and remote control. Photos/videos import automatically; use AI editor for quick video creation. Use Insta360 Studio software on PC for advanced editing and exporting. Share with one click to Instagram, YouTube, Facebook, and more. Supports automatic backup to cloud or external drives for data safety.",
-      "quiz": {
-        "question_zh": "Insta360 ONE R 支援哪種連線方式與APP同步？",
-        "question_en": "Which connection is supported for app synchronization?",
-        "options_zh": ["紅外線", "WiFi或藍牙", "GPS"],
-        "options_en": ["Infrared", "WiFi or Bluetooth", "GPS"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "Insta360 ONE R 支援哪種連線方式與APP同步？",
+          "question_en": "Which connection is supported for app synchronization?",
+          "options_zh": ["紅外線", "WiFi或藍牙", "GPS"],
+          "options_en": ["Infrared", "WiFi or Bluetooth", "GPS"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "Insta360 APP支援什麼編輯？",
+          "question_en": "What editing does the Insta360 app support?",
+          "options_zh": ["AI自動剪輯", "僅裁切", "無編輯"],
+          "options_en": ["AI auto editing", "Only cropping", "No editing"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "若需將影片分享至社群，正確步驟是？",
+          "question_en": "What is the correct way to share videos to social media?",
+          "options_zh": ["直接在相機長按電源", "用APP一鍵分享", "寄SD卡"],
+          "options_en": ["Long press power button on camera", "One-click share via app", "Send SD card by mail"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "電腦編輯推薦哪個軟體？",
+          "question_en": "Which PC software is recommended for editing?",
+          "options_zh": ["Insta360 Studio", "Word", "PPT"],
+          "options_en": ["Insta360 Studio", "Word", "PPT"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "ONE R 支援自動備份方式？",
+          "question_en": "Which backup methods does ONE R support?",
+          "options_zh": ["只支援SD卡", "雲端與硬碟", "不支援備份"],
+          "options_en": ["SD card only", "Cloud & external drive", "No backup supported"],
+          "correct_answer_index": 1
+        }
+      ]
     }
   ]
 }

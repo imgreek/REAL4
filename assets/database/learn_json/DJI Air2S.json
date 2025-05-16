@@ -4,31 +4,85 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=IKOWAbpw5n4",
+      "video_url": "https://www.youtube.com/embed/IKOWAbpw5n4",
       "intro_zh": "取出機身，確認槳葉無損壞，安裝於對應馬達上。將電池裝入機身，長按電源鍵兩次開啟空拍機與遙控器。在手機安裝DJI Fly App，連接遙控器，依指示完成配對。按畫面提示校正指南針，確認有足夠GPS訊號才起飛。",
       "intro_en": "Take out the drone, check propellers for damage, and mount them on the correct motors. Insert the battery, double press and hold the power button to turn on the drone and remote. Download DJI Fly App, connect to the remote controller, and pair as instructed. Calibrate compass on screen prompt, ensure strong GPS signal before takeoff.",
-      "quiz": {
-        "question_zh": "DJI Air 2S 使用哪個App遙控？",
-        "question_en": "Which app controls the DJI Air 2S?",
-        "options_zh": ["DJI Go 4", "DJI Fly", "DJI Ronin"],
-        "options_en": ["DJI Go 4", "DJI Fly", "DJI Ronin"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "DJI Air 2S 使用哪個App遙控？",
+          "question_en": "Which app controls the DJI Air 2S?",
+          "options_zh": ["DJI Go 4", "DJI Fly", "DJI Ronin"],
+          "options_en": ["DJI Go 4", "DJI Fly", "DJI Ronin"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "起飛前必須檢查什麼？",
+          "question_en": "What must you check before takeoff?",
+          "options_zh": ["電池裝入", "指南針校正", "GPS訊號", "全部以上"],
+          "options_en": ["insert battery", "compass calibration", "GPS signal", "All of the above"],
+          "correct_answer_index": 3
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "開機正確步驟是？",
+          "question_en": "What’s the correct way to power on?",
+          "options_zh": ["短按一次", "連續長按兩次", "甩遙控器"],
+          "options_en": ["Short press once", "Double press then hold", "Shake remote"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "飛行時App顯示GPS信號不足應？",
+          "question_en": "If GPS signal is weak during flight, you should?",
+          "options_zh": ["立即返航", "繼續飛", "關機"],
+          "options_en": ["Return immediately", "Keep flying", "Land immediately"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=IBmLzH_XtJY",
+      "video_url": "https://www.youtube.com/embed/IBmLzH_XtJY",
       "intro_zh": "在App選擇主題，點選「跟隨」即可自動追蹤拍攝對象。開啟避障功能，飛行過程自動偵測四周障礙物。選擇Dronie、Helix等智能拍攝模式，輕鬆創作專業影片。在App設定最高5.4K解析度錄影，適合記錄校園專題。",
       "intro_en": "Select the subject in the app and tap “Follow” for automatic tracking. Activate obstacle avoidance, so the drone automatically detects obstacles while flying. Use Dronie, Helix, and other QuickShots for creative, professional-looking clips. Set the video resolution to 5.4K in the app for high-quality project footage.",
-      "quiz": {
-        "question_zh": "FocusTrack 可做到什麼？",
-        "question_en": "What does FocusTrack allow?",
-        "options_zh": ["自動追蹤", "手動變焦", "拍照"],
-        "options_en": ["Automatic Tracking", "Manual zoom", "Photo only"],
-        "correct_answer_index": 0
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "FocusTrack 可做到什麼？",
+          "question_en": "What does FocusTrack allow?",
+          "options_zh": ["自動追蹤", "手動變焦", "拍照"],
+          "options_en": ["Automatic Tracking", "Manual zoom", "Photo only"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "下列哪一項屬於智能拍攝模式？",
+          "question_en": "Which is a smart photo/video mode?",
+          "options_zh": ["QuickShots", "Macro", "全手動"],
+          "options_en": ["QuickShots", "Macro", "Manual only"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "Air 2S 最高支援錄影畫質？",
+          "question_en": "What is the max video recording quality of Air 2S?",
+          "options_zh": ["4K", "5.4K", "1080p"],
+          "options_en": ["4K", "5.4K", "1080p"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "Obstacle Avoidance的作用為？",
+          "question_en": "What is the purpose of Obstacle Avoidance?",
+          "options_zh": ["告警", "自動閃避障礙物", "增強圖像"],
+          "options_en": ["Warning only", "Auto avoid obstacles", "Enhance image"],
+          "correct_answer_index": 1
+        }
+      ]
     },
     {
       "id": 3,
@@ -37,13 +91,40 @@
       "video_url": "https://www.youtube.com/playlist?list=PLTHHnG-OHfxkKk2NqcNerEEU66oqZ01fC",
       "intro_zh": "可將影像同步直播到大螢幕，進行現場討論或遠端教學。使用 DJI Fly App 內建工具剪輯影片，直接分享到社群或雲端。一人操控飛行、一人負責特寫或出鏡，提高攝製效率。錄下課堂、運動會、校慶等素材，後期結合多來源資料製成專案影片。",
       "intro_en": "Stream live preview to a big screen for group discussion or remote teaching. Edit and share videos using the built-in DJI Fly App editor. Assign one to fly, another to manage subjects or scenes for efficient teamwork. Document classes, events, and combine footage with other devices for comprehensive projects.",
-      "quiz": {
-        "question_zh": "DJI Air 2S 可以同步影像到哪裡？",
-        "question_en": "Where can Air 2S live stream or preview its video?",
-        "options_zh": ["手機", "平板", "電腦", "以上皆可"],
-        "options_en": ["Phone", "Tablet", "Computer", "All of the above"],
-        "correct_answer_index": 3
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "DJI Air 2S 可以同步影像到哪裡？",
+          "question_en": "Where can Air 2S live stream or preview its video?",
+          "options_zh": ["手機", "平板", "電腦", "以上皆可"],
+          "options_en": ["Phone", "Tablet", "Computer", "All of the above"],
+          "correct_answer_index": 3
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "哪個App內建有編輯和分享功能？",
+          "question_en": "Which app has built-in editing and sharing?",
+          "options_zh": ["微信", "DJI Fly", "Facebook"],
+          "options_en": ["WeChat", "DJI Fly", "Facebook"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "校園影片製作可以怎樣高效協作？",
+          "question_en": "How can school projects improve collaboration?",
+          "options_zh": ["團隊分工", "一人全部操作", "無分工"],
+          "options_en": ["Teamwork division", "One handles all", "No division"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "Air 2S拍完的影片適合？",
+          "question_en": "What are Air 2S videos suitable for?",
+          "options_zh": ["活動記錄", "創意短片", "校園專題", "以上皆可"],
+          "options_en": ["Event documentation", "Creative shorts", "School projects", "All of the above"],
+          "correct_answer_index": 3
+        }
+      ]
     }
   ]
 }

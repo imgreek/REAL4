@@ -4,46 +4,151 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=cbg88cNkm5I",
+      "video_url": "https://www.youtube.com/embed/cbg88cNkm5I",
       "intro_zh": "打開底部電池艙，裝入電池及SD/CFexpress記憶卡。向右撥動開關開機，並按螢幕指示設語言、時間等。對準紅點，輕轉鏡頭卡緊即可。半按快門鍵自動對焦，全按拍攝照片。",
       "intro_en": "Open the battery compartment, insert battery and SD/CFexpress card. Switch to ON, and set language/time as prompted on the screen. Align the red dot and gently twist the lens until it locks. Half-press shutter for autofocus; fully press to take a picture.",
-      "quiz": {
-        "question_zh": "EOS R5 的感光元件有多少萬像素？",
-        "question_en": "What is the resolution (in megapixels) of EOS R5's sensor?",
-        "options_zh": ["2010萬", "2420萬", "4500萬"],
-        "options_en": ["20MP", "24MP", "45MP"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "EOS R5 的感光元件有多少萬像素？",
+          "question_en": "What is the resolution (in megapixels) of EOS R5's sensor?",
+          "options_zh": ["2010萬", "2420萬", "4500萬"],
+          "options_en": ["20MP", "24MP", "45MP"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "電池與記憶卡裝在哪裡？",
+          "question_en": "Where do you install the battery and memory card?",
+          "options_zh": ["底部電池艙", "鏡頭旁", "手把上"],
+          "options_en": ["Bottom compartment", "Lens mount", "On top of grip"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "正確安裝鏡頭時，要對準什麼標記？",
+          "question_en": "What mark do you align when attaching a lens?",
+          "options_zh": ["藍點", "紅點", "黃線"],
+          "options_en": ["Blue dot", "Red dot", "Yellow line"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "半按快門有什麼作用？",
+          "question_en": "What does half-pressing the shutter do?",
+          "options_zh": ["自動對焦", "直接拍照", "關閉相機"],
+          "options_en": ["Autofocus", "Take photo", "Power off"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_5",
+          "question_zh": "開機後最先要設定什麼？",
+          "question_en": "What should you set first after powering on?",
+          "options_zh": ["鏡頭型號", "語言與時間", "電池容量"],
+          "options_en": ["Lens type", "Language & Time", "Battery level"],
+          "correct_answer_index": 1
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=u99Zuh8kkxM",
+      "video_url": "https://www.youtube.com/embed/u99Zuh8kkxM",
       "intro_zh": "轉盤或選單可切換單張拍攝與高速連拍。進入錄影選單設定8K或4K畫質錄影。啟用人臉/眼睛偵測追焦，追蹤主體。在設定中開啟防震提升拍攝穩定度。設定選單中配對手機和平板傳輸照片。",
       "intro_en": "Use dial/menu to select single shot or high-speed burst. In video menu, select 8K or 4K for video recording. Enable face/eye AF for subject tracking. Enable IBIS in settings for better stability. Use settings to pair with smart devices for photo transfer.",
-      "quiz": {
-        "question_zh": "EOS R5 可錄製最高幾K影片？",
-        "question_en": "What is the maximum video resolution EOS R5 supports?",
-        "options_zh": ["4K", "6K", "8K"],
-        "options_en": ["4K", "6K", "8K"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "EOS R5 可錄製最高幾K影片？",
+          "question_en": "What is the maximum video resolution EOS R5 supports?",
+          "options_zh": ["4K", "6K", "8K"],
+          "options_en": ["4K", "6K", "8K"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "延長曝光拍照時要開啟什麼功能防止模糊？",
+          "question_en": "What feature should you enable for blur prevention in long exposure?",
+          "options_zh": ["WiFi", "IBIS（機身防震）", "閃光燈"],
+          "options_en": ["WiFi", "IBIS (In-Body Image Stabilization)", "Flash"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "哪一項有利於動態主體追焦？",
+          "question_en": "Which setting helps track moving subjects?",
+          "options_zh": ["單點對焦", "人臉/眼睛偵測AF", "手動對焦"],
+          "options_en": ["Single-point AF", "Face/Eye AF", "Manual focus"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "可以用WiFi/藍牙將相片傳到手機嗎？",
+          "question_en": "Can you transfer photos to your phone with WiFi/Bluetooth?",
+          "options_zh": ["可以", "不行"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "如何切換單拍與連拍？",
+          "question_en": "How to switch between single shot and burst mode?",
+          "options_zh": ["用轉盤或選單", "重開機", "換電池"],
+          "options_en": ["Dial or Menu", "Restart", "Change battery"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.youtube.com/watch?v=3e6Mo3hLbPY",
+      "video_url": "https://www.youtube.com/embed/3e6Mo3hLbPY",
       "intro_zh": "下載Canon Camera Connect，配對WiFi或藍牙開始照片傳送。手機App可無線控制拍照錄影及即時預覽。直接將影像上傳至雲端或社群平台。插入麥克風、閃光燈或其他擴充配件。使用USB-C傳輸線將檔案快速備份到電腦。",
       "intro_en": "Download Canon Camera Connect, pair via WiFi/Bluetooth for transfer. The app enables remote shutter, video recording and live view. Directly upload to cloud or social platforms. Attach microphones, flashes or other accessories. Use USB-C cable for fast backup to computer.",
-      "quiz": {
-        "question_zh": "哪個App適合與R5手機連線？",
-        "question_en": "Which app is used to connect the R5 with your phone?",
-        "options_zh": ["Camera Connect", "Canon Print", "Zoom"],
-        "options_en": ["Camera Connect", "Canon Print", "Zoom"],
-        "correct_answer_index": 0
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "哪個App適合與R5手機連線？",
+          "question_en": "Which app is used to connect the R5 with your phone?",
+          "options_zh": ["Camera Connect", "Canon Print", "Zoom"],
+          "options_en": ["Camera Connect", "Canon Print", "Zoom"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "可否用手機遠端控制相機拍照？",
+          "question_en": "Can you use your phone for remote shutter on R5?",
+          "options_zh": ["可以", "不行"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "R5可以將照片直接上傳雲端嗎？",
+          "question_en": "Can the R5 directly upload images to the cloud?",
+          "options_zh": ["可以", "不行"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "外接麥克風應插在？",
+          "question_en": "Where do you connect an external microphone?",
+          "options_zh": ["熱靴", "麥克風插孔", "兩者皆可"],
+          "options_en": ["Hot shoe", "Mic jack", "Both"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "可以通過USB-C傳檔到電腦嗎？",
+          "question_en": "Can you transfer files to PC via USB-C?",
+          "options_zh": ["可以", "不行"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        }
+      ]
     }
   ]
 }

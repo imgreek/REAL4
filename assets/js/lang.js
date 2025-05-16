@@ -1,7 +1,6 @@
 // Language translation file for REAL Platform
 const translations = {
   zh: {
-    // Common
     platform_name: "REAL 平台",
     home: "首頁",
     equipment: "設備",
@@ -24,8 +23,6 @@ const translations = {
     basic: "基礎",
     intermediate: "進階",
     professional: "專業",
-    
-    // QR Scanner
     qr_scanner: "QR碼掃描",
     scan_instruction: "請將鏡頭對準設備上的QR碼，系統將自動識別",
     view_details: "查看詳情",
@@ -36,17 +33,12 @@ const translations = {
     status: "狀態",
     available: "可借用",
     borrowed: "已借出",
-    equipment_not_found: "找不到對應的設備資訊，請檢查QR碼是否正確。",
-    
-    // Login page
     login: "登入",
     student_account: "學生帳號",
     password: "密碼",
     password_placeholder: "輸入密碼（Demo 版可直接進入）",
     select_user: "請選擇用戶",
     demo_note: "Demo 版：任何用戶均可直接登入",
-    
-    // Home page
     recent_status: "借用狀態",
     no_equipment: "目前沒有借用中的設備",
     main_functions: "主要功能",
@@ -55,8 +47,6 @@ const translations = {
     continue_learning: "繼續學習",
     progress: "進度",
     completed: "已完成",
-    
-    // Equipment page
     equipment_rental: "設備借用",
     rental_date: "借用日期",
     select_rental_dates: "請選擇借用起始與結束日期",
@@ -88,11 +78,10 @@ const translations = {
     lens: "鏡頭",
     audio: "音頻",
     lighting: "燈光",
-    gimbal: "穩定器",
+    stabilizer: "穩定器",
     accessory: "配件",
     available_equipment: "可用設備",
     no_matching_equipment: "沒有找到匹配的設備",
-    available: "可用",
     unavailable: "已借出",
     difficulty: "難度",
     points_per_day: "積分/天",
@@ -100,8 +89,6 @@ const translations = {
     brand: "品牌",
     model: "型號",
     available_dates: "可借用日期",
-    rental_history: "借用記錄",
-    completed_courses: "已完成課程",
     personal_preferences: "個人喜好設置",
     language: "語言",
     traditional_chinese: "繁體中文",
@@ -121,8 +108,6 @@ const translations = {
     my_group_members: "我的群組成員",
     project_member: "項目成員",
     no_group_members: "目前沒有群組成員",
-    
-    // Chat page
     chat: "聊天室",
     recent_conversations: "最近對話",
     typing: "正在輸入...",
@@ -143,16 +128,12 @@ const translations = {
     select_at_least_one: "請選擇至少一個聯絡人",
     enter_group_name: "請輸入群組名稱",
     chat_created: "聊天已建立！在完整版本中，這將創建一個新的聊天頻道。",
-    
-    // 錯誤信息
     error_loading_user_data: "載入用戶資料失敗，請重試",
     error_during_booking: "預訂過程中發生錯誤，請稍後再試",
     dates_no_longer_available: "所選日期已被預訂，請選擇其他日期",
     not_enough_points: "您的積分不足以完成此預訂",
     error_loading_courses: "載入課程資訊失敗",
-    
-    // 設備類型
-    tripod: "三腳架",
+    tripod: "三腳架/燈架",
     drone: "無人機",
     profile_title: "個人中心",
     my_profile: "我的資料",
@@ -196,8 +177,6 @@ const translations = {
     select_user_prompt: "請先選擇一個用戶",
     login_failed: "登入失敗，請檢查您的選擇或稍後重試。",
     login_error: "登入過程中發生意外錯誤，請聯繫管理員。",
-    
-    // Equipment page specific from recent changes
     equipment_icon: "器材圖標",
     status_in_use: "使用中",
     status_checking: "檢查中",
@@ -213,21 +192,76 @@ const translations = {
     cannot_borrow: "無法預約",
     booked_on_selected_date: "此設備在 {{date}} 已被預訂。",
     no_matching_equipment_for_date: "在 {{date}} 沒有找到符合條件的設備。",
-    stabilizer: "穩定器", 
-    computer: "電腦",   
-    tripod: "三腳架/燈架",
+    computer: "電腦",
     communication: "通訊設備",
     monitor: "監視器",
-    stroage: "儲存設備", 
+    stroage: "儲存設備",
     utility: "實用工具",
-    video_equipment: "視訊設備", 
+    video_equipment: "視訊設備",
     status_available: "可借用",
     status_not_available: "無法借用",
-    status_fully_functional: "功能正常", 
+    status_fully_functional: "功能正常",
     status_missing: "遺失",
+    course_detail_page: "課程詳情",
+    course_content_not_found: "找不到指定的課程內容。",
+    stage_content_intro_text: "請觀看以下影片並閱讀器材簡介：",
+    quiz_title_text_val: "小測驗",
+    submit_answer_val: "提交答案",
+    select_an_answer: "請選擇一個答案。",
+    correct_answer_next_stage: "回答正確！您可以進入下一階段。",
+    incorrect_answer_try_again: "回答錯誤，請再試一次。",
+    previous_stage: "上一階段",
+    next_stage_val: "下一階段",
+    complete_course_val: "完成課程",
+    course_completed_title: "恭喜！課程已完成！",
+    course_completed_text: "您已成功完成此課程所有階段。",
+    back_to_courses_list: "返回課程列表",
+    complete_previous_stage_to_unlock: "請先完成上一階段的測驗以解鎖此階段。",
+    quiz_passed_label: "測驗已通過",
+    quiz_already_passed_message: "您已通過此階段的測驗。",
+    login_to_save_progress_alert: "請先登入以保存您的學習進度。",
+    you: "你",
+    status_pending: "處理中",
+    pending_pickup: "待取/預約中",
+    overdue: "已逾期",
+    no_courses_available: "目前沒有可用的課程。",
+    no_courses_in_progress: "沒有正在進行中的課程。",
+    no_courses_completed_yet: "尚無已完成的課程。",
+    proceed_without_login_progress_warning: "您尚未登入，學習進度將不會被保存。要繼續瀏覽課程嗎？",
+    login_recommended_for_progress: "建議登入以追踪您的學習進度。",
+    quiz_question_prefix: "問題 {{num}}:",
+    correct_answer_short: "回答正確！",
+    incorrect_answer_short: "回答錯誤。",
+    no_video_for_stage: "此階段沒有影片。",
+    no_quiz_for_stage: "此階段沒有測驗。",
+    complete_all_stage_quizzes: "請先完成本階段所有測驗問題才能進入下一階段或完成課程。",
+    rental_detail_page: "訂單詳細資料",
+    back_to_profile_rentals: "返回個人租借記錄",
+    loading_order_details: "正在加載訂單詳細資料...",
+    order_id_label: "訂單號",
+    equipment_name: "器材名稱",
+    total_points_consumed: "總消耗積分",
+    booking_date: "預訂日期",
+    order_qr_code_alt: "訂單 {{bookingId}} 的QR碼",
+    order_qr_code_missing: "未能加載訂單QR碼",
+    confirm_pickup_action: "確認取件",
+    confirm_return_action: "確認歸還",
+    order_already_returned: "此訂單已歸還。",
+    order_action_not_applicable: "此訂單當前狀態無需操作。",
+    order_not_found_or_invalid: "找不到訂單或訂單ID無效。",
+    error_loading_order_details: "加載訂單詳情失敗。",
+    pickup_confirmed_message: "訂單 {{bookingId}} 已成功確認取件！",
+    return_confirmed_message: "訂單 {{bookingId}} 已成功確認歸還！",
+    order_not_found_for_qr: "未找到與QR碼內容 [{{qr_content}}] 對應的訂單。",
+    error_processing_qr: "處理QR碼時發生錯誤。",
+    error_database_module_unavailable: "數據庫模塊不可用或加載失敗。",
+    scan_failed_try_again: "掃描失敗，請重試。 (錯誤: {{error_msg}})",
+    camera_permission_or_error: "無法啟動相機，請檢查權限或稍後重試。",
+    action_failed_error: "操作失敗：{{error}}",
+    confirm_action_button_label: "確認操作",
+    scanned_order_details: "掃描的訂單詳情"
   },
   en: {
-    // Common
     platform_name: "REAL Platform",
     home: "Home",
     equipment: "Equipment",
@@ -250,8 +284,6 @@ const translations = {
     basic: "Basic",
     intermediate: "Intermediate",
     professional: "Professional",
-    
-    // QR Scanner
     qr_scanner: "QR Code Scanner",
     scan_instruction: "Point the camera at a QR code on the equipment for automatic recognition",
     view_details: "View Details",
@@ -262,17 +294,12 @@ const translations = {
     status: "Status",
     available: "Available",
     borrowed: "Borrowed",
-    equipment_not_found: "Equipment information not found. Please check if the QR code is correct.",
-    
-    // Login page
     login: "Login",
     student_account: "Student Account",
     password: "Password",
     password_placeholder: "Enter password (Direct entry for Demo version)",
     select_user: "Please select a user",
     demo_note: "Demo version: Any user can login directly",
-    
-    // Home page
     recent_status: "Rental Status",
     no_equipment: "No equipment currently rented",
     main_functions: "Main Functions",
@@ -281,8 +308,6 @@ const translations = {
     continue_learning: "Continue Learning",
     progress: "Progress",
     completed: "Completed",
-    
-    // Equipment page
     equipment_rental: "Equipment Rental",
     rental_date: "Rental Date",
     select_rental_dates: "Please select start and end dates for rental",
@@ -314,11 +339,10 @@ const translations = {
     lens: "Lens",
     audio: "Audio",
     lighting: "Lighting",
-    gimbal: "Gimbal",
+    stabilizer: "Stabilizer",
     accessory: "Accessory",
     available_equipment: "Available Equipment",
     no_matching_equipment: "No matching equipment found",
-    available: "Available",
     unavailable: "Unavailable",
     difficulty: "Difficulty",
     points_per_day: "Points/Day",
@@ -326,8 +350,6 @@ const translations = {
     brand: "Brand",
     model: "Model",
     available_dates: "Available Dates",
-    rental_history: "Rental History",
-    completed_courses: "Completed Courses",
     personal_preferences: "Personal Preferences",
     language: "Language",
     traditional_chinese: "繁體中文",
@@ -347,8 +369,6 @@ const translations = {
     my_group_members: "My Group Members",
     project_member: "Project Member",
     no_group_members: "No group members available",
-    
-    // Chat page
     chat: "Chat",
     recent_conversations: "Recent Conversations",
     typing: "Typing...",
@@ -369,16 +389,12 @@ const translations = {
     select_at_least_one: "Please select at least one contact",
     enter_group_name: "Please enter a group name",
     chat_created: "Chat created! This would create a new chat channel in the full version.",
-    
-    // 錯誤信息
     error_loading_user_data: "Failed to load user data, please try again",
     error_during_booking: "Error occurred during booking, please try again later",
     dates_no_longer_available: "Selected dates are no longer available, please choose other dates",
     not_enough_points: "You don't have enough points to complete this booking",
     error_loading_courses: "Failed to load course information",
-    
-    // 設備類型
-    tripod: "Tripod",
+    tripod: "Tripod/Lightstand",
     drone: "Drone",
     profile_title: "Profile Center",
     my_profile: "My Profile",
@@ -422,8 +438,6 @@ const translations = {
     select_user_prompt: "Please select a user first.",
     login_failed: "Login failed. Please check your selection or try again later.",
     login_error: "An unexpected error occurred during login. Please contact an administrator.",
-    
-    // Equipment page specific from recent changes
     equipment_icon: "Equipment Icon",
     status_in_use: "In Use",
     status_checking: "Checking",
@@ -438,19 +452,75 @@ const translations = {
     level_too_low_detailed: "Your level ({{currentUserLevel}}) is not sufficient. This equipment requires level {{reqLevel}}. Please visit the <a href='{{courseLink}}' class='underline text-blue-600 hover:text-blue-800'>Learning Center</a> to level up.",
     cannot_borrow: "Cannot Borrow",
     booked_on_selected_date: "Booked on {{date}}.",
-    no_matching_equipment_for_date: "No matching equipment found for {{date}}.", 
-    stabilizer: "Stabilizer", 
-    computer: "Computer",   
-    tripod: "Tripod/Lightstand",
+    no_matching_equipment_for_date: "No matching equipment found for {{date}}.",
+    computer: "Computer",
     communication: "Communication",
     monitor: "Monitor",
-    stroage: "Storage", 
+    stroage: "Storage",
     utility: "Utility",
-    video_equipment: "Video Equipment", 
+    video_equipment: "Video Equipment",
     status_available: "Available",
     status_not_available: "Not Available",
-    status_fully_functional: "Fully Functional", 
+    status_fully_functional: "Fully Functional",
     status_missing: "Missing",
+    course_detail_page: "Course Detail",
+    course_content_not_found: "Course content not found.",
+    stage_content_intro_text: "Please watch the video below and read the equipment introduction:",
+    quiz_title_text_val: "Quiz",
+    submit_answer_val: "Submit Answer",
+    select_an_answer: "Please select an answer.",
+    correct_answer_next_stage: "Correct! You can proceed to the next stage.",
+    incorrect_answer_try_again: "Incorrect answer, please try again.",
+    previous_stage: "Previous Stage",
+    next_stage_val: "Next Stage",
+    complete_course_val: "Complete Course",
+    course_completed_title: "Congratulations! Course Completed!",
+    course_completed_text: "You have successfully completed all stages of this course.",
+    back_to_courses_list: "Back to Courses List",
+    complete_previous_stage_to_unlock: "Please complete the previous stage's quiz to unlock this stage.",
+    quiz_passed_label: "Quiz Passed",
+    quiz_already_passed_message: "You have already passed the quiz for this stage.",
+    login_to_save_progress_alert: "Please log in to save your learning progress.",
+    you: "You",
+    status_pending: "Pending",
+    pending_pickup: "Pending Pickup/Reserved",
+    overdue: "Overdue",
+    no_courses_available: "No courses currently available.",
+    no_courses_in_progress: "No courses in progress.",
+    no_courses_completed_yet: "No courses completed yet.",
+    proceed_without_login_progress_warning: "You are not logged in. Your learning progress will not be saved. Do you want to continue browsing courses?",
+    login_recommended_for_progress: "Login is recommended to track your learning progress.",
+    quiz_question_prefix: "Question {{num}}:",
+    correct_answer_short: "Correct!",
+    incorrect_answer_short: "Incorrect.",
+    no_video_for_stage: "(No video for this stage)",
+    no_quiz_for_stage: "(No quiz for this stage)",
+    complete_all_stage_quizzes: "Please answer all quiz questions correctly in this stage to proceed or complete the course.",
+    rental_detail_page: "Rental Detail",
+    back_to_profile_rentals: "Back to Profile Rentals",
+    loading_order_details: "Loading order details...",
+    order_id_label: "Order ID",
+    equipment_name: "Equipment Name",
+    total_points_consumed: "Total Points Consumed",
+    booking_date: "Booking Date",
+    order_qr_code_alt: "QR Code for Order {{bookingId}}",
+    order_qr_code_missing: "Failed to load order QR Code",
+    confirm_pickup_action: "Confirm Pickup",
+    confirm_return_action: "Confirm Return",
+    order_already_returned: "This order has already been returned.",
+    order_action_not_applicable: "No action applicable for this order's current status.",
+    order_not_found_or_invalid: "Order not found or invalid Order ID.",
+    error_loading_order_details: "Failed to load order details.",
+    pickup_confirmed_message: "Order {{bookingId}} pickup confirmed successfully!",
+    return_confirmed_message: "Order {{bookingId}} return confirmed successfully!",
+    order_not_found_for_qr: "Order not found for QR Code content [{{qr_content}}].",
+    error_processing_qr: "Error processing QR Code.",
+    error_database_module_unavailable: "Database module unavailable or failed to load.",
+    scan_failed_try_again: "Scan failed, please try again. (Error: {{error_msg}})",
+    camera_permission_or_error: "Could not start camera. Please check permissions or try again later.",
+    action_failed_error: "Action failed: {{error}}",
+    confirm_action_button_label: "Confirm Action",
+    scanned_order_details: "Scanned Order Details"
   }
 };
 
@@ -458,34 +528,24 @@ const translations = {
 function t(key, lang, options = {}) {
   let currentLang = lang || localStorage.getItem('language') || 'zh';
   
-  // Fallback to 'zh' if currentLang is not a valid key in translations
   if (!translations[currentLang]) {
-    // console.warn(`Language "${currentLang}" not found in translations, falling back to 'zh'.`);
     currentLang = 'zh';
   }
 
   let translation = '';
-  // Try to get translation for the current language
   if (translations[currentLang] && typeof translations[currentLang][key] !== 'undefined') {
     translation = translations[currentLang][key];
   } else {
-    // Fallback to English if current language or key is missing, and currentLang is not English
     if (currentLang !== 'en' && translations['en'] && typeof translations['en'][key] !== 'undefined') {
-        // console.warn(`Key "${key}" not found for lang "${currentLang}", falling back to 'en'.`);
         translation = translations['en'][key];
     } 
-    // Fallback to Chinese if English also missing or currentLang is English but key missing, and currentLang is not Chinese
     else if (currentLang !== 'zh' && translations['zh'] && typeof translations['zh'][key] !== 'undefined') {
-        // console.warn(`Key "${key}" not found for lang "${currentLang}" or 'en', falling back to 'zh'.`);
         translation = translations['zh'][key];
     } else {
-        // If key not found in current, en, or zh, return the key itself as a last resort
-        // console.warn(`Key "${key}" not found in any configured language, returning key.`);
-        translation = key;
+        translation = key; 
     }
   }
 
-  // Perform placeholder replacement
   if (typeof translation === 'string') {
     for (const placeholder in options) {
       if (Object.hasOwnProperty.call(options, placeholder)) {
@@ -499,37 +559,28 @@ function t(key, lang, options = {}) {
 // Function to switch language
 function switchLanguage(lang) {
   localStorage.setItem('language', lang);
-  applyTranslations(); // 直接應用翻譯，而不是刷新頁面
+  applyTranslations(); 
 }
 
 // Initialize language preference and apply translations
 document.addEventListener('DOMContentLoaded', function() {
-  // Set default language if not set
   if (!localStorage.getItem('language')) {
     localStorage.setItem('language', 'zh');
   }
-  
-  // Apply translations to the page
   applyTranslations();
   
-  // 動態添加語言切換器到頁眉 (如果不存在)
-  // 這段代碼可以考慮刪除或重構，因為預期切換器已在各HTML中
-  const header = document.querySelector('header .flex.items-center'); // 更精準地選擇容器
+  const header = document.querySelector('header .flex.items-center'); 
   if (header && !document.getElementById('languageSwitcher')) {
     const languageSwitcher = document.createElement('button');
     languageSwitcher.id = 'languageSwitcher';
-    languageSwitcher.className = 'text-white ml-2'; // 保持樣式一致性
+    languageSwitcher.className = 'text-white ml-2'; 
     languageSwitcher.setAttribute('aria-label', 'Switch Language');
-    
-    const currentLangOnLoad = localStorage.getItem('language') || 'zh';
-    languageSwitcher.innerHTML = `<i class="fas fa-globe"></i>`; // 統一使用圖標
-    
+    languageSwitcher.innerHTML = `<i class="fas fa-globe"></i>`; 
     languageSwitcher.addEventListener('click', function() {
       const currentLang = localStorage.getItem('language') || 'zh';
       const newLang = currentLang === 'zh' ? 'en' : 'zh';
       switchLanguage(newLang);
     });
-    // 將切換器添加到頁眉的右側控件中
     const firstChild = header.firstChild;
     if (firstChild) {
         header.insertBefore(languageSwitcher, firstChild);
@@ -543,24 +594,19 @@ document.addEventListener('DOMContentLoaded', function() {
 function applyTranslations() {
   const currentLang = localStorage.getItem('language') || 'zh';
   
-  // 更新頁面標題 (如果標題包含平台名稱)
-  if (document.title.includes(t('platform_name', currentLang === 'zh' ? 'en' : 'zh'))) { // 使用相反語言的平台名稱來替換
+  if (document.title.includes(t('platform_name', currentLang === 'zh' ? 'en' : 'zh'))) { 
       document.title = document.title.replace(t('platform_name', currentLang === 'zh' ? 'en' : 'zh'), t('platform_name', currentLang));
-  } else if (document.title.includes("REAL Platform")) { // 初始英文標題
+  } else if (document.title.includes("REAL Platform")) { 
       document.title = document.title.replace("REAL Platform", t('platform_name', currentLang));
-  } else if (document.title.includes("REAL 平台")) { // 初始中文標題
+  } else if (document.title.includes("REAL 平台")) { 
       document.title = document.title.replace("REAL 平台", t('platform_name', currentLang));
   }
 
-  // 更新語言切換按鈕的 aria-label (如果存在)
   const langSwitcherButton = document.getElementById('languageSwitcher');
   if (langSwitcherButton) {
     langSwitcherButton.setAttribute('aria-label', t('switch_language', currentLang) || 'Switch Language');
-    // 如果按鈕內含文字，也可以更新文字
-    // e.g., langSwitcherButton.querySelector('span').textContent = t('language_switcher_text', currentLang);
   }
   
-  // 更新文本內容
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
     if (key) {
@@ -568,7 +614,6 @@ function applyTranslations() {
     }
   });
   
-  // 更新佔位符
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
     if (key) {
@@ -576,7 +621,6 @@ function applyTranslations() {
     }
   });
   
-  // 更新 aria-labels
   document.querySelectorAll('[data-i18n-aria]').forEach(element => {
     const key = element.getAttribute('data-i18n-aria');
     if (key) {
@@ -584,7 +628,6 @@ function applyTranslations() {
     }
   });
 
-  // 更新 title 屬性
   document.querySelectorAll('[data-i18n-title]').forEach(element => {
     const key = element.getAttribute('data-i18n-title');
     if (key) {
@@ -593,7 +636,6 @@ function applyTranslations() {
   });
 }
 
-// 確保在所有依賴的HTML元素加載完畢後執行
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applyTranslations);
 } else {

@@ -4,46 +4,151 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=M8MvX0K2jTQ",
+      "video_url": "https://www.youtube.com/embed/M8MvX0K2jTQ",
       "intro_zh": "插入電源線並用USB-C連至電腦。將攝影機、電腦、遊戲主機等HDMI輸入口連接到ATEM Mini ISO的HDMI端口（1~4）。可使用麥克風或其他音源（3.5mm）輸入到AUDIO IN。按HDMI 1~4按鍵切換出現在直播畫面或錄製中的輸入源。",
       "intro_en": "Plug in the power cable and connect the USB-C cable to your computer. Connect cameras, computers, game consoles, etc., to HDMI inputs (1~4) on the ATEM Mini ISO. Connect microphones or audio sources (3.5mm) to AUDIO IN. Use HDMI 1–4 buttons to select which source appears on the program output or stream.",
-      "quiz": {
-        "question_zh": "ATEM Mini ISO 最多可接幾組HDMI影像源？",
-        "question_en": "How many HDMI video inputs does the ATEM Mini ISO support?",
-        "options_zh": ["2", "4", "8"],
-        "options_en": ["2", "4", "8"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "ATEM Mini ISO 最多可接幾組HDMI影像源？",
+          "question_en": "How many HDMI video inputs does the ATEM Mini ISO support?",
+          "options_zh": ["2", "4", "8"],
+          "options_en": ["2", "4", "8"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "麥克風應插在 ATEM Mini ISO 的哪個接口？",
+          "question_en": "Where do you plug in the microphone on the ATEM Mini ISO?",
+          "options_zh": ["HDMI", "USB-C", "AUDIO IN (3.5mm)"],
+          "options_en": ["HDMI", "USB-C", "AUDIO IN (3.5mm)"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "如何切換直播畫面的畫面來源？",
+          "question_en": "How do you switch sources for the stream output?",
+          "options_zh": ["按 HDMI 1~4 快捷鍵", "用電源鍵", "拔插電源"],
+          "options_en": ["Press HDMI 1–4 buttons", "Use the power button", "Plug in/out the power cable"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "USB-C可同時作為視訊捕捉介面嗎？",
+          "question_en": "Can USB-C connection be used as a video capture interface?",
+          "options_zh": ["可以", "不可以"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_5",
+          "question_zh": "ATEM Mini ISO 可以單獨用於直播操作嗎？",
+          "question_en": "Can the ATEM Mini ISO be used alone for live switching?",
+          "options_zh": ["可以", "不可以"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=lWFPXvR8IFw",
+      "video_url": "https://www.youtube.com/embed/lWFPXvR8IFw",
       "intro_zh": "將USB硬碟或SSD插到ATEM側邊USB口，再用軟體設定啟動ISO錄製。每個HDMI輸入都可自動儲存單獨影像檔及一條剪接好的總檔。透過音訊旋鈕或ATEM軟體調整各輸入音量及靜音。按下畫面切換或子母畫面按鍵可添加特效。",
       "intro_en": "Plug a USB drive/SSD into ATEM side USB port, then enable ISO recording in software. Every HDMI input gets an individual recording file, plus a single program file. Use audio knobs or ATEM software to adjust/mute audio levels per channel. Use transition/Picture-in-Picture (PiP) buttons for special effects.",
-      "quiz": {
-        "question_zh": "開啟ISO錄製需插什麼裝置？",
-        "question_en": "What device should you plug in to enable ISO recording?",
-        "options_zh": ["SD卡", "USB硬碟或SSD", "CFexpress"],
-        "options_en": ["SD card", "USB HDD or SSD", "CFexpress"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "開啟ISO錄製需插什麼裝置？",
+          "question_en": "What device should you plug in to enable ISO recording?",
+          "options_zh": ["SD卡", "USB硬碟或SSD", "CFexpress"],
+          "options_en": ["SD card", "USB HDD or SSD", "CFexpress"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "ISO錄製能同時分軌存檔與儲存總檔嗎？",
+          "question_en": "Can ISO recording save both individual and program files at the same time?",
+          "options_zh": ["可以", "不可以"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "如何調整各HDMI聲音輸入音量？",
+          "question_en": "How do you adjust audio levels for each HDMI input?",
+          "options_zh": ["音訊旋鈕或軟體", "HDMI按鍵", "電源開關"],
+          "options_en": ["Audio knob or software", "HDMI buttons", "Power switch"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "螢幕上子母畫面功能英文是什麼？",
+          "question_en": "What is the English term for “子母畫面” on the ATEM Mini ISO?",
+          "options_zh": ["Frame-in-frame", "Picture-in-Picture (PiP)", "Split screen"],
+          "options_en": ["Frame-in-frame", "Picture-in-Picture (PiP)", "Split screen"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "切換特效可以按什麼實現？",
+          "question_en": "What button do you press to apply transitions?",
+          "options_zh": ["特效", "電源", "音訊"],
+          "options_en": ["Transition", "Power", "Audio"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.youtube.com/watch?v=RCn6UwFtnPs",
+      "video_url": "https://www.youtube.com/embed/RCn6UwFtnPs",
       "intro_zh": "用USB-C當Webcam來源輸出，OBS直接辨識切換台畫面。HDMI OUT端口可連接大螢幕或額外錄影機進行同步監看與備份。透過HDMI OUT與另一台ATEM串接，進行更大規模製作。結合調音台、燈控台等形成完整直播系統。",
       "intro_en": "Use USB-C as a webcam source; OBS will detect the ATEM as a camera. HDMI OUT port connects to monitors/recorders for live view/backup. Use HDMI OUT/IN to link multiple ATEMs for larger productions. Integrate mixers, light controllers for a complete live studio system.",
-      "quiz": {
-        "question_zh": "ATEM Mini ISO 可作為電腦的什麼裝置被辨識？",
-        "question_en": "How does a computer recognize the ATEM Mini ISO via USB-C?",
-        "options_zh": ["麥克風", "外接螢幕", "網路攝影機"],
-        "options_en": ["Microphone", "Monitor", "Webcam"],
-        "correct_answer_index": 2
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "ATEM Mini ISO 可作為電腦的什麼裝置被辨識？",
+          "question_en": "How does a computer recognize the ATEM Mini ISO via USB-C?",
+          "options_zh": ["麥克風", "外接螢幕", "網路攝影機"],
+          "options_en": ["Microphone", "Monitor", "Webcam"],
+          "correct_answer_index": 2
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "HDMI OUT 用於哪些設備？",
+          "question_en": "HDMI OUT can be connected to what devices?",
+          "options_zh": ["顯示器或錄影機", "耳機", "攝影機"],
+          "options_en": ["Monitors or recorders", "Headphones", "Cameras"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "可否多台ATEM級聯組成更大的切換台？",
+          "question_en": "Can you chain multiple ATEMs for a larger switcher system?",
+          "options_zh": ["可以", "不可以"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "OBS與ATEM結合時, ATEM會被視為？",
+          "question_en": "When connected to OBS, ATEM is treated as?",
+          "options_zh": ["影片檔案", "實況攝影機", "麥克風"],
+          "options_en": ["Video file", "Live camera", "Mic"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "可以結合哪些設備強化現場直播系統？",
+          "question_en": "What devices can be integrated for a better live system?",
+          "options_zh": ["調音台", "燈控台", "以上皆可"],
+          "options_en": ["mixer", "lighting controller", "All of the above"],
+          "correct_answer_index": 2
+        }
+      ]
     }
   ]
 }

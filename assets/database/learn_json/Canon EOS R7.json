@@ -4,46 +4,151 @@
       "id": 1,
       "title_zh": "第一階段：基礎操作",
       "title_en": "Stage 1: Basic Operation",
-      "video_url": "https://www.youtube.com/watch?v=MZ-GL4Zm5mA",
+      "video_url": "https://youtu.be/xZGsoreLuIs?si=OKF3qE3KRc3OxDm1",
       "intro_zh": "打開相機底部的電池艙, 插入電池與SD卡。按下電源開關，依照螢幕指示設定日期與時間。將相機卡口處的紅點或白點對準鏡頭, 輕轉至卡住。半按快門對焦，完全按下拍照。",
       "intro_en": "Open the battery compartment at the bottom, insert the battery and SD card. Turn on the power switch, set the date and time as prompted on the screen. Align the red or white dot on the camera mount with the lens, twist until it clicks. Half-press the shutter button to focus, fully press down to take a photo.",
-      "quiz": {
-        "question_zh": "Canon R7的感光元件類型是？",
-        "question_en": "What type of sensor does the Canon R7 have?",
-        "options_zh": ["全片幅", "APS-C", "1吋"],
-        "options_en": ["Full-frame", "APS-C", "1-inch"],
-        "correct_answer_index": 1
-      }
+      "quiz": [
+        {
+          "id": "q1_1",
+          "question_zh": "Canon R7的感光元件類型是？",
+          "question_en": "What type of sensor does the Canon R7 have?",
+          "options_zh": ["全片幅", "APS-C", "1吋"],
+          "options_en": ["Full-frame", "APS-C", "1-inch"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q1_2",
+          "question_zh": "設定日期和時間在啟動相機時會跳出提示？",
+          "question_en": "Will the camera prompt to set date and time upon first power-on?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_3",
+          "question_zh": "更換鏡頭時, 必須將紅點或白點對齊嗎？",
+          "question_en": "Should you align the red or white dot when attaching a lens?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_4",
+          "question_zh": "半按快門可以自動對焦嗎？",
+          "question_en": "Does half-pressing the shutter button activate autofocus?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q1_5",
+          "question_zh": "相機沒有插入記憶卡可以拍照嗎？",
+          "question_en": "Can you take a photo without a memory card inserted?",
+          "options_zh": ["能", "不能"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 1
+        }
+      ]
     },
     {
       "id": 2,
       "title_zh": "第二階段：功能運用",
       "title_en": "Stage 2: Feature Usage",
-      "video_url": "https://www.youtube.com/watch?v=SJ3wqFf2vyo",
+      "video_url": "https://youtu.be/xZGsoreLuIs?si=OKF3qE3KRc3OxDm1",
       "intro_zh": "進入拍攝選單，選擇連拍模式。旋鈕切換到錄影模式，進入選單選擇4K錄影品質。在螢幕或按鈕上切換單次AF與連續AF。在設定選單找到WiFi設置，選擇裝置配對。",
       "intro_en": "Go to the shooting menu and select the burst shooting mode. Turn the dial to video mode, select 4K video quality in the menu. Switch between One Shot and Servo AF on the screen or via buttons. In the settings menu, find WiFi setup and select device pairing.",
-      "quiz": {
-        "question_zh": "Canon R7是否支援4K錄影？",
-        "question_en": "Does Canon R7 support 4K video recording?",
-        "options_zh": ["是", "否"],
-        "options_en": ["Yes", "No"],
-        "correct_answer_index": 0
-      }
+      "quiz": [
+        {
+          "id": "q2_1",
+          "question_zh": "Canon R7是否支援4K錄影？",
+          "question_en": "Does Canon R7 support 4K video recording?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_2",
+          "question_zh": "如何進行連拍模式設置？",
+          "question_en": "How do you access burst shooting mode?",
+          "options_zh": ["通過設定選單", "只有觸控螢幕", "拍照按鈕長按"],
+          "options_en": ["Through the settings menu", "Touchscreen only", "By holding the shutter button"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_3",
+          "question_zh": "連續自動對焦模式為何？",
+          "question_en": "What is the name of continuous autofocus mode?",
+          "options_zh": ["Single Shot AF", "Servo AF", "Manual Focus"],
+          "options_en": ["Single Shot AF", "Servo AF", "Manual Focus"],
+          "correct_answer_index": 1
+        },
+        {
+          "id": "q2_4",
+          "question_zh": "WiFi 連線需配對裝置嗎？",
+          "question_en": "Does WiFi connection require device pairing?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q2_5",
+          "question_zh": "可以使用觸控螢幕切換對焦模式嗎？",
+          "question_en": "Can you use the touchscreen to switch focus modes?",
+          "options_zh": ["能", "不能"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        }
+      ]
     },
     {
       "id": 3,
       "title_zh": "第三階段：器材協作",
       "title_en": "Stage 3: Device Collaboration",
-      "video_url": "https://www.youtube.com/watch?v=qaM7AEQ0Txg",
+      "video_url": "https://youtu.be/xZGsoreLuIs?si=OKF3qE3KRc3OxDm1",
       "intro_zh": "下載Canon Camera Connect App並開啟藍牙與WiFi。用App遠端預覽及選擇照片上傳到手機。在App內啟用遙控快門功能，輕鬆遠距拍攝。透過USB或WiFi將照片/影片匯入電腦。",
       "intro_en": "Download the Canon Camera Connect App and turn on Bluetooth and WiFi. Preview and select photos via the app to transfer to your phone. Activate remote shutter in the app for easy distant shooting. Use USB cable or WiFi to import files to your computer.",
-      "quiz": {
-        "question_zh": "Canon Camera Connect App可以在手機做什麼？",
-        "question_en": "What can the Canon Camera Connect App do on your smartphone?",
-        "options_zh": ["遠端拍照", "相片傳輸", "預覽相片", "以上皆是"],
-        "options_en": ["Remote Shooting", "Transfer Photos", "Preview Images", "All of the above"],
-        "correct_answer_index": 3
-      }
+      "quiz": [
+        {
+          "id": "q3_1",
+          "question_zh": "Canon Camera Connect App可以在手機做什麼？",
+          "question_en": "What can the Canon Camera Connect App do on your smartphone?",
+          "options_zh": ["遠端拍照", "相片傳輸", "預覽相片", "以上皆是"],
+          "options_en": ["Remote Shooting", "Transfer Photos", "Preview Images", "All of the above"],
+          "correct_answer_index": 3
+        },
+        {
+          "id": "q3_2",
+          "question_zh": "通過WiFi, 相機可否與電腦無線資料傳輸？",
+          "question_en": "Can you transfer files wirelessly from the camera to a computer via WiFi?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_3",
+          "question_zh": "藍牙遙控快門可以用來遠距拍照嗎？",
+          "question_en": "Can Bluetooth remote shutter be used for remote shooting?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_4",
+          "question_zh": "遠端預覽照片是否需要開啟WiFi？",
+          "question_en": "Does remote photo preview require WiFi to be turned on?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 0
+        },
+        {
+          "id": "q3_5",
+          "question_zh": "將照片傳到手機只可用藍牙嗎？",
+          "question_en": "Can you only use Bluetooth for photo transfer to your phone?",
+          "options_zh": ["是", "否"],
+          "options_en": ["Yes", "No"],
+          "correct_answer_index": 1
+        }
+      ]
     }
   ]
 }
